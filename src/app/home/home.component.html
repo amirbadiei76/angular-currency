@@ -1,5 +1,5 @@
 <p>home works!</p>
 
-@for (works of reqestClass?.mainCurrencyList; track works.title) {
-    <h1>{{works.title}}</h1>
+@for (works of reqestClass?.allItemsList; track works.id) {
+    <h1 class="rtl">{{works.id}}: {{works.title}} -> {{works.lastPriceInfo.p}}</h1>
 }

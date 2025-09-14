@@ -3930,6 +3930,22 @@ export class CurrenciesService {
   
   
   
+  
+  
+
+
+
+  
+  getGoldGc22PriceInfo() {
+    const url = this.base_url + "/margani/pricedb/main/tgju/current/gc22/latest.json";
+    return this.http.get<Price>(url)
+  }
+
+  getGoldGc22HistoryInfo() {
+    const url = this.base_url + "/margani/pricedb/main/tgju/current/gc22/history.json";
+    return this.http.get<Price[]>(url)
+  }
+  
 
   
   
@@ -4399,6 +4415,23 @@ export class CurrenciesService {
 
   getGc17CoinHistoryInfo() {
     const url = this.base_url + "/margani/pricedb/main/tgju/current/gc17/history.json";
+    return this.http.get<Price[]>(url)
+  }
+
+
+
+
+
+
+
+  
+  getGc16CoinPriceInfo() {
+    const url = this.base_url + "/margani/pricedb/main/tgju/current/gc16/latest.json";
+    return this.http.get<Price>(url)
+  }
+
+  getGc16CoinHistoryInfo() {
+    const url = this.base_url + "/margani/pricedb/main/tgju/current/gc16/history.json";
     return this.http.get<Price[]>(url)
   }
   

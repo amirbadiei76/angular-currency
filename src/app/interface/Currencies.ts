@@ -582,11 +582,13 @@ export interface Price {
 
 
 export interface CurrencyItem {
+    id: string,
     historyCallInfo: Observable<Price[]>;
     lastPriceInfo: Price;
     title: string;
     filterName: string;
     mainTitle?: string;
     unit?: string;
-    shortedName?: string
+    shortedName?: string;
+    groupName: string
 }

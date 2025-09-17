@@ -590,5 +590,6 @@ export interface CurrencyItem {
     mainTitle?: string;
     unit?: string;
     shortedName?: string;
-    groupName: string
+    groupName: string;
+    img?: string;
 }

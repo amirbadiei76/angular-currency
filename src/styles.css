@@ -1,5 +1,54 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+* {
+    transition: 0.4s ease all;
+}
+
+:root {
+    --theme-white: #f2f2f2;
+    --theme-black: #1a1a1a;
+    
+    --background: #ffffff;
+    --foreground: #171717;
+
+    --error-dark: #ba062b;
+    --error-light: #fa5358;
+    
+    
+    /* light/dark */
+    --light-theme: #fafefd;
+    --dark-theme: #121212;
+
+    --light-border: #a7a9a8;
+    --dark-border: #292a2a;
+
+    --light-hover: #f1f5f4;
+    --dark-hover: #1b1b1b;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+  
+    --color-error-dark: var(--error-dark);
+    --color-error-light: var(--error-light);
+    
+    /* light/dark */
+    --color-light: var(--light-theme);
+    --color-dark: var(--dark-theme);
+
+    --color-light-border: var(--light-border);
+    --color-dark-border: var(--dark-border);
+
+    --color-light-hover: var(--light-hover);
+    --color-dark-hover: var(--dark-hover);
+    
+}
 
 .rtl {
     direction: rtl;

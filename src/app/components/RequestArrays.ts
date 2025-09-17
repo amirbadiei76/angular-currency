@@ -50,6 +50,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/us.svg'
         });
         this.mainCurrencyList.push({
             id: "1000001",
@@ -60,6 +61,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/eu.svg'
         });
         this.mainCurrencyList.push({
             id: "1000002",
@@ -70,6 +72,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ae.svg'
         });
         this.mainCurrencyList.push({
             id: "1000003",
@@ -80,6 +83,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/gb.svg'
         });
         this.mainCurrencyList.push({
             id: "1000004",
@@ -90,6 +94,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tr.svg'
         });
         this.mainCurrencyList.push({
             id: "1000005",
@@ -100,6 +105,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ch.svg'
         });
         this.mainCurrencyList.push({
             id: "1000006",
@@ -110,6 +116,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cn.svg'
         });
         this.mainCurrencyList.push({
             id: "1000007",
@@ -120,6 +127,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/jp.svg'
         });
         this.mainCurrencyList.push({
             id: "1000008",
@@ -130,6 +138,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/kr.svg'
         });
         this.mainCurrencyList.push({
             id: "1000009",
@@ -140,6 +149,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ca.svg'
         });
         this.mainCurrencyList.push({
             id: "1000010",
@@ -150,6 +160,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/au.svg'
         });
         this.mainCurrencyList.push({
             id: "1000011",
@@ -160,6 +171,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/nz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000012",
@@ -170,6 +182,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sg.svg'
         });
         this.mainCurrencyList.push({
             id: "1000013",
@@ -180,6 +193,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/in.svg'
         });
         this.mainCurrencyList.push({
             id: "1000014",
@@ -190,6 +204,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/pk.svg'
         });
         this.mainCurrencyList.push({
             id: "1000015",
@@ -200,6 +215,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/iq.svg'
         });
         this.mainCurrencyList.push({
             id: "1000016",
@@ -210,6 +226,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sy.svg'
         });
         this.mainCurrencyList.push({
             id: "1000017",
@@ -220,6 +237,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/af.svg'
         });
         this.mainCurrencyList.push({
             id: "1000018",
@@ -230,6 +248,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/dk.svg'
         });
         this.mainCurrencyList.push({
             id: "1000019",
@@ -240,6 +259,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/se.svg'
         });
         this.mainCurrencyList.push({
             id: "1000020",
@@ -250,6 +270,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/no.svg'
         });
         this.mainCurrencyList.push({
             id: "1000021",
@@ -260,6 +281,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sa.svg'
         });
         this.mainCurrencyList.push({
             id: "1000022",
@@ -270,6 +292,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/qa.svg'
         });
         this.mainCurrencyList.push({
             id: "1000023",
@@ -280,6 +303,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/om.svg'
         });
         this.mainCurrencyList.push({
             id: "1000024",
@@ -290,6 +314,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/kw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000025",
@@ -300,6 +325,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bh.svg'
         });
         this.mainCurrencyList.push({
             id: "1000026",
@@ -310,6 +336,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/my.svg'
         });
         this.mainCurrencyList.push({
             id: "1000027",
@@ -320,6 +347,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/th.svg'
         });
         this.mainCurrencyList.push({
             id: "1000028",
@@ -330,6 +358,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/hk.svg'
         });
         this.mainCurrencyList.push({
             id: "1000029",
@@ -340,6 +369,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ru.svg'
         });
         this.mainCurrencyList.push({
             id: "1000030",
@@ -350,6 +380,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/az.svg'
         });
         this.mainCurrencyList.push({
             id: "1000031",
@@ -360,6 +391,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/am.svg'
         });
         this.mainCurrencyList.push({
             id: "1000032",
@@ -370,6 +402,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ge.svg'
         });
         this.mainCurrencyList.push({
             id: "1000033",
@@ -380,6 +413,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/kg.svg'
         });
         this.mainCurrencyList.push({
             id: "1000034",
@@ -390,6 +424,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tj.svg'
         });
         this.mainCurrencyList.push({
             id: "1000035",
@@ -400,6 +435,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tm.svg'
         });
 
 
@@ -414,6 +450,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/al.svg'
         });
         this.mainCurrencyList.push({
             id: "1000037",
@@ -424,6 +461,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bb.svg'
         });
         this.mainCurrencyList.push({
             id: "1000038",
@@ -434,6 +472,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bd.svg'
         });
         this.mainCurrencyList.push({
             id: "1000039",
@@ -444,6 +483,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bg.svg'
         });
         this.mainCurrencyList.push({
             id: "1000040",
@@ -454,6 +494,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bi.svg'
         });
         this.mainCurrencyList.push({
             id: "1000041",
@@ -464,6 +505,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bn.svg'
         });
         this.mainCurrencyList.push({
             id: "1000042",
@@ -474,6 +516,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bs.svg'
         });
         this.mainCurrencyList.push({
             id: "1000043",
@@ -484,6 +527,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000044",
@@ -494,6 +538,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/by.svg'
         });
         this.mainCurrencyList.push({
             id: "1000045",
@@ -504,6 +549,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000046",
@@ -514,6 +560,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cu.svg'
         });
         this.mainCurrencyList.push({
             id: "1000047",
@@ -524,6 +571,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000048",
@@ -534,6 +582,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/dj.svg'
         });
         this.mainCurrencyList.push({
             id: "1000049",
@@ -544,6 +593,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/do.svg'
         });
         this.mainCurrencyList.push({
             id: "1000050",
@@ -554,6 +604,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/dz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000051",
@@ -564,6 +615,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/et.svg'
         });
         this.mainCurrencyList.push({
             id: "1000052",
@@ -574,6 +626,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/gn.svg'
         });
         this.mainCurrencyList.push({
             id: "1000053",
@@ -584,6 +637,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/gt.svg'
         });
         this.mainCurrencyList.push({
             id: "1000054",
@@ -594,6 +648,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/gy.svg'
         });
         this.mainCurrencyList.push({
             id: "1000055",
@@ -604,6 +659,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/hn.svg'
         });
         this.mainCurrencyList.push({
             id: "1000056",
@@ -614,6 +670,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/hr.svg'
         });
         this.mainCurrencyList.push({
             id: "1000057",
@@ -624,6 +681,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ht.svg'
         });
         this.mainCurrencyList.push({
             id: "1000058",
@@ -634,6 +692,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/is.svg'
         });
         this.mainCurrencyList.push({
             id: "1000059",
@@ -644,6 +703,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/jm.svg'
         });
         this.mainCurrencyList.push({
             id: "1000060",
@@ -654,6 +714,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ke.svg'
         });
         this.mainCurrencyList.push({
             id: "1000061",
@@ -664,6 +725,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/kh.svg'
         });
         this.mainCurrencyList.push({
             id: "1000062",
@@ -674,6 +736,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/km.svg'
         });
         this.mainCurrencyList.push({
             id: "1000063",
@@ -684,6 +747,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/kz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000064",
@@ -694,6 +758,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/la.svg'
         });
         this.mainCurrencyList.push({
             id: "1000065",
@@ -704,6 +769,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/lb.svg'
         });
         this.mainCurrencyList.push({
             id: "1000066",
@@ -714,6 +780,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/lk.svg'
         });
         this.mainCurrencyList.push({
             id: "1000067",
@@ -724,6 +791,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/lr.svg'
         });
         this.mainCurrencyList.push({
             id: "1000068",
@@ -734,6 +802,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ls.svg'
         });
         this.mainCurrencyList.push({
             id: "1000069",
@@ -744,6 +813,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ly.svg'
         });
         this.mainCurrencyList.push({
             id: "1000070",
@@ -754,6 +824,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ma.svg'
         });
         this.mainCurrencyList.push({
             id: "1000071",
@@ -764,6 +835,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mg.svg'
         });
         this.mainCurrencyList.push({
             id: "1000072",
@@ -774,6 +846,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mk.svg'
         });
         this.mainCurrencyList.push({
             id: "1000073",
@@ -784,6 +857,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mm.svg'
         });
         this.mainCurrencyList.push({
             id: "1000074",
@@ -794,6 +868,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mo.svg'
         });
         this.mainCurrencyList.push({
             id: "1000075",
@@ -804,6 +879,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mu.svg'
         });
         this.mainCurrencyList.push({
             id: "1000076",
@@ -814,6 +890,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mv.svg'
         });
         this.mainCurrencyList.push({
             id: "1000077",
@@ -824,6 +901,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000078",
@@ -834,6 +912,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000079",
@@ -844,6 +923,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/na.svg'
         });
         this.mainCurrencyList.push({
             id: "1000080",
@@ -854,6 +934,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ng.svg'
         });
         this.mainCurrencyList.push({
             id: "1000081",
@@ -864,6 +945,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/np.svg'
         });
         this.mainCurrencyList.push({
             id: "1000082",
@@ -874,6 +956,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/pa.svg'
         });
         this.mainCurrencyList.push({
             id: "1000083",
@@ -884,6 +967,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/pg.svg'
         });
         this.mainCurrencyList.push({
             id: "1000084",
@@ -894,6 +978,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ph.svg'
         });
         this.mainCurrencyList.push({
             id: "1000085",
@@ -904,6 +989,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ro.svg'
         });
         this.mainCurrencyList.push({
             id: "1000086",
@@ -914,6 +1000,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/rs.svg'
         });
         this.mainCurrencyList.push({
             id: "1000087",
@@ -924,6 +1011,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/rw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000088",
@@ -934,6 +1022,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sc.svg'
         });
         this.mainCurrencyList.push({
             id: "1000089",
@@ -944,6 +1033,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sd.svg'
         });
         this.mainCurrencyList.push({
             id: "1000090",
@@ -954,6 +1044,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sh.svg'
         });
         this.mainCurrencyList.push({
             id: "1000091",
@@ -964,6 +1055,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/so.svg'
         });
         this.mainCurrencyList.push({
             id: "1000092",
@@ -974,6 +1066,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sv.svg'
         });
         this.mainCurrencyList.push({
             id: "1000093",
@@ -984,6 +1077,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000094",
@@ -994,6 +1088,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tn.svg'
         });
         this.mainCurrencyList.push({
             id: "1000095",
@@ -1004,6 +1099,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tt.svg'
         });
         this.mainCurrencyList.push({
             id: "1000096",
@@ -1014,6 +1110,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000097",
@@ -1024,6 +1121,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ug.svg'
         });
         this.mainCurrencyList.push({
             id: "1000098",
@@ -1034,6 +1132,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ye.svg'
         });
         this.mainCurrencyList.push({
             id: "1000099",
@@ -1044,6 +1143,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/zm.svg'
         });
         this.mainCurrencyList.push({
             id: "1000100",
@@ -1054,6 +1154,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/gh.svg'
         });
         this.mainCurrencyList.push({
             id: "1000101",
@@ -1064,6 +1165,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/pe.svg'
         });
         this.mainCurrencyList.push({
             id: "1000102",
@@ -1074,6 +1176,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cl.svg'
         });
         this.mainCurrencyList.push({
             id: "1000103",
@@ -1084,6 +1187,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/eg.svg'
         });
         this.mainCurrencyList.push({
             id: "1000104",
@@ -1094,6 +1198,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mx.svg'
         });
         this.mainCurrencyList.push({
             id: "1000105",
@@ -1104,6 +1209,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/jo.svg'
         });
         this.mainCurrencyList.push({
             id: "1000106",
@@ -1114,6 +1220,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/br.svg'
         });
         this.mainCurrencyList.push({
             id: "1000107",
@@ -1124,6 +1231,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/uy.svg'
         });
         this.mainCurrencyList.push({
             id: "1000108",
@@ -1134,6 +1242,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/co.svg'
         });
         this.mainCurrencyList.push({
             id: "1000109",
@@ -1144,6 +1253,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/pl.svg'
         });
         this.mainCurrencyList.push({
             id: "1000110",
@@ -1154,6 +1264,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ar.svg'
         });
         this.mainCurrencyList.push({
             id: "1000111",
@@ -1164,6 +1275,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ky.svg'
         });
         this.mainCurrencyList.push({
             id: "1000112",
@@ -1174,6 +1286,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/hu.svg'
         });
         this.mainCurrencyList.push({
             id: "1000113",
@@ -1184,6 +1297,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/py.svg'
         });
         this.mainCurrencyList.push({
             id: "1000114",
@@ -1194,6 +1308,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ua.svg'
         });
         this.mainCurrencyList.push({
             id: "1000115",
@@ -1204,6 +1319,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/za.svg'
         });
         this.mainCurrencyList.push({
             id: "1000116",
@@ -1214,6 +1330,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ni.svg'
         });
         this.mainCurrencyList.push({
             id: "1000117",
@@ -1224,6 +1341,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/fj.svg'
         });
         this.mainCurrencyList.push({
             id: "1000118",
@@ -1234,6 +1352,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/tw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000119",
@@ -1244,6 +1363,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/uz.svg'
         });
         this.mainCurrencyList.push({
             id: "1000120",
@@ -1254,6 +1374,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/id.svg'
         });
         this.mainCurrencyList.push({
             id: "1000121",
@@ -1264,6 +1385,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/za.svg'
         });
         this.mainCurrencyList.push({
             id: "1000122",
@@ -1274,6 +1396,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/pf.svg'
         });
         this.mainCurrencyList.push({
             id: "1000123",
@@ -1284,6 +1407,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/vn.svg'
         });
         this.mainCurrencyList.push({
             id: "1000124",
@@ -1294,6 +1418,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/gm.svg'
         });
         this.mainCurrencyList.push({
             id: "1000125",
@@ -1304,6 +1429,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cf.svg'
         });
         this.mainCurrencyList.push({
             id: "1000126",
@@ -1314,6 +1440,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/vu.svg'
         });
         this.mainCurrencyList.push({
             id: "1000127",
@@ -1324,6 +1451,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/mr.svg'
         });
         this.mainCurrencyList.push({
             id: "1000128",
@@ -1334,6 +1462,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ang.svg'
         });
         this.mainCurrencyList.push({
             id: "1000129",
@@ -1344,6 +1473,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/st.svg'
         });
         this.mainCurrencyList.push({
             id: "1000130",
@@ -1354,6 +1484,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/zw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000131",
@@ -1364,6 +1495,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ba.svg'
         });
         this.mainCurrencyList.push({
             id: "1000132",
@@ -1374,6 +1506,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bt.svg'
         });
         this.mainCurrencyList.push({
             id: "1000133",
@@ -1384,6 +1517,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cd.svg'
         });
         this.mainCurrencyList.push({
             id: "1000134",
@@ -1394,6 +1528,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cr.svg'
         });
         this.mainCurrencyList.push({
             id: "1000135",
@@ -1404,6 +1539,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cv.svg'
         });
         this.mainCurrencyList.push({
             id: "1000136",
@@ -1414,6 +1550,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/bm.svg'
         });
         this.mainCurrencyList.push({
             id: "1000137",
@@ -1424,6 +1561,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/aw.svg'
         });
         this.mainCurrencyList.push({
             id: "1000138",
@@ -1434,6 +1572,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/sl.svg'
         });
         this.mainCurrencyList.push({
             id: "1000139",
@@ -1444,6 +1583,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/ve.svg'
         });
         this.mainCurrencyList.push({
             id: "1000140",
@@ -1454,6 +1594,7 @@ export class RequestArray {
             filterName: filter_other_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/country-flags/cy.svg'
         });
 
     }

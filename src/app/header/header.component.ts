@@ -10,8 +10,12 @@ export class HeaderComponent {
 
 
   ngOnInit() {
-    if (typeof window !== 'undefined' && localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
-
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
+      else {
+        if (localStorage.getItem("theme") === 'dark') document.documentElement.classList.add("dark")
+      }
+    }
   }
 
   changeTheme() {

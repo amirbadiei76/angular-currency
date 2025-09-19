@@ -1,6 +1,6 @@
 <p>home works!</p>
 
-@for (item of reqestClass?.mainCurrencyList; track item.id) {
+@for (item of reqestClass?.allItemsList; track item.id) {
     <currency-item [currencyItem]="item"/>
 
 }

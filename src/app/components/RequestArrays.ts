@@ -1611,6 +1611,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/btc.svg'
         });
         this.cryptoList.push({
             id: "1000142",
@@ -1621,6 +1622,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/eth.svg'
         });
         this.cryptoList.push({
             id: "1000143",
@@ -1631,6 +1633,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/usdt.svg'
         });
         this.cryptoList.push({
             id: "1000144",
@@ -1641,6 +1644,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/bnb.svg'
         });
         this.cryptoList.push({
             id: "1000145",
@@ -1651,6 +1655,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/sol.svg'
         });
         this.cryptoList.push({
             id: "1000146",
@@ -1661,6 +1666,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/usdc.svg'
         });
         this.cryptoList.push({
             id: "1000147",
@@ -1671,6 +1677,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/xrp.svg'
         });
         this.cryptoList.push({
             id: "1000148",
@@ -1681,6 +1688,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/ada.svg'
         });
         this.cryptoList.push({
             id: "1000149",
@@ -1691,6 +1699,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/doge.svg'
         });
         this.cryptoList.push({
             id: "1000150",
@@ -1701,6 +1710,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/avax.svg'
         });
         this.cryptoList.push({
             id: "1000151",
@@ -1711,6 +1721,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/shiba_inu2.png'
         });
         this.cryptoList.push({
             id: "1000152",
@@ -1721,6 +1732,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/dot.svg'
         });
         this.cryptoList.push({
             id: "1000153",
@@ -1731,6 +1743,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/trx.svg'
         });
         this.cryptoList.push({
             id: "1000154",
@@ -1741,6 +1754,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/bch.svg'
         });
         this.cryptoList.push({
             id: "1000155",
@@ -1751,6 +1765,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/uni.svg'
         });
         this.cryptoList.push({
             id: "1000156",
@@ -1761,6 +1776,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/ltc.svg'
         });
         this.cryptoList.push({
             id: "1000157",
@@ -1771,6 +1787,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/fil.svg'
         });
         this.cryptoList.push({
             id: "1000158",
@@ -1781,6 +1798,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/atom.svg'
         });
         this.cryptoList.push({
             id: "1000159",
@@ -1791,6 +1809,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/etc.svg'
         });
         this.cryptoList.push({
             id: "1000160",
@@ -1801,6 +1820,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/xlm.svg'
         });
         this.cryptoList.push({
             id: "1000161",
@@ -1811,6 +1831,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/ftm.png'
         });
         this.cryptoList.push({
             id: "1000162",
@@ -1821,6 +1842,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/egld.png'
         });
         this.cryptoList.push({
             id: "1000163",
@@ -1831,6 +1853,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/mkr.svg'
         });
         this.cryptoList.push({
             id: "1000164",
@@ -1841,6 +1864,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/eos.svg'
         });
         this.cryptoList.push({
             id: "1000165",
@@ -1851,6 +1875,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/btt.svg'
         });
         this.cryptoList.push({
             id: "1000166",
@@ -1861,6 +1886,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/flow.png'
         });
         this.cryptoList.push({
             id: "1000167",
@@ -1871,6 +1897,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/gala.png'
         });
         this.cryptoList.push({
             id: "1000168",
@@ -1881,6 +1908,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/sand.svg'
         });
         this.cryptoList.push({
             id: "1000169",
@@ -1891,6 +1919,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/cakeswap.png'
         });
         this.cryptoList.push({
             id: "1000170",
@@ -1901,6 +1930,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/dash.svg'
         });
         this.cryptoList.push({
             id: "1000171",
@@ -1911,6 +1941,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/xmr.svg'
         });
         this.cryptoList.push({
             id: "1000172",
@@ -1921,6 +1952,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/link.svg'
         });
         this.cryptoList.push({
             id: "1000173",
@@ -1931,6 +1963,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/cashaa.png'
         });
         this.cryptoList.push({
             id: "1000174",
@@ -1941,6 +1974,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/xtz.svg'
         });
         this.cryptoList.push({
             id: "1000175",
@@ -1951,6 +1985,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/lrc.svg'
         });
         this.cryptoList.push({
             id: "1000176",
@@ -1961,6 +1996,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/dcr.svg'
         });
         this.cryptoList.push({
             id: "1000177",
@@ -1971,6 +2007,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/waves.svg'
         });
         this.cryptoList.push({
             id: "1000178",
@@ -1981,6 +2018,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/zec.svg'
         });
         this.cryptoList.push({
             id: "1000179",
@@ -1991,6 +2029,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/link.svg'
         });
         this.cryptoList.push({
             id: "1000180",
@@ -2001,6 +2040,7 @@ export class RequestArray {
             filterName: filter_cryptocurrency,
             groupName: CRYPTO_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/crypto-icons/neo.svg'
         });
 
     }
@@ -2017,6 +2057,7 @@ export class RequestArray {
             shortedName: "eur/usd ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/eu-usd.png'
         });
         this.worldMarketList.push({
             id: "1000182",
@@ -2026,6 +2067,7 @@ export class RequestArray {
             shortedName: "gbp/usd ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/gb-us.png'
         });
         this.worldMarketList.push({
             id: "1000183",
@@ -2035,6 +2077,7 @@ export class RequestArray {
             shortedName: "usd/jpy ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-jp.png'
         });
         this.worldMarketList.push({
             id: "1000184",
@@ -2044,6 +2087,7 @@ export class RequestArray {
             shortedName: "usd/chf ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-ch.png'
         });
         this.worldMarketList.push({
             id: "1000185",
@@ -2053,6 +2097,7 @@ export class RequestArray {
             shortedName: "aud/usd ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/au-us.png'
         });
         this.worldMarketList.push({
             id: "1000186",
@@ -2062,6 +2107,7 @@ export class RequestArray {
             shortedName: "usd/cad ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-ca.png'
         });
         this.worldMarketList.push({
             id: "1000187",
@@ -2071,6 +2117,7 @@ export class RequestArray {
             shortedName: "usd/nzd ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-nz.png'
         });
         this.worldMarketList.push({
             id: "1000188",
@@ -2080,6 +2127,7 @@ export class RequestArray {
             shortedName: "usd/try ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-tr.png'
         });
         this.worldMarketList.push({
             id: "1000189",
@@ -2089,6 +2137,7 @@ export class RequestArray {
             shortedName: "usd/sek ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-se.png'
         });
         this.worldMarketList.push({
             id: "1000190",
@@ -2098,6 +2147,7 @@ export class RequestArray {
             shortedName: "usd/sar ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-sa.png'
         });
         this.worldMarketList.push({
             id: "1000191",
@@ -2107,6 +2157,7 @@ export class RequestArray {
             shortedName: "usd/krw ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-kr.png'
         });
         this.worldMarketList.push({
             id: "1000192",
@@ -2116,6 +2167,7 @@ export class RequestArray {
             shortedName: "usd/cny ask",
             filterName: filter_pair_currencies,
             groupName: WORLD_MARKET_PREFIX,
+            img: '/assets/images/ask-flags/us-cn.png'
         });
 
     }
@@ -2133,6 +2185,7 @@ export class RequestArray {
             filterName: filter_coin_cash,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000194",
@@ -2143,6 +2196,7 @@ export class RequestArray {
             filterName: filter_coin_cash,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000195",
@@ -2153,6 +2207,7 @@ export class RequestArray {
             filterName: filter_coin_cash,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000196",
@@ -2163,6 +2218,7 @@ export class RequestArray {
             filterName: filter_coin_cash,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000197",
@@ -2173,6 +2229,7 @@ export class RequestArray {
             filterName: filter_coin_cash,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
 
         
@@ -2186,6 +2243,7 @@ export class RequestArray {
             filterName: filter_coin_retail,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000199",
@@ -2196,6 +2254,7 @@ export class RequestArray {
             filterName: filter_coin_retail,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000200",
@@ -2206,6 +2265,7 @@ export class RequestArray {
             filterName: filter_coin_retail,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000201",
@@ -2216,6 +2276,7 @@ export class RequestArray {
             filterName: filter_coin_retail,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000202",
@@ -2226,6 +2287,7 @@ export class RequestArray {
             filterName: filter_coin_retail,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
 
 
@@ -2239,6 +2301,7 @@ export class RequestArray {
             filterName: filter_coin_blubber,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000204",
@@ -2249,6 +2312,7 @@ export class RequestArray {
             filterName: filter_coin_blubber,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000205",
@@ -2259,6 +2323,7 @@ export class RequestArray {
             filterName: filter_coin_blubber,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000206",
@@ -2269,6 +2334,7 @@ export class RequestArray {
             filterName: filter_coin_blubber,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000207",
@@ -2279,6 +2345,7 @@ export class RequestArray {
             filterName: filter_coin_blubber,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
 
 
@@ -2292,6 +2359,7 @@ export class RequestArray {
             filterName: filter_coin_exchange,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000209",
@@ -2302,6 +2370,7 @@ export class RequestArray {
             filterName: filter_coin_exchange,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000210",
@@ -2312,6 +2381,7 @@ export class RequestArray {
             filterName: filter_coin_exchange,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000211",
@@ -2322,6 +2392,7 @@ export class RequestArray {
             filterName: filter_coin_exchange,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000212",
@@ -2332,6 +2403,7 @@ export class RequestArray {
             filterName: filter_coin_exchange,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000213",
@@ -2342,6 +2414,7 @@ export class RequestArray {
             filterName: filter_coin_exchange,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
 
 
@@ -2355,6 +2428,7 @@ export class RequestArray {
             filterName: filter_other_coins,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000215",
@@ -2365,6 +2439,7 @@ export class RequestArray {
             filterName: filter_other_coins,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
         this.coinList.push({
             id: "1000216",
@@ -2375,6 +2450,7 @@ export class RequestArray {
             filterName: filter_other_coins,
             groupName: COIN_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/sekee.png'
         });
 
     }
@@ -2392,6 +2468,7 @@ export class RequestArray {
             filterName: filter_gold,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/ingots2.png'
         });
         this.goldList.push({
             id: "1000218",
@@ -2402,6 +2479,7 @@ export class RequestArray {
             filterName: filter_gold,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/ingots2.png'
         });
         this.goldList.push({
             id: "1000219",
@@ -2412,6 +2490,7 @@ export class RequestArray {
             filterName: filter_gold,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/ingots2.png'
         });
         this.goldList.push({
             id: "1000220",
@@ -2422,6 +2501,7 @@ export class RequestArray {
             filterName: filter_gold,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/ingots2.png'
         });
 
 
@@ -2435,6 +2515,7 @@ export class RequestArray {
             filterName: filter_silver,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/silver2.png'
         });
         this.goldList.push({
             id: "1000222",
@@ -2445,6 +2526,7 @@ export class RequestArray {
             filterName: filter_silver,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/silver2.png'
         });
 
 
@@ -2458,6 +2540,7 @@ export class RequestArray {
             filterName: filter_mesghal,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
         this.goldList.push({
             id: "1000224",
@@ -2468,6 +2551,7 @@ export class RequestArray {
             filterName: filter_mesghal,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
         this.goldList.push({
             id: "1000225",
@@ -2478,6 +2562,7 @@ export class RequestArray {
             filterName: filter_mesghal,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
         this.goldList.push({
             id: "1000226",
@@ -2488,6 +2573,7 @@ export class RequestArray {
             filterName: filter_mesghal,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
 
 
@@ -2501,6 +2587,7 @@ export class RequestArray {
             filterName: filter_melted,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
         this.goldList.push({
             id: "1000228",
@@ -2511,6 +2598,7 @@ export class RequestArray {
             filterName: filter_melted,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
         this.goldList.push({
             id: "1000229",
@@ -2521,6 +2609,7 @@ export class RequestArray {
             filterName: filter_melted,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/bar2.png'
         });
 
 
@@ -2535,6 +2624,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000231",
@@ -2545,6 +2635,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000232",
@@ -2555,6 +2646,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000233",
@@ -2565,6 +2657,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000234",
@@ -2575,6 +2668,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000235",
@@ -2585,6 +2679,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000236",
@@ -2595,6 +2690,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000237",
@@ -2605,6 +2701,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000238",
@@ -2615,6 +2712,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000239",
@@ -2625,6 +2723,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000240",
@@ -2635,6 +2734,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000241",
@@ -2645,6 +2745,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000242",
@@ -2655,6 +2756,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
         this.goldList.push({
             id: "1000243",
@@ -2665,6 +2767,7 @@ export class RequestArray {
             filterName: filter_etf,
             groupName: GOLD_PREFIX,
             unit: rial_unit,
+            img: '/assets/images/coins/treasure-chest2.png'
         });
 
 
@@ -2683,6 +2786,7 @@ export class RequestArray {
             filterName: filter_global_ounces,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/gold.png'
         });
         this.preciousMetalList.push({
             id: "1000245",
@@ -2693,6 +2797,7 @@ export class RequestArray {
             filterName: filter_global_ounces,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/silver.png'
         });
         this.preciousMetalList.push({
             id: "1000246",
@@ -2703,6 +2808,7 @@ export class RequestArray {
             filterName: filter_global_ounces,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/platinum.png'
         });
         this.preciousMetalList.push({
             id: "1000247",
@@ -2713,6 +2819,7 @@ export class RequestArray {
             filterName: filter_global_ounces,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/palladium.png'
         });
 
 
@@ -2726,6 +2833,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
         this.preciousMetalList.push({
             id: "1000249",
@@ -2736,6 +2844,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
         this.preciousMetalList.push({
             id: "1000250",
@@ -2746,6 +2855,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
         this.preciousMetalList.push({
             id: "1000251",
@@ -2756,6 +2866,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
         this.preciousMetalList.push({
             id: "1000252",
@@ -2766,6 +2877,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
         this.preciousMetalList.push({
             id: "1000253",
@@ -2776,6 +2888,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
         this.preciousMetalList.push({
             id: "1000254",
@@ -2786,6 +2899,7 @@ export class RequestArray {
             filterName: filter_gold_vs_other,
             groupName: PRECIOUS_METALS_PREFIX,
             unit: dollar_unit,
+            img: '/assets/images/coins/coin-vs2.png'
         });
 
     }

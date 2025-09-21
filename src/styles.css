@@ -27,6 +27,12 @@
 
     --light-hover: #f1f5f4;
     --dark-hover: #1b1b1b;
+
+    --light-text: #fefffe;
+    ---dark-text: #222;
+
+    --dark-high-green: #1dbb7e;
+    --dark-low-red: #cc2735;
 }
 
 @theme inline {
@@ -48,6 +54,12 @@
     --color-light-hover: var(--light-hover);
     --color-dark-hover: var(--dark-hover);
     
+    --color-light-text: var(--light-text);
+    --color-dark-text: var(--dark-text);
+
+
+    --color-dark-high-green: var(--dark-high-green);
+    --color-dark-low-red: var(--dark-low-red);
 }
 
 .rtl {

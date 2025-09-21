@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyItem } from '../interface/Currencies';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'currency-item',
-  imports: [],
+  imports: [NgIf],
   templateUrl: './currency-item.component.html',
   styleUrl: './currency-item.component.css'
 })

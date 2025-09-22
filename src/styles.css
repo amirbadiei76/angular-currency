@@ -5,6 +5,9 @@
 
 * {
     transition: 0.4s ease all;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 :root {
@@ -31,8 +34,17 @@
     --light-text: #fefffe;
     ---dark-text: #222;
 
-    --dark-high-green: #1dbb7e;
-    --dark-low-red: #cc2735;
+    --light-text2: #949696;
+    --dark-text2: #818383;
+
+    --dark-green-text: #1dbb7e;
+    --dark-red-text: #d02633;
+
+    --light-green-text: #1eb980;
+    --light-red-text: #eb3740;
+
+
+    --green-btn: #00d890;
 }
 
 @theme inline {
@@ -56,10 +68,31 @@
     
     --color-light-text: var(--light-text);
     --color-dark-text: var(--dark-text);
+    
+    --color-light-text2: var(--light-text2);
+    --color-dark-text2: var(--dark-text2);
 
 
-    --color-dark-high-green: var(--dark-high-green);
-    --color-dark-low-red: var(--dark-low-red);
+    --color-dark-green-text: var(--dark-green-text);
+    --color-dark-red-text: var(--dark-red-text);
+    
+    --color-light-green-text: var(--light-green-text);
+    --color-light-red-text: var(--light-red-text);
+    
+    --color-green-btn: var(--green-btn);
+
+
+
+
+
+    --font-byekan: 'BYekan';
+    --font-vazir: 'Vazir';
+}
+
+.scroll-snap-x {
+    scroll-snap-type: x mandatory;
+    scroll-snap-align: center;
+    touch-action: pan-x;
 }
 
 .rtl {
@@ -68,4 +101,17 @@
 
 .ltr {
     direction: ltr;
+}
+
+
+
+@font-face {
+    font-family: 'BYekan';
+    src: url('./assets/fonts/Yekan.ttf');
+}
+
+
+@font-face {
+    font-family: 'Vazir';
+    src: url('./assets/fonts/Vazir-Regular-FD.ttf');
 }

@@ -1,12 +1,16 @@
 <article class="h-[5.8rem] flex justify-between items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border hover:bg-light-hover hover:dark:bg-dark-hover hover:cursor-pointer">
     <div>
         <i class="text-base bi bi-caret-left-fill text-dark-text dark:text-light-text"></i>
-        <strong class="text-dark-text dark:text-light-text">اطلاعات بیشتر</strong>
+        <strong class="text-dark-text dark:text-light-text font-byekan">اطلاعات بیشتر</strong>
     </div>
-    <strong class="text-dark dark:text-light">{{currencyItem?.title}}</strong>
+    <strong class="text-dark dark:text-light font-byekan">{{currencyItem?.title}}</strong>
     <div>
-        <strong *ngIf="currencyItem?.lastPriceInfo?.dt font-normal" class="text-dark dark:text-light">{{currencyItem?.lastPriceInfo?.dt === 'high' ? '+' : '-'}}</strong>
-        <strong class="text-dark dark:text-light font-normal">{{currencyItem?.lastPriceInfo?.dp}}%</strong>
+        <strong class="font-normal font-vazir text-xs {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}</strong>
+        <strong class="font-normal font-vazir text-xs {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dp}}%</strong>
+    </div>
+    <div class="flex flex-col items-end justify-center">    
+        <strong class="text-dark-text dark:text-light-text font-normal font-vazir text-sm">{{currencyItem?.lastPriceInfo?.p}}</strong>
+        <strong class="text-dark-text2 dark:text-light-text2 font-normal font-vazir text-sm">{{currencyItem?.unit}}</strong>
     </div>
     <img class="w-8 h-8 object-cover rounded-full" src="{{currencyItem?.img}}" alt="">
 </article>

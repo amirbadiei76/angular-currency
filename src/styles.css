@@ -37,6 +37,9 @@
     --light-text2: #949696;
     --dark-text2: #818383;
 
+    --light-text3: #d5d8d7;
+    --dark-text3: #676767;
+
     --dark-green-text: #1dbb7e;
     --dark-red-text: #d02633;
 
@@ -45,6 +48,8 @@
 
 
     --green-btn: #00d890;
+
+
 }
 
 @theme inline {
@@ -71,6 +76,9 @@
     
     --color-light-text2: var(--light-text2);
     --color-dark-text2: var(--dark-text2);
+    
+    --color-light-text3: var(--light-text3);
+    --color-dark-text3: var(--dark-text3);
 
 
     --color-dark-green-text: var(--dark-green-text);
@@ -84,9 +92,12 @@
 
 
 
+    --title-width: calc(100% - 30px);
+
 
     --font-byekan: 'BYekan';
     --font-vazir: 'Vazir';
+    --font-helvetica: 'Helvetica';
 }
 
 .scroll-snap-x {
@@ -114,4 +125,9 @@
 @font-face {
     font-family: 'Vazir';
     src: url('./assets/fonts/Vazir-Regular-FD.ttf');
+}
+
+@font-face {
+  font-family: 'Helvetica';
+  src: url('./assets/fonts/Helvetica.ttf');
 }

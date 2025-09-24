@@ -15,7 +15,7 @@ export class HomeComponent {
   reqestClass?: RequestArray;
 
   constructor(private currencyService: CurrenciesService) {
-    this.reqestClass = new RequestArray(this.currencyService);
+    this.reqestClass = RequestArray.requestArrayInstance(currencyService)
   }
 
   ngOnInit () {

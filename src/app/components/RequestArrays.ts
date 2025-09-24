@@ -15,6 +15,13 @@ export class RequestArray {
     preciousMetalList: CurrencyItem[] = [];
     baseMetalList: CurrencyItem[] = [];
     commodityList: CurrencyItem[] = [];
+
+    static _requestArray: RequestArray;
+
+    static requestArrayInstance (httpCurrency: CurrenciesService): RequestArray {
+        return (this._requestArray) || (this._requestArray = new this(httpCurrency))
+    }
+
     
     constructor (private currencyService: CurrenciesService) {
         // this.currencyService = injector(CurrenciesService)
@@ -3249,7 +3256,8 @@ export class RequestArray {
     }
 
     setupAllItemsList () {
-        this.allItemsList = this.allItemsList.concat(this.mainCurrencyList)
+        this.allItemsList = this.allItemsList
+        .concat(this.mainCurrencyList).concat(this.cryptoList)
         .concat(this.worldMarketList).concat(this.coinList)
         .concat(this.goldList).concat(this.preciousMetalList)
         .concat(this.baseMetalList).concat(this.commodityList)

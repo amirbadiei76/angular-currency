@@ -592,4 +592,5 @@ export interface CurrencyItem {
     shortedName?: string;
     groupName: string;
     img?: string;
+    isFav?: boolean;
 }

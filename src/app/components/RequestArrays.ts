@@ -16,10 +16,63 @@ export class RequestArray {
     baseMetalList: CurrencyItem[] = [];
     commodityList: CurrencyItem[] = [];
 
+
+    favIds: string[] = []
+    favList: CurrencyItem[] = []
+
     static _requestArray: RequestArray;
 
     static requestArrayInstance (httpCurrency: CurrenciesService): RequestArray {
         return (this._requestArray) || (this._requestArray = new this(httpCurrency))
+    }
+
+    addToFavorite(item: CurrencyItem) {
+        console.log('item: ' + item)
+        console.log('Before fav List: ' + this.favList)
+        console.log('Before fav IDs: ' + this.favIds)
+        if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
+            item.isFav = true;
+            this.favList.push(item)
+            this.favIds.push(item.id)
+
+            let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
+            items.push(item.id)
+            localStorage.setItem('fav', JSON.stringify(items))
+            // console.log('After: ' + this.favList)
+            // console.log('After: ' + this.mainCurrencyList)
+        } else {
+            item.isFav = true;
+            this.favIds.push(item.id)
+            this.favList.push(item)
+            localStorage.setItem('fav', JSON.stringify(this.favIds))
+            // console.log('After: ' + this.favList)
+            // console.log('After: ' + this.mainCurrencyList)
+        }
+    }
+
+    removeFromFavorite(id: string) {
+        let itemToRemove: CurrencyItem | undefined = this.allItemsList.find(item => item.id === id)
+        console.log(itemToRemove?.id)
+        console.log(this.favList)
+        console.log(this.favIds)
+
+        if (typeof window !== 'undefined' && itemToRemove !== undefined) {
+            let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
+            this.favIds = items;
+            // console.log(items.indexOf(id))
+            // items = items.splice(items.indexOf(id), 1)
+            // localStorage.setItem('fav', JSON.stringify(items))
+            // console.log('new items: ' + items)
+
+            itemToRemove.isFav = false;
+            this.favList = this.favList.filter(item => item.id !== id)
+            this.favIds = this.favIds.filter(itemId => itemId !== id)
+            localStorage.setItem('fav', JSON.stringify(this.favIds))
+
+            console.log('Remove Fav List: ' + this.favList)
+            console.log('Remove Fav IDs: ' + this.favIds)
+            // console.log(this.mainCurrencyList)
+        }
     }
 
     
@@ -57,7 +110,7 @@ export class RequestArray {
             filterName: filter_main_currencies,
             groupName: MAIN_CURRENCY_PREFIX,
             unit: rial_unit,
-            img: '/assets/images/country-flags/us.svg'
+            img: '/assets/images/country-flags/us.svg',
         });
         this.mainCurrencyList.push({
             id: "1000001",
@@ -3261,6 +3314,19 @@ export class RequestArray {
         .concat(this.worldMarketList).concat(this.coinList)
         .concat(this.goldList).concat(this.preciousMetalList)
         .concat(this.baseMetalList).concat(this.commodityList)
+
+        if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
+            let favItems = JSON.parse(localStorage.getItem('fav') as string) as string[]
+            this.allItemsList.forEach(item => {
+                if (favItems.indexOf(item.id, 0) >= 0) item.isFav = true;
+                else item.isFav = false
+            })
+        } else {
+            this.allItemsList.forEach(item => {
+                item.isFav = false
+            })
+        }
+
     }
 
 

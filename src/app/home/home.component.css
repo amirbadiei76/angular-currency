@@ -1,0 +1,5 @@
+
+.text-2xs {
+    font-size: 0.625rem;
+    line-height: calc(1 / 0.625);
+}

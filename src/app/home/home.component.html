@@ -1,6 +1,6 @@
-<p>home works!</p>
-
-@for (item of reqestClass?.allItemsList; track item.id) {
-    <currency-item [currencyItem]="item"/>
-
-}
+<main class="bg-light dark:bg-dark w-full">
+    @for (item of reqestClass?.allItemsList; track item.id) {
+        <currency-item [currencyItem]="item"/>
+    
+    }
+</main>

@@ -4,7 +4,7 @@
 
 
 * {
-    transition: 0.4s ease all;
+    /* transition: 0.4s ease all; */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -49,6 +49,8 @@
 
     --green-btn: #00d890;
     --yellow-star: #e7c400;
+
+    --margin: 2rem;
 }
 
 @theme inline {
@@ -97,23 +99,21 @@
 
 
     --font-byekanp: 'YekanP';
+    --font-byekan-persian: 'YekanPersian';
     --font-yekan: 'Yekan';
     --font-byekan: 'BYekan';
     --font-byekan-plus: 'BYekanPLUS';
     --font-vazir: 'Vazir';
+
+    --leading-4.\5: 1.125rem;
 }
+
 
 .scroll-snap-x {
     scroll-snap-type: x mandatory;
     scroll-snap-align: center;
     touch-action: pan-x;
 }
-
-.leading-4.\5 {
-    --tw-leading: calc(var(--spacing) * 4.5) /* 1rem = 18px */;
-    line-height: calc(var(--spacing) * 4.5) /* 1rem = 18px */;
-}
-
 
 .rtl {
     direction: rtl;
@@ -128,6 +128,11 @@
 @font-face {
     font-family: 'YekanP';
     src: url('./assets/fonts/yekanp.TTF');
+}
+
+@font-face {
+    font-family: 'YekanPersian';
+    src: url('./assets/fonts/Persian-Yekan.ttf');
 }
 
 @font-face {

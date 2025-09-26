@@ -1,9 +1,9 @@
-<article class="h-[4.853rem] sm:h-[5.8rem] sm:px-[12.5%] flex justify-between items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border hover:bg-light-hover hover:dark:bg-dark-hover hover:cursor-pointer">
-    <div class="justify-start items-center gap-2 min-w-[20%] hidden md:flex">
-        <i class="text-sm bi bi-caret-left-fill text-dark-text3 dark:text-light-text3 font-normal"></i>
+<article class="min-h-[4.853rem] padding-inline-4 sm:min-h-[5.8rem] w-full flex items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border md:hover:bg-light-hover md:hover:dark:bg-dark-hover hover:cursor-pointer">
+    <div class="justify-start items-center gap-1.5 min-w-[20%] hidden md:flex">
+        <i class="text-xs bi bi-caret-left-fill text-dark-text3 dark:text-light-text3 font-normal"></i>
         <strong class="text-dark-text3 dark:text-light-text3 font-normal font-yekan">اطلاعات بیشتر</strong>
     </div>
-    <div class="flex justify-start items-center gap-2 min-w-[15%]">
+    <div class="flex justify-start md:justify-center items-center gap-2 min-w-[15%]">
         <strong class="font-normal font-vazir text-xs {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}{{currencyItem?.lastPriceInfo?.dp}}%</strong>
     </div>
     <div class="flex flex-col items-end justify-center w-[25%]">    
@@ -14,7 +14,7 @@
         <div class="flex pl-0.5 overflow-hidden text-ellipsis">
             <div class="flex flex-col items-end justify-start">
                 <p class="text-dark-text2 dark:text-light-text2 order-2 sm:order-1 sm:text-dark sm:dark:text-light w-full text-end font-byekan-plus text-2xs sm:text-xs md:text-base leading-6">{{currencyItem?.title}}</p>
-                <p class="text-dark order-1 sm:order-2 mt-1 whitespace-nowrap ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal leading-4.5 text-xs sm:text-sm {{currencyItem?.filterName === 'سکه در بورس' ? 'font-byekanp' : 'font-byekan-plus'}}">{{currencyItem?.shortedName}}</p>
+                <p class="text-dark order-1 sm:order-2 mt-1 whitespace-nowrap ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal text-xs sm:text-sm {{currencyItem?.filterName === 'سکه در بورس' ? 'font-byekanp' : 'font-byekan-plus'}}">{{currencyItem?.shortedName}}</p>
             </div>
         </div>
         <div class="mr-5 flex gap-0 md:gap-1.5 flex-row sm:flex-col md:flex-row">

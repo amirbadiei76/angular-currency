@@ -3,11 +3,12 @@ import { CurrencyItem } from '../interface/Currencies';
 import { CommonModule, NgIf } from '@angular/common';
 import { RequestArray } from '../components/RequestArrays';
 import { CurrenciesService } from '../services/currencies.service';
+import { StarIconComponent } from '../star-icon/star-icon.component';
 
 
 @Component({
   selector: 'currency-item',
-  imports: [CommonModule, NgIf],
+  imports: [CommonModule, NgIf, StarIconComponent],
   templateUrl: './currency-item.component.html',
   styleUrl: './currency-item.component.css'
 })

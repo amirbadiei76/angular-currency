@@ -26,6 +26,7 @@ export class RequestArray {
         return (this._requestArray) || (this._requestArray = new this(httpCurrency))
     }
 
+
     addToFavorite(item: CurrencyItem) {
         if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
             item.isFav = true;
@@ -40,6 +41,19 @@ export class RequestArray {
             this.favIds.push(item.id)
             this.favList.push(item)
             localStorage.setItem('fav', JSON.stringify(this.favIds))
+        }
+    }
+
+    getFavorites() {
+        if (typeof window !== 'undefined') {
+            let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
+            let favItems: CurrencyItem[] | undefined = []
+            for (const item of this.allItemsList) {
+                for (const favId of items) {
+                    if (item.id === favId) favItems.push(item)
+                }
+            }
+            this.favList = favItems;
         }
     }
 
@@ -75,6 +89,7 @@ export class RequestArray {
             this.setupCommodityMarket(data.current)
             this.setupAllItemsList()
         })
+        this.getFavorites()
     }
 
 

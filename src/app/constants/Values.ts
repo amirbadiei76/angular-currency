@@ -8,9 +8,20 @@ export const PRECIOUS_METALS_PREFIX = "Precious_Metal";
 export const BASE_METALS_PREFIX = "Base_Metal";
 export const COMMODITY_PREFIX = "Commodity_Market";
 
+// main titles
+export const favories_title = 'دیده بان';
+export const currency_title = 'بازار ارز';
+export const gold_title = 'بازار طلا';
+export const coin_title = 'بازار سکه';
+export const crypto_title = 'ارز دیجیتال';
+export const world_title = 'بازارهای ارزی';
+export const precious_metal_title = 'فلزات گرانبها';
+export const base_metal_title = 'فلزات پایه';
+export const commodity_title = 'بازار کالاها';
+
 
 // filters
-export const filter_overview = "نمای کلی";
+export const filter_overview = "همه";
 
 export const filter_main_currencies = "ارزهای اصلی";
 export const filter_other_currencies = "سایر ارزها";

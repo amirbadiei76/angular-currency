@@ -46,6 +46,9 @@
     --light-green-text: #1eb980;
     --light-red-text: #eb3740;
 
+    --sorting-green-dark: #4ef09d;
+    --sorting-green-light: #02a67f;
+
 
     --green-btn: #00d890;
     --yellow-star: #e7c400;
@@ -91,7 +94,8 @@
     --color-green-btn: var(--green-btn);
     --color-yellow-star: var(--yellow-star);
 
-
+    --color-sorting-green-dark: var(--sorting-green-dark);
+    --color-sorting-green-light: var(--sorting-green-light);
 
 
     --title-width: calc(100% - 30px);

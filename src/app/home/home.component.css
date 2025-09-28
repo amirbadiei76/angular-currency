@@ -13,6 +13,17 @@
     padding-bottom: 0.5rem;
 }
 
+.padding-vertical-3 {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+.padding-constant-1 {
+    padding-block: 0.4rem;
+    padding-inline: 0.3rem;
+    margin-left: 0.5rem;
+}
+
 .padding-inline-4 {
     padding-inline: 1rem;
 }
@@ -48,6 +59,11 @@
     .margin-left-1 {
         margin-left: 1rem;
     }
+
+    .padding-vertical-3 {
+        padding-top: 1.2rem;
+        padding-bottom: 0.7rem;
+    }
 }
 
 /* md */
@@ -59,5 +75,10 @@
 
     .margin-left-1 {
         margin-left: 1rem;
+    }
+    
+    .padding-vertical-3 {
+        padding-top: 1.2rem;
+        padding-bottom: 0.7rem;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { CurrenciesService } from '../services/currencies.service';
 import { Currencies, CurrencyItem } from '../interface/Currencies';
 import { RequestArray } from '../components/RequestArrays';
@@ -26,9 +26,10 @@ export class HomeComponent {
   priceSorting: SortingType = SortingType.None;
   change24hSorting: SortingType = SortingType.None;
 
+  @ViewChild('main>div>search_input') searchInput?: ElementRef; 
+
   change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
   priceSortingText: WritableSignal<string> = signal("قیمت")
-  inputBorderColor: WritableSignal<string> = signal("قیمت")
 
   categories = [
     {
@@ -107,10 +108,12 @@ export class HomeComponent {
 
   ]
 
-  isRialUnitType: boolean = true;
   currentList?: CurrencyItem[] = [];
+  currentSubCategoryList?: string[] = [];
   currenTemptList?: CurrencyItem[] = [];
+  currenTemptList2?: CurrencyItem[] = [];
   currentCategory: WritableSignal<string> = signal(this.categories[0].title)
+  currentSubCategory: WritableSignal<string> = signal(filter_overview)
 
 
   constructor(private currencyService: CurrenciesService) {
@@ -136,7 +139,6 @@ export class HomeComponent {
     (event.target as HTMLInputElement).classList.remove('border-green-btn');
     (event.target as HTMLInputElement).classList.add('border-light-text2');
     (event.target as HTMLInputElement).classList.add('dark:border-dark-text2');
-
   }
 
   setCurrentCategory (title: string) {
@@ -146,63 +148,92 @@ export class HomeComponent {
       case favories_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.favList;
+        this.initializeFavFilters();
+        this.currentSubCategoryList = this.categories[0].subtitles
         break;
 
       case currency_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.mainCurrencyList;
+        this.currentSubCategoryList = this.categories[1].subtitles
         break;
       
       case gold_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.goldList;
+        this.currentSubCategoryList = this.categories[2].subtitles
         break;
 
       case coin_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.coinList;
+        this.currentSubCategoryList = this.categories[3].subtitles
         break;
 
       case crypto_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.cryptoList;
+        this.currentSubCategoryList = this.categories[4].subtitles
         break;
 
       case world_title:
         this.priceSortingText.set('نسبت');
         this.currentList = this.reqestClass?.worldMarketList;
+        this.currentSubCategoryList = this.categories[5].subtitles
         break;
 
       case precious_metal_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.preciousMetalList;
+        this.currentSubCategoryList = this.categories[6].subtitles
         break;
 
       case base_metal_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.baseMetalList;
+        this.currentSubCategoryList = this.categories[7].subtitles
         break;
 
       case commodity_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.commodityList;
+        this.currentSubCategoryList = this.categories[8].subtitles
         break;
     }
+    this.currentSubCategory.set(filter_overview)
     this.currenTemptList = this.currentList;
+    this.currenTemptList2 = this.currentList;
     this.resetSortingLists()
   }
 
 
   initializeFavFilters() {
+    let favSubCategoryList: string[] = [filter_overview]
+    this.reqestClass?.favList.forEach((item: CurrencyItem) => {
+      if (!favSubCategoryList.includes(item.filterName)) favSubCategoryList.push(item.filterName)
+    })
+    this.categories[0].subtitles = favSubCategoryList;
+  }
 
+  filterByCategory (name: string) {
+    this.currentSubCategory.set(name);
+    if (this.currentSubCategory() === filter_overview) {
+      this.currenTemptList = this.currentList;
+      this.currenTemptList2 = this.currentList;
+    }
+    else {
+      let filteredList: CurrencyItem[] = [...this.currentList!!]
+      this.currenTemptList = filteredList.filter((item: CurrencyItem) => item.filterName === name)
+      this.currenTemptList2 = filteredList.filter((item: CurrencyItem) => item.filterName === name)
+    }
   }
 
   filterList(event: Event) {
     const listToFilter = [...this.currentList!!]
     const textToFilter = (event.target as HTMLInputElement).value
-    console.log(textToFilter)
     if (textToFilter !== null) {
       this.currenTemptList = listToFilter.filter(item => item.title.includes(textToFilter))
+      this.currenTemptList2 = listToFilter.filter(item => item.title.includes(textToFilter))
     }
   }
 
@@ -215,6 +246,7 @@ export class HomeComponent {
       }
       else {
         this.currenTemptList = this.currentList;
+        this.currenTemptList2 = this.currentList;
       }
   }
 
@@ -227,7 +259,10 @@ export class HomeComponent {
 
     if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending()
     else if (this.titleSorting === SortingType.Descending) this.setTitleListDescending()
-    else this.currenTemptList = this.currentList;
+    else {
+      this.currenTemptList = this.currentList;
+      this.currenTemptList2 = this.currentList;
+    }
 
   }
 
@@ -241,7 +276,10 @@ export class HomeComponent {
 
     if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending()
     else if (this.priceSorting === SortingType.Descending) this.setPriceListDescending()
-    else this.currenTemptList = this.currentList;
+    else {
+      this.currenTemptList = this.currentList;
+      this.currenTemptList2 = this.currentList;
+    }
   }
 
   
@@ -254,12 +292,15 @@ export class HomeComponent {
     
     if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending()
       else if (this.change24hSorting === SortingType.Descending) this.setChange24hListDescending()
-      else this.currenTemptList = this.currentList;
+      else {
+      this.currenTemptList = this.currentList;
+      this.currenTemptList2 = this.currentList;
+    }
   }
 
   
   setChange24hListDescending () {
-    let descendingPriceList: CurrencyItem[] = [...this.currentList!!]
+    let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
@@ -270,11 +311,12 @@ export class HomeComponent {
       if (realAValue > realBValue) return 1
       else return -1
     })
+    this.currenTemptList2 = [...this.currenTemptList]
   }
 
   
   setChange24hListAscending () {
-    let ascendingPriceList: CurrencyItem[] = [...this.currentList!!]
+    let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
@@ -285,6 +327,7 @@ export class HomeComponent {
       if (realAValue > realBValue) return -1
       else return 1
     })
+    this.currenTemptList2 = [...this.currenTemptList]
   }
 
 
@@ -292,14 +335,16 @@ export class HomeComponent {
 
   
   setPriceListDescending () {
-    let descendingPriceList: CurrencyItem[] = [...this.currentList!!]
+    let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? 1 : -1)
+    this.currenTemptList2 = [...this.currenTemptList]
   }
 
 
   setPriceListAscending () {
-    let ascendingPriceList: CurrencyItem[] = [...this.currentList!!]
+    let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? -1 : 1)
+    this.currenTemptList2 = [...this.currenTemptList]
   }
 
 
@@ -307,13 +352,15 @@ export class HomeComponent {
 
 
   setTitleListDescending () {
-    let descendingTitleList: CurrencyItem[] = [...this.currentList!!]
+    let descendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList = descendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? -1 : 1)
+    this.currenTemptList2 = [...this.currenTemptList]
   }
 
   setTitleListAscending () {
-    let ascendingTitleList: CurrencyItem[] = [...this.currentList!!]
+    let ascendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList = ascendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? 1 : -1)
+    this.currenTemptList2 = [...this.currenTemptList]
   }
 
   resetSortingLists () {
@@ -338,6 +385,14 @@ export class HomeComponent {
         }
       })
 
+      window.addEventListener('click', (event: MouseEvent) => {
+        if ((event.target as HTMLElement).id !== 'search_input' && this.searchInput) {
+          this.searchInput?.nativeElement.classList.remove('border-green-btn');
+          this.searchInput?.nativeElement.classList.add('border-light-text2');
+          this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
+        }
+      })
+
       if (window.innerWidth <= 624) {
         this.change24hText.set('24h')
       }
@@ -345,5 +400,6 @@ export class HomeComponent {
         this.change24hText.set('تغییر 24 ساعت')
       }
     }
+    
   }
 }

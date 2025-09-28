@@ -229,11 +229,10 @@ export class HomeComponent {
   }
 
   filterList(event: Event) {
-    const listToFilter = [...this.currentList!!]
-    const textToFilter = (event.target as HTMLInputElement).value
+    const listToFilter = [...this.currenTemptList!!]
+    const textToFilter = (event.target as HTMLInputElement).value.toLowerCase()
     if (textToFilter !== null) {
-      this.currenTemptList = listToFilter.filter(item => item.title.includes(textToFilter))
-      this.currenTemptList2 = listToFilter.filter(item => item.title.includes(textToFilter))
+      this.currenTemptList2 = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
     }
   }
 
@@ -260,8 +259,7 @@ export class HomeComponent {
     if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending()
     else if (this.titleSorting === SortingType.Descending) this.setTitleListDescending()
     else {
-      this.currenTemptList = this.currentList;
-      this.currenTemptList2 = this.currentList;
+      this.currenTemptList2 = this.currenTemptList;
     }
 
   }
@@ -277,8 +275,7 @@ export class HomeComponent {
     if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending()
     else if (this.priceSorting === SortingType.Descending) this.setPriceListDescending()
     else {
-      this.currenTemptList = this.currentList;
-      this.currenTemptList2 = this.currentList;
+      this.currenTemptList2 = this.currenTemptList;
     }
   }
 
@@ -291,17 +288,16 @@ export class HomeComponent {
     if (this.change24hSorting.toString() === '3') this.change24hSorting = 0;
     
     if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending()
-      else if (this.change24hSorting === SortingType.Descending) this.setChange24hListDescending()
-      else {
-      this.currenTemptList = this.currentList;
-      this.currenTemptList2 = this.currentList;
+    else if (this.change24hSorting === SortingType.Descending) this.setChange24hListDescending()
+    else {
+      this.currenTemptList2 = this.currenTemptList;
     }
   }
 
   
   setChange24hListDescending () {
     let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+    this.currenTemptList2 = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
 
@@ -311,13 +307,12 @@ export class HomeComponent {
       if (realAValue > realBValue) return 1
       else return -1
     })
-    this.currenTemptList2 = [...this.currenTemptList]
   }
 
   
   setChange24hListAscending () {
     let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+    this.currenTemptList2 = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
 
@@ -327,7 +322,6 @@ export class HomeComponent {
       if (realAValue > realBValue) return -1
       else return 1
     })
-    this.currenTemptList2 = [...this.currenTemptList]
   }
 
 
@@ -336,15 +330,13 @@ export class HomeComponent {
   
   setPriceListDescending () {
     let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? 1 : -1)
-    this.currenTemptList2 = [...this.currenTemptList]
+    this.currenTemptList2 = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? 1 : -1)
   }
 
 
   setPriceListAscending () {
     let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? -1 : 1)
-    this.currenTemptList2 = [...this.currenTemptList]
+    this.currenTemptList2 = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? -1 : 1)
   }
 
 
@@ -353,14 +345,12 @@ export class HomeComponent {
 
   setTitleListDescending () {
     let descendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList = descendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? -1 : 1)
-    this.currenTemptList2 = [...this.currenTemptList]
+    this.currenTemptList2 = descendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? -1 : 1)
   }
 
   setTitleListAscending () {
     let ascendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList = ascendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? 1 : -1)
-    this.currenTemptList2 = [...this.currenTemptList]
+    this.currenTemptList2 = ascendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? 1 : -1)
   }
 
   resetSortingLists () {
@@ -386,10 +376,10 @@ export class HomeComponent {
       })
 
       window.addEventListener('click', (event: MouseEvent) => {
-        if ((event.target as HTMLElement).id !== 'search_input' && this.searchInput) {
-          this.searchInput?.nativeElement.classList.remove('border-green-btn');
-          this.searchInput?.nativeElement.classList.add('border-light-text2');
-          this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
+        if ((event.target as HTMLElement).id !== 'search_input') {
+          document.querySelector("input[name='search_input']")?.classList.remove('border-green-btn');
+          document.querySelector("input[name='search_input']")?.classList.add('border-light-text2');
+          document.querySelector("input[name='search_input']")?.classList.add('dark:border-dark-text2');
         }
       })
 

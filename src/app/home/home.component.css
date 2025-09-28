@@ -25,6 +25,11 @@
     margin-left: 0.7rem;
 }
 
+.input-paddings {
+    padding-left: 0.8rem;
+    padding-right: 2.7rem;
+}
+
 /* sm */
 @media (width >= 40rem /* 640px */) {
     .margin-inline-7 {

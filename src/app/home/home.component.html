@@ -11,7 +11,7 @@
 </main> -->
 
 <main class="w-full bg-light dark:bg-dark">
-    <div class="mx-0 margin-inline-7 padding-inline-4 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
+    <div class="order-2 sm:order-1 mx-0 margin-inline-7 padding-inline-4 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
         <!-- class="inline-block whitespace-nowrap overflow-hidden rtl" -->
         <div class="inline-block text-center whitespace-nowrap overflow-hidden rtl">
             @for (item of categories; track item.title) {
@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div class="hidden sm:flex margin-inline-7 padding-inline-4 justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
+    <div class="order-1 sm:order-2 flex margin-inline-7 padding-inline-4 justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
         <!-- <div class="overflow-hidden flex flex-row-reverse rounded-semi border border-dark-text2 dark:border-light-text2">
             <div
                 class="w-18 h-[3.6875rem] flex justify-center items-center bg-amber-500 cursor-pointer"
@@ -45,6 +45,14 @@
                 <p class="rtl text-dark-text2 dark:text-light-text2 font-vazir text-sm">دلار USD</p>
             </div>
         </div> -->
+        <div class="relative w-full sm:w-[40%] h-12">
+            <svg
+                viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
+                <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+            </svg>
+            <input type="text" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out input-paddings rounded-semi font-byekan-plus font-thin outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 text-sm w-full text-right" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
+        </div>
     </div>
     
 

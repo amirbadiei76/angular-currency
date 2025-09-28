@@ -28,6 +28,7 @@ export class HomeComponent {
 
   change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
   priceSortingText: WritableSignal<string> = signal("قیمت")
+  inputBorderColor: WritableSignal<string> = signal("قیمت")
 
   categories = [
     {
@@ -125,6 +126,19 @@ export class HomeComponent {
     }
   }
 
+  inputMouseLeave(event: Event) {
+    (event.target as HTMLInputElement).classList.remove('border-light-text2');
+    (event.target as HTMLInputElement).classList.remove('dark:border-dark-text2');
+    (event.target as HTMLInputElement).classList.add('border-green-btn');
+  }
+  
+  inputMouseEnter(event: Event) {
+    (event.target as HTMLInputElement).classList.remove('border-green-btn');
+    (event.target as HTMLInputElement).classList.add('border-light-text2');
+    (event.target as HTMLInputElement).classList.add('dark:border-dark-text2');
+
+  }
+
   setCurrentCategory (title: string) {
     this.currentCategory.set(title)
 
@@ -181,6 +195,15 @@ export class HomeComponent {
 
   initializeFavFilters() {
 
+  }
+
+  filterList(event: Event) {
+    const listToFilter = [...this.currentList!!]
+    const textToFilter = (event.target as HTMLInputElement).value
+    console.log(textToFilter)
+    if (textToFilter !== null) {
+      this.currenTemptList = listToFilter.filter(item => item.title.includes(textToFilter))
+    }
   }
 
   convertToRial () {
@@ -301,7 +324,6 @@ export class HomeComponent {
 
   ngOnInit () {
     this.reqestClass?.setupMainData();
-    this.currentCategory.set(currency_title)
     this.setCurrentCategory(currency_title);
 
     

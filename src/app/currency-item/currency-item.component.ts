@@ -15,11 +15,13 @@ import { StarIconComponent } from '../star-icon/star-icon.component';
 export class CurrencyItemComponent {
     
   @Input() currencyItem?: CurrencyItem;
+  requestArray?: RequestArray;
 
-  requestArray?: RequestArray
+  currentCurrencyItem?: CurrencyItem;
   
   constructor(private service: CurrenciesService) {
     this.requestArray = RequestArray.requestArrayInstance(service)
+    this.currentCurrencyItem = this.currencyItem;
   }
 
   addToFav() {

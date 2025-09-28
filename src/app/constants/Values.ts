@@ -60,6 +60,7 @@ export const filter_animal_products = "محصولات دامی";
 // units
 export const dollar_unit = "دلار";
 export const rial_unit = "ریال";
+export const pound_unit = "پوند";
 
 
 

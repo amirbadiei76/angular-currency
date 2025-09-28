@@ -54,6 +54,7 @@
     --yellow-star: #e7c400;
 
     --margin: 2rem;
+
 }
 
 @theme inline {
@@ -110,6 +111,7 @@
     --font-vazir: 'Vazir';
 
     --leading-4.\5: 1.125rem;
+    --radius-semi: 0.625rem;
 }
 
 

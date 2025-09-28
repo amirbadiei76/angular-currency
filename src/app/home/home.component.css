@@ -17,6 +17,13 @@
     padding-inline: 1rem;
 }
 
+.padding-block-1 {
+    padding-block: 1rem;
+}
+
+.margin-left-1 {
+    margin-left: 0.7rem;
+}
 
 /* sm */
 @media (width >= 40rem /* 640px */) {
@@ -32,6 +39,10 @@
     .padding-inline-4 {
         padding-inline: 0;
     }
+
+    .margin-left-1 {
+        margin-left: 1rem;
+    }
 }
 
 /* md */
@@ -39,5 +50,9 @@
     .padding-vertical-2 {
         padding-top: 1rem;
         padding-bottom: 1rem;
+    }
+
+    .margin-left-1 {
+        margin-left: 1rem;
     }
 }

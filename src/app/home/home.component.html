@@ -11,43 +11,74 @@
 </main> -->
 
 <main class="w-full bg-light dark:bg-dark">
-    <div class="flex flex-row-reverse items-center justify-start mx-0 margin-inline-7 bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
-        @for (item of categories; track item.title) {
-            <span (click)="setCurrentCategory(item.title)" class="{{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text3 dark:text-light-text3'}} w-30 h-7 hover:cursor-pointer flex items-center justify-center gap-2.5 font-byekan-persian text-xs sm:text-sm md:text-base">{{item.title}} <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" /></span>
-        }
+    <div class="mx-0 margin-inline-7 padding-inline-4 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
+        <!-- class="inline-block whitespace-nowrap overflow-hidden rtl" -->
+        <div class="inline-block text-center whitespace-nowrap overflow-hidden rtl">
+            @for (item of categories; track item.title) {
+                <!-- class="inline-block padding-block-1" -->
+                <div class="inline-block text-center align-middle margin-left-1">
+                    <div class="flex flex-col justify-center items-center">
+                        <span
+                            (click)="setCurrentCategory(item.title)"
+                            class="padding-block-1 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 font-yekan text-base sm:text-lg">
+                            <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
+                            {{item.title}}
+                        </span>
+                        <div *ngIf="item.title === currentCategory()" class="bg-green-btn h-0.5 w-8"></div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
+
+    <div class="hidden sm:flex margin-inline-7 padding-inline-4 justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
+        <!-- <div class="overflow-hidden flex flex-row-reverse rounded-semi border border-dark-text2 dark:border-light-text2">
+            <div
+                class="w-18 h-[3.6875rem] flex justify-center items-center bg-amber-500 cursor-pointer"
+                (click)="convertToRial()"
+                >
+                <p class="rtl text-dark-text2 dark:text-light-text2 font-vazir text-sm">تومان IRR</p>
+            </div>
+            <div *ngIf="currentList?.at(0)?.unit === 'دلار'"
+                (click)="currenTemptList = currentList"
+                class="w-18 h-[3.6875rem] flex justify-center items-center bg-amber-900 cursor-pointer">
+                <p class="rtl text-dark-text2 dark:text-light-text2 font-vazir text-sm">دلار USD</p>
+            </div>
+        </div> -->
+    </div>
+    
 
     <div class="margin-inline-7 padding-inline-4 flex justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
         <div class="w-[25%] md:w-[35%] flex justify-start md:justify-end">
             <div (click)="changeChange24hSortingType()" class="hover:cursor-pointer flex gap-3 flex-row items-center w-fit">
                 <div class="flex flex-col">
-                    <i class="{{change24hSorting.toString() === '0' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text3 dark:text-light-text3'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
-                    <i class="{{change24hSorting.toString() === '1' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text3 dark:text-light-text3'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+                    <i class="{{change24hSorting.toString() === '0' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
+                    <i class="{{change24hSorting.toString() === '1' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <p class="font-byekan-plus sm:font-byekan-persian text-dark-text3 dark:text-light-text3 text-xs sm:text-sm md:text-base pointer-events-none">{{change24hText()}}</p>
+                <span class="font-byekan-plus sm:font-byekan-persian text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{change24hText()}}</span>
             </div>
         </div>
         <div class="w-[15%] md:w-[25%] flex justify-end">
             <div (click)="changePriceSortingType()" class="flex gap-3 w-fit flex-row items-center hover:cursor-pointer">
                 <div class="flex flex-col">
-                    <i class="{{priceSorting.toString() === '0' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text3 dark:text-light-text3'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
-                    <i class="{{priceSorting.toString() === '1' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text3 dark:text-light-text3'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+                    <i class="{{priceSorting.toString() === '0' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
+                    <i class="{{priceSorting.toString() === '1' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <p class="font-byekan-persian text-dark-text3 dark:text-light-text3 text-xs sm:text-sm md:text-base pointer-events-none">قیمت</p>
+                <span class="font-byekan-persian text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{priceSortingText()}}</span>
             </div>
         </div>
         <div class="flex flex-1 justify-end">
             <div (click)="changeTitleSortingType()" class="flex gap-3 flex-row justify-end items-center hover:cursor-pointer">
                 <div class="flex flex-col">
-                    <i class="{{titleSorting.toString() === '0' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text3 dark:text-light-text3'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
-                    <i class="{{titleSorting.toString() === '1' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text3 dark:text-light-text3'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+                    <i class="{{titleSorting.toString() === '0' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
+                    <i class="{{titleSorting.toString() === '1' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <p class="font-byekan-persian text-dark-text3 dark:text-light-text3 text-xs sm:text-sm md:text-base pointer-events-none">عنوان</p>
+                <span class="font-byekan-persian text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">عنوان</span>
             </div>
         </div>
     </div>
     <div class="mx-0 margin-inline-7">
-        @for (item of currentList; track item.id) {
+        @for (item of currenTemptList; track item.id) {
             <currency-item [currencyItem]="item"/>
         }
     </div>

@@ -593,4 +593,7 @@ export interface CurrencyItem {
     groupName: string;
     img?: string;
     isFav?: boolean;
+    realPrice?: number;
+    rialStringRealPrice?: string;
+    rialUnit?: string
 }

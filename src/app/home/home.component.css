@@ -19,17 +19,32 @@
 }
 
 .padding-constant-1 {
-    padding-block: 0.4rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.4rem;
     padding-inline: 0.3rem;
-    margin-left: 0.5rem;
+    margin-left: 0.6rem;
+    margin-bottom: 0.3rem;
 }
+
+.padding-block-1-arrow {
+    padding-top: 0.2rem;
+    padding-bottom: 0.4rem;
+}
+
+
+.padding-inline-1-arrow {
+    padding-inline: 0.4rem;
+}
+
+
 
 .padding-inline-4 {
     padding-inline: 1rem;
 }
 
 .padding-block-1 {
-    padding-block: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .margin-left-1 {
@@ -62,7 +77,7 @@
 
     .padding-vertical-3 {
         padding-top: 1.2rem;
-        padding-bottom: 0.7rem;
+        padding-bottom: 1.2rem;
     }
 }
 
@@ -79,6 +94,6 @@
     
     .padding-vertical-3 {
         padding-top: 1.2rem;
-        padding-bottom: 0.7rem;
+        padding-bottom: 1.2rem;
     }
 }

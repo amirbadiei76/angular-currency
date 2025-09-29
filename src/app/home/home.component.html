@@ -11,27 +11,26 @@
 </main> -->
 
 <main class="w-full bg-light dark:bg-dark flex flex-col flex-1">
-    <div class="mx-0 margin-inline-7 padding-inline-4 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
-        <!-- class="inline-block whitespace-nowrap overflow-hidden rtl" -->
+    <div class="order-2 sm:order-1 mx-0 margin-inline-7 padding-inline-4 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
         <div class="inline-block text-center whitespace-nowrap overflow-hidden rtl">
             @for (item of categories; track item.title) {
-                <!-- class="inline-block padding-block-1" -->
                 <div class="inline-block text-center align-middle margin-left-1">
-                    <div class="flex flex-col justify-center items-center">
+                    <div class="flex flex-col justify-center items-center relative">
                         <span
                             (click)="setCurrentCategory(item.title)"
                             class="padding-block-1 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 font-yekan text-base sm:text-lg">
                             <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
                             {{item.title}}
                         </span>
-                        <div *ngIf="item.title === currentCategory()" class="bg-green-btn h-0.5 w-8"></div>
+                        <div
+                            class="bg-green-btn h-0.5 w-8 {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
                     </div>
                 </div>
             }
         </div>
     </div>
 
-    <div class="flex margin-inline-7 padding-inline-4 justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
+    <div class="order-1 sm:order-2 flex margin-inline-7 padding-inline-4 justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-text3 dark:border-b-dark-text3">
         <!-- <div class="overflow-hidden flex flex-row-reverse rounded-semi border border-dark-text2 dark:border-light-text2">
             <div
                 class="w-18 h-[3.6875rem] flex justify-center items-center bg-amber-500 cursor-pointer"
@@ -51,18 +50,36 @@
                 <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                 <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
             </svg>
-            <input #search_input type="text" id="search_input" name="search_input" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out input-paddings rounded-semi font-byekan-plus font-thin outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 text-sm w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
+            <input #searchInput type="text" id="searchInput" name="searchInput" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out input-paddings rounded-semi font-byekan-plus font-thin outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 text-sm w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
         </div>
     </div>
 
-    <div class="relative inline-block text-right whitespace-nowrap overflow-hidden rtl margin-inline-7 padding-inline-4 justify-start padding-vertical-3 bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
-        @for (item of currentSubCategoryList; track item) {
-            <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} inline-block padding-constant-1 hover:cursor-pointer font-byekan-plus text-sm sm:text-base">{{item}}</p>
-        }
+    <div  class="order-3 rtl margin-inline-7 relative text-right padding-inline-4 justify-start padding-vertical-3 bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
+        <div #rightSubCategoryArrow id="rightSubCategoryArrow" class="absolute h-[98%] text-start align-middle right-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10">
+            <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
+            </div>
+        </div>
+
+        <div #leftSubCategoryArrow id="leftSubCategoryArrow" class="absolute h-[98%] text-end align-middle left-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10">
+            <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"></i>
+            </div>
+        </div>
+
+        <div #scrollViewSubCategory class="scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x text-right whitespace-nowrap">
+            <div class="inline-block scroll-hide w-full">
+                @for (item of currentSubCategoryList; track item) {
+                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block padding-constant-1 hover:cursor-pointer font-byekan-plus text-sm sm:text-base">{{item}}</p>
+                }
+            </div>
+        </div>
+        
+
     </div>
     
 
-    <div class="margin-inline-7 padding-inline-4 flex justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
+    <div class="order-4 margin-inline-7 padding-inline-4 flex justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
         <div class="w-[25%] md:w-[35%] flex justify-start md:justify-end">
             <div (click)="changeChange24hSortingType()" class="hover:cursor-pointer flex gap-3 flex-row items-center w-fit">
                 <div class="flex flex-col">
@@ -91,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="mx-0 margin-inline-7">
+    <div class="order-4 mx-0 margin-inline-7">
         @for (item of currenTemptList2; track item.id) {
             <currency-item [currencyItem]="item"/>
         }

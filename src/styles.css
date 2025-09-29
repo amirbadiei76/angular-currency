@@ -136,6 +136,21 @@
 }
 
 
+.scroll-snap-x {
+    scroll-snap-type: x mandatory;
+    scroll-snap-align: center;
+    touch-action: pan-x;
+}
+
+
+.scroll-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-snap-align-end {
+    scroll-snap-align: end;
+}
+
 
 @font-face {
     font-family: 'YekanP';

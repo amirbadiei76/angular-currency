@@ -21,16 +21,6 @@ export class HomeComponent {
   fetchedData?: Currencies;
   reqestClass?: RequestArray;
 
-
-  titleSorting: SortingType = SortingType.None;
-  priceSorting: SortingType = SortingType.None;
-  change24hSorting: SortingType = SortingType.None;
-
-  @ViewChild('main>div>search_input') searchInput?: ElementRef; 
-
-  change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
-  priceSortingText: WritableSignal<string> = signal("قیمت")
-
   categories = [
     {
       title: favories_title,
@@ -115,6 +105,18 @@ export class HomeComponent {
   currentCategory: WritableSignal<string> = signal(this.categories[0].title)
   currentSubCategory: WritableSignal<string> = signal(filter_overview)
 
+  titleSorting: SortingType = SortingType.None;
+  priceSorting: SortingType = SortingType.None;
+  change24hSorting: SortingType = SortingType.None;
+
+  @ViewChild('searchInput') searchInput?: ElementRef; 
+  @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef; 
+  @ViewChild('rightSubCategoryArrow') rightSubCategoryArrow?: ElementRef; 
+  @ViewChild('leftSubCategoryArrow') leftSubCategoryArrow?: ElementRef;
+
+  change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
+  priceSortingText: WritableSignal<string> = signal("قیمت")
+
 
   constructor(private currencyService: CurrenciesService) {
     this.reqestClass = RequestArray.requestArrayInstance(currencyService)
@@ -126,6 +128,32 @@ export class HomeComponent {
       else {
         this.change24hText.set('تغییر 24 ساعت')
       }
+    }
+  }
+  
+  subCategoryLeft () {
+    this.scrollViewSubCategory?.nativeElement.scrollTo({ left: this.scrollViewSubCategory?.nativeElement.scrollLeft - 70 })
+    
+    if (this.scrollViewSubCategory?.nativeElement.scrollLeft === 0) {
+      this.leftSubCategoryArrow?.nativeElement.classList.add('hidden')
+    }
+    else {
+      this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
+    }
+  }
+
+  
+  subCategoryRight () {
+    this.scrollViewSubCategory?.nativeElement.scrollTo({ left: this.scrollViewSubCategory?.nativeElement.scrollLeft + 70 })
+    
+     
+    console.log((this.scrollViewSubCategory?.nativeElement as HTMLDivElement).scrollWidth)
+    console.log((this.scrollViewSubCategory?.nativeElement as HTMLDivElement).scrollLeft)
+    if (this.scrollViewSubCategory?.nativeElement.scrollLeft  <= 0.01) {
+      this.rightSubCategoryArrow?.nativeElement.classList.add('hidden')
+    }
+    else {
+      this.rightSubCategoryArrow?.nativeElement.classList.remove('hidden')
     }
   }
 
@@ -375,14 +403,6 @@ export class HomeComponent {
         }
       })
 
-      window.addEventListener('click', (event: MouseEvent) => {
-        if ((event.target as HTMLElement).id !== 'search_input') {
-          document.querySelector("input[name='search_input']")?.classList.remove('border-green-btn');
-          document.querySelector("input[name='search_input']")?.classList.add('border-light-text2');
-          document.querySelector("input[name='search_input']")?.classList.add('dark:border-dark-text2');
-        }
-      })
-
       if (window.innerWidth <= 624) {
         this.change24hText.set('24h')
       }
@@ -391,5 +411,15 @@ export class HomeComponent {
       }
     }
     
+  }
+
+  ngAfterViewInit () {
+    window.addEventListener('click', (event: MouseEvent) => {
+      if ((event.target as HTMLElement).id !== 'searchInput') {
+        this.searchInput?.nativeElement.classList.remove('border-green-btn');
+        this.searchInput?.nativeElement.classList.add('border-light-text2');
+        this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
+      }
+    })
   }
 }

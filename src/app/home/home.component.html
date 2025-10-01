@@ -55,19 +55,19 @@
     </div>
 
     <div  class="order-3 rtl margin-inline-7 relative text-right padding-inline-4 justify-start padding-vertical-3 bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
-        <div #rightSubCategoryArrow id="rightSubCategoryArrow" class="absolute h-[98%] text-start align-middle right-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10">
+        <div #rightSubCategoryArrow *ngIf="showRightSubCategoryArrow()" id="rightSubCategoryArrow" class="absolute h-[98%] text-start align-middle right-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10">
             <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                 <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
             </div>
         </div>
 
-        <div #leftSubCategoryArrow id="leftSubCategoryArrow" class="absolute h-[98%] text-end align-middle left-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10">
+        <div #leftSubCategoryArrow *ngIf="showLeftSubCategoryArrow()" id="leftSubCategoryArrow" class="absolute h-[98%] text-end align-middle left-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10">
             <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                 <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"></i>
             </div>
-        </div>
+        </div> 
 
-        <div #scrollViewSubCategory class="scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x text-right whitespace-nowrap">
+        <div #scrollViewSubCategory (scroll)="onSubCategoryScroll()" class="scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x text-right whitespace-nowrap">
             <div class="inline-block scroll-hide w-full">
                 @for (item of currentSubCategoryList; track item) {
                     <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block padding-constant-1 hover:cursor-pointer font-byekan-plus text-sm sm:text-base">{{item}}</p>

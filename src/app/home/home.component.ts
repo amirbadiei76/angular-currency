@@ -109,10 +109,16 @@ export class HomeComponent {
   priceSorting: SortingType = SortingType.None;
   change24hSorting: SortingType = SortingType.None;
 
-  @ViewChild('searchInput') searchInput?: ElementRef; 
-  @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef; 
-  @ViewChild('rightSubCategoryArrow') rightSubCategoryArrow?: ElementRef; 
-  @ViewChild('leftSubCategoryArrow') leftSubCategoryArrow?: ElementRef;
+  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
+  @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>; 
+  @ViewChild('rightSubCategoryArrow') rightSubCategoryArrow?: ElementRef<HTMLDivElement>; 
+  @ViewChild('leftSubCategoryArrow') leftSubCategoryArrow?: ElementRef<HTMLDivElement>;
+
+  showRightSubCategoryArrow: WritableSignal<Boolean> = signal(true);
+  showLeftSubCategoryArrow: WritableSignal<Boolean> = signal(true);
+
+  private scrollAmount: number = 70;
+  
 
   change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
   priceSortingText: WritableSignal<string> = signal("قیمت")
@@ -131,31 +137,117 @@ export class HomeComponent {
     }
   }
   
-  subCategoryLeft () {
-    this.scrollViewSubCategory?.nativeElement.scrollTo({ left: this.scrollViewSubCategory?.nativeElement.scrollLeft - 70 })
+  // checkSubCategoryArrows (element: HTMLDivElement) {
     
-    if (this.scrollViewSubCategory?.nativeElement.scrollLeft === 0) {
-      this.leftSubCategoryArrow?.nativeElement.classList.add('hidden')
-    }
-    else {
-      this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
-    }
+  //   if (Math.floor(element.scrollLeft) + element.scrollWidth ===  element.clientWidth) {
+    //     this.rightSubCategoryArrow?.nativeElement.classList.remove('hidden')
+    //     this.leftSubCategoryArrow?.nativeElement.classList.add('hidden')
+    //   }
+    //   else if (Math.round(element.scrollLeft)  <= 1) {
+      //     // divElement.scrollTo({ left: 0 })
+      //     this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
+      //     this.rightSubCategoryArrow?.nativeElement.classList.add('hidden')
+      //   }
+      //   // else if (Math.floor(element.scrollLeft) + element.scrollWidth !==  element.clientWidth) {
+        //   // }
+        
+        //   else {
+          //     console.log('else')
+          //     this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
+  //     this.rightSubCategoryArrow?.nativeElement.classList.remove('hidden')
+  //   }
+
+
+    
+  // }
+  
+  // resetSubCategoryArrows () {
+  //   let divElement = (this.scrollViewSubCategory?.nativeElement as HTMLDivElement)
+  //   divElement?.scrollTo({ left: divElement.clientWidth - divElement.scrollWidth })
+  //   this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
+  //   this.rightSubCategoryArrow?.nativeElement.classList.add('hidden')
+  // }
+  
+  
+  subCategoryLeft () {
+    const element = this.scrollViewSubCategory?.nativeElement;
+    this.showRightSubCategoryArrow.set(true)
+    element?.scrollBy({ behavior: 'smooth', left: -this.scrollAmount })
+    this.updateSubCategoryArrowVisibility()
+  }
+  
+  subCategoryRight () {
+    const element = this.scrollViewSubCategory?.nativeElement;
+    this.showLeftSubCategoryArrow.set(true)
+    element?.scrollBy({ behavior: 'smooth', left: this.scrollAmount })
+    this.updateSubCategoryArrowVisibility()
+  }
+
+  scrollToStart () {
+    const element = this.scrollViewSubCategory?.nativeElement;
+    element?.scrollTo({ left: 0, behavior: 'smooth' })
+  }
+
+  onSubCategoryScroll () {
+    this.updateSubCategoryArrowVisibility()
+  }
+
+  getMaxScrollLeft () {
+    const element = this.scrollViewSubCategory?.nativeElement;
+    return Math.max(0, element?.scrollWidth!! - element?.clientWidth!!)
   }
 
   
-  subCategoryRight () {
-    this.scrollViewSubCategory?.nativeElement.scrollTo({ left: this.scrollViewSubCategory?.nativeElement.scrollLeft + 70 })
+  
+  updateSubCategoryArrowVisibility() {
+    const scrollElement = this.scrollViewSubCategory?.nativeElement;
+    const scrollLeft = scrollElement?.scrollLeft;
+    const scrollWidth = scrollElement?.scrollWidth;
+    const clientWidth = scrollElement?.clientWidth;
+
+    const maxScroll = this.getMaxScrollLeft()
+
+    const EPS = 1
+
+    // this.showLeftSubCategoryArrow = scrollLeft! > EPS;
+    // this.showRightSubCategoryArrow = scrollLeft! <= clientWidth! - scrollLeft!
+
+    console.log('sc left: ' + scrollLeft!!)
+    console.log('floor sc left: ' + Math.floor(scrollLeft!!))
+    console.log('sc width: ' + scrollWidth!!)
+    console.log('cl width: ' + clientWidth!!)
+    // console.log('left side: ' + (scrollLeft!! + scrollWidth!!))
+    // console.log('right side: ' + (clientWidth!!))
+    // console.log('show right arrow: ' + ((Math.floor(scrollLeft!!) + clientWidth!!) >= (scrollWidth!! - 1)))
+    console.log('________________')
+
+    // if (scrollWidth!! + scrollLeft!! < clientWidth!!)
+    // {
+    //   this.showLeftSubCategoryArrow = false
+    //   this.showRightSubCategoryArrow = true
+    //   return;
+    // }
     
-     
-    console.log((this.scrollViewSubCategory?.nativeElement as HTMLDivElement).scrollWidth)
-    console.log((this.scrollViewSubCategory?.nativeElement as HTMLDivElement).scrollLeft)
-    if (this.scrollViewSubCategory?.nativeElement.scrollLeft  <= 0.01) {
-      this.rightSubCategoryArrow?.nativeElement.classList.add('hidden')
+    if (scrollLeft! === 0) {
+      console.log('scroll: 0')
+      this.showRightSubCategoryArrow.set(false)
     }
-    else {
-      this.rightSubCategoryArrow?.nativeElement.classList.remove('hidden')
+    else if ((Math.floor(scrollLeft!) + scrollWidth!) === clientWidth) {
+      this.showLeftSubCategoryArrow.set(false)
+      console.log('(scrollLeft! + scrollWidth!) === clientWidth')
     }
+
+
+    // this.showLeftSubCategoryArrow = scrollLeft! <= 1;
+    // this.showRightSubCategoryArrow = ((Math.floor(scrollLeft!) + clientWidth!) < (scrollWidth!));
+      
+    
+    console.log('show left? ' + this.showLeftSubCategoryArrow())
+    console.log('show right? ' + this.showRightSubCategoryArrow())
+    console.log('__________________________________')
   }
+
+
 
   inputMouseLeave(event: Event) {
     (event.target as HTMLInputElement).classList.remove('border-light-text2');
@@ -232,6 +324,9 @@ export class HomeComponent {
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
     this.resetSortingLists()
+    // this.scrollToStart()
+    // this.scrollViewSubCategory?.nativeElement?.scrollTo({ left: this.scrollViewSubCategory.nativeElement.scrollWidth!! + this.scrollViewSubCategory.nativeElement.clientWidth!!});
+    this.updateSubCategoryArrowVisibility()
   }
 
 
@@ -414,12 +509,21 @@ export class HomeComponent {
   }
 
   ngAfterViewInit () {
-    window.addEventListener('click', (event: MouseEvent) => {
-      if ((event.target as HTMLElement).id !== 'searchInput') {
-        this.searchInput?.nativeElement.classList.remove('border-green-btn');
-        this.searchInput?.nativeElement.classList.add('border-light-text2');
-        this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
-      }
-    })
+    if (typeof window !== 'undefined') {
+      window.addEventListener('click', (event: MouseEvent) => {
+        if ((event.target as HTMLElement).id !== 'searchInput') {
+          this.searchInput?.nativeElement.classList.remove('border-green-btn');
+          this.searchInput?.nativeElement.classList.add('border-light-text2');
+          this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
+        }
+      })
+  
+      this.scrollToStart()
+      // this.updateSubCategoryArrowVisibility()
+      // setTimeout(() => {
+      //   this.updateSubCategoryArrowVisibility()
+      //   this.scrollViewSubCategory?.nativeElement.addEventListener('click', this.updateSubCategoryArrowVisibility.bind(this))
+      // }, 0);
+    }
   }
 }

@@ -6,6 +6,7 @@ import { CurrencyItemComponent } from '../currency-item/currency-item.component'
 import { base_metal_title, coin_title, commodity_title, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_silver, filter_us_base_metals, gold_title, precious_metal_title, rial_unit, world_title } from '../constants/Values';
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
+import { fromEvent } from 'rxjs';
 
 enum SortingType {
   Ascending, Descending, None
@@ -123,9 +124,17 @@ export class HomeComponent {
   change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
   priceSortingText: WritableSignal<string> = signal("قیمت")
 
+  static mainData: Currencies;
+
 
   constructor(private currencyService: CurrenciesService) {
     this.reqestClass = RequestArray.requestArrayInstance(currencyService)
+    // this.reqestClass.setupMainData()
+    
+    this.reqestClass?.setupMainData();
+    this.setCurrentCategory(currency_title);
+
+    console.log('req? constructor: ' + this.reqestClass)
 
     if (typeof window !== 'undefined') {
       if (window.innerWidth <= 624) {
@@ -212,14 +221,14 @@ export class HomeComponent {
     // this.showLeftSubCategoryArrow = scrollLeft! > EPS;
     // this.showRightSubCategoryArrow = scrollLeft! <= clientWidth! - scrollLeft!
 
-    console.log('sc left: ' + scrollLeft!!)
-    console.log('floor sc left: ' + Math.floor(scrollLeft!!))
-    console.log('sc width: ' + scrollWidth!!)
-    console.log('cl width: ' + clientWidth!!)
+    // console.log('sc left: ' + scrollLeft!!)
+    // console.log('floor sc left: ' + Math.floor(scrollLeft!!))
+    // console.log('sc width: ' + scrollWidth!!)
+    // console.log('cl width: ' + clientWidth!!)
     // console.log('left side: ' + (scrollLeft!! + scrollWidth!!))
     // console.log('right side: ' + (clientWidth!!))
     // console.log('show right arrow: ' + ((Math.floor(scrollLeft!!) + clientWidth!!) >= (scrollWidth!! - 1)))
-    console.log('________________')
+    // console.log('________________')
 
     // if (scrollWidth!! + scrollLeft!! < clientWidth!!)
     // {
@@ -323,7 +332,7 @@ export class HomeComponent {
     this.currentSubCategory.set(filter_overview)
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
-    this.resetSortingLists()
+    this.autoSortList()
     // this.scrollToStart()
     // this.scrollViewSubCategory?.nativeElement?.scrollTo({ left: this.scrollViewSubCategory.nativeElement.scrollWidth!! + this.scrollViewSubCategory.nativeElement.clientWidth!!});
     this.updateSubCategoryArrowVisibility()
@@ -349,6 +358,7 @@ export class HomeComponent {
       this.currenTemptList = filteredList.filter((item: CurrencyItem) => item.filterName === name)
       this.currenTemptList2 = filteredList.filter((item: CurrencyItem) => item.filterName === name)
     }
+    this.autoSortList()
   }
 
   filterList(event: Event) {
@@ -385,6 +395,21 @@ export class HomeComponent {
       this.currenTemptList2 = this.currenTemptList;
     }
 
+  }
+
+  autoSortList () {
+    if (this.titleSorting === SortingType.Ascending || this.titleSorting === SortingType.Descending) {
+      if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending();
+      else this.setTitleListDescending()
+    }
+    else if (this.priceSorting === SortingType.Ascending || this.priceSorting === SortingType.Descending) {
+      if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending();
+      else this.setPriceListDescending();
+    }
+    else if (this.change24hSorting === SortingType.Ascending || this.change24hSorting === SortingType.Descending) {
+      if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending();
+      else this.setChange24hListDescending();
+    }
   }
 
   
@@ -483,12 +508,13 @@ export class HomeComponent {
   }
 
   ngOnInit () {
-    this.reqestClass?.setupMainData();
-    this.setCurrentCategory(currency_title);
-
     
     if (typeof window !== 'undefined') {
-      window.addEventListener('resize', () => {
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      
+      fromEvent(window, 'resize')
+      .subscribe((event: Event) => {
         const width = document.body.clientWidth;
         if (width <= 624) {
           this.change24hText.set('24h')
@@ -509,21 +535,26 @@ export class HomeComponent {
   }
 
   ngAfterViewInit () {
+    // if (this.reqestClass.dataFetced) {
+      // console.log('fetched? ' + this.reqestClass.dataFetced)
+      // console.log('req? after init: ' + this.reqestClass)
+      // console.log('req? after init: ' + this.reqestClass)
+
+    // }
+    
     if (typeof window !== 'undefined') {
-      window.addEventListener('click', (event: MouseEvent) => {
+
+      fromEvent(window, 'click').subscribe((event: Event) => {
         if ((event.target as HTMLElement).id !== 'searchInput') {
           this.searchInput?.nativeElement.classList.remove('border-green-btn');
           this.searchInput?.nativeElement.classList.add('border-light-text2');
           this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
         }
       })
-  
-      this.scrollToStart()
-      // this.updateSubCategoryArrowVisibility()
-      // setTimeout(() => {
-      //   this.updateSubCategoryArrowVisibility()
-      //   this.scrollViewSubCategory?.nativeElement.addEventListener('click', this.updateSubCategoryArrowVisibility.bind(this))
-      // }, 0);
+
+      
+   
+      // this.scrollToStart();
     }
   }
 }

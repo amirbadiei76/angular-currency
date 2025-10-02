@@ -1,7 +1,10 @@
-<header>
-    <div class="cursor-pointer flex justify-center items-center w-fit" (click)="changeTheme()">
-        <svg *ngIf="!isDark" class="fill-dark-text2 dark:fill-light-text2 hover:fill-light-green-text hover:dark:fill-dark-green-text" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-            width="24px" height="24px" viewBox="0 0 81.289 81.289"
+<header class="fixed z-[3] bg-light dark:bg-dark w-full h-16 flex items-center justify-start border-b border-b-light-border dark:border-b-dark-border">
+    <div class="w-6 h-6 cursor-pointer flex justify-center items-center" (click)="changeTheme()">
+        <svg
+            *ngIf="!isDark"
+            class="fill-dark-text2 dark:fill-light-text2 hover:fill-light-green-text hover:dark:fill-dark-green-text"
+            version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+            viewBox="0 0 81.289 81.289"
             xml:space="preserve">
             <g>
                 <path d="M79.248,38.668c-1.246-0.464-2.669-0.088-3.518,0.95c-4.791,5.84-11.858,9.192-19.403,9.192
@@ -14,9 +17,9 @@
         </svg>
 
         <svg
-            class="fill-dark-text2 dark:fill-light-text2 hover:fill-light-green-text hover:dark:fill-dark-green-text"
+            class="w-6 h-6 fill-dark-text2 dark:fill-light-text2 hover:fill-light-green-text hover:dark:fill-dark-green-text"
             *ngIf="isDark"
-            width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
         >
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7.11628C9.3028 7.11628 7.11628 9.3028 7.11628 12C7.11628 14.6972 9.3028 16.8837 12 16.8837C14.6972 16.8837 16.8837 14.6972 16.8837 12C16.8837 9.3028 14.6972 7.11628 12 7.11628ZM5.72093 12C5.72093 8.53217 8.53217 5.72093 12 5.72093C15.4678 5.72093 18.2791 8.53217 18.2791 12C18.2791 15.4678 15.4678 18.2791 12 18.2791C8.53217 18.2791 5.72093 15.4678 5.72093 12Z"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C12.3853 2 12.6977 2.31236 12.6977 2.69767V3.62791C12.6977 4.01322 12.3853 4.32558 12 4.32558C11.6147 4.32558 11.3023 4.01322 11.3023 3.62791V2.69767C11.3023 2.31236 11.6147 2 12 2Z"/>

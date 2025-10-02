@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, pound_unit, PRECIOUS_METALS_PREFIX, rial_unit, WORLD_MARKET_PREFIX } from "../constants/Values";
 import { Currencies, CurrencyItem, Current } from "../interface/Currencies";
 import { CurrenciesService } from "../services/currencies.service";
+import { HomeComponent } from "../home/home.component";
 
 export class RequestArray {
     
@@ -16,14 +17,17 @@ export class RequestArray {
     baseMetalList: CurrencyItem[] = [];
     commodityList: CurrencyItem[] = [];
 
+    dataFetced: boolean = false
+
 
     favIds: string[] = []
     favList: CurrencyItem[] = []
 
-    static _requestArray: RequestArray;
+    static _requestArray?: RequestArray;
 
     static requestArrayInstance (httpCurrency: CurrenciesService): RequestArray {
-        return (this._requestArray) || (this._requestArray = new this(httpCurrency))
+        this._requestArray = new this(httpCurrency)
+        return this._requestArray
     }
 
 
@@ -102,6 +106,10 @@ export class RequestArray {
     setupMainData() {
         this.currencyService.getAllCurrencies().subscribe((data: Currencies) => {
             this.mainData = data;
+            this.dataFetced = true;
+
+            HomeComponent.mainData = this.mainData;
+            
             this.setupMainCurrenciesList(data.current)
             this.calculateRealPrice(this.mainCurrencyList, data.current)
 

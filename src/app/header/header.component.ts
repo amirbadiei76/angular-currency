@@ -1,5 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
+import { CurrenciesService } from '../services/currencies.service';
+import { RequestArray } from '../components/RequestArrays';
 
 @Component({
   selector: 'app-header',
@@ -10,8 +12,15 @@ import { Component } from '@angular/core';
 export class HeaderComponent {
 
   isDark: boolean = false;
+  // reqestClass: RequestArray;
+
+  constructor (private currencyService: CurrenciesService) {
+    // this.reqestClass = RequestArray.requestArrayInstance(currencyService)
+    // this.reqestClass.setupMainData()
+  }
 
   ngOnInit() {
+    // this.reqestClass.setupMainData()
     if (typeof window !== 'undefined') {
       if (localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
       else {

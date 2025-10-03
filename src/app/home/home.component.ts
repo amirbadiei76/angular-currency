@@ -1,7 +1,5 @@
 import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
-import { CurrenciesService } from '../services/currencies.service';
 import { Currencies, CurrencyItem } from '../interface/Currencies';
-import { RequestArray } from '../components/RequestArrays';
 import { CurrencyItemComponent } from '../currency-item/currency-item.component';
 import { base_metal_title, coin_title, commodity_title, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_silver, filter_us_base_metals, gold_title, precious_metal_title, rial_unit, world_title } from '../constants/Values';
 import { StarIconComponent } from '../star-icon/star-icon.component';

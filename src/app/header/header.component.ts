@@ -1,7 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { CurrenciesService } from '../services/currencies.service';
-import { RequestArray } from '../components/RequestArrays';
 
 @Component({
   selector: 'app-header',

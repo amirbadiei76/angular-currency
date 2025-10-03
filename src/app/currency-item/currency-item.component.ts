@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyItem } from '../interface/Currencies';
 import { CommonModule, NgIf } from '@angular/common';
-import { RequestArray } from '../components/RequestArrays';
-import { CurrenciesService } from '../services/currencies.service';
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { RequestArrayService } from '../services/request-array.service';
 
@@ -27,12 +25,10 @@ export class CurrencyItemComponent {
 
   addToFav() {
     this.requestArray?.addToFavorite(this.currencyItem!)
-    console.log('add')
   }
 
   removeFromFav() {
     this.requestArray?.removeFromFavorite(this.currencyItem?.id!)
-    console.log('remove')
   }
 
 }

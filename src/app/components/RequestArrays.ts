@@ -17,8 +17,6 @@ export class RequestArray {
     baseMetalList: CurrencyItem[] = [];
     commodityList: CurrencyItem[] = [];
 
-    dataFetced: boolean = false
-
 
     favIds: string[] = []
     favList: CurrencyItem[] = []
@@ -26,7 +24,8 @@ export class RequestArray {
     static _requestArray?: RequestArray;
 
     static requestArrayInstance (httpCurrency: CurrenciesService): RequestArray {
-        this._requestArray = new this(httpCurrency)
+        if (!this._requestArray) this._requestArray = new this(httpCurrency)
+        // this._requestArray.setupMainData()
         return this._requestArray
     }
 
@@ -64,6 +63,7 @@ export class RequestArray {
     removeFromFavorite(id: string) {
         let itemToRemove: CurrencyItem | undefined = this.allItemsList.find(item => item.id === id)
 
+        console.log(itemToRemove?.id)
         if (typeof window !== 'undefined' && itemToRemove !== undefined) {
             let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
             this.favIds = items;
@@ -106,7 +106,6 @@ export class RequestArray {
     setupMainData() {
         this.currencyService.getAllCurrencies().subscribe((data: Currencies) => {
             this.mainData = data;
-            this.dataFetced = true;
 
             HomeComponent.mainData = this.mainData;
             

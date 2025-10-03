@@ -7,6 +7,7 @@ import { base_metal_title, coin_title, commodity_title, crypto_title, currency_t
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
 import { fromEvent } from 'rxjs';
+import { RequestArrayService } from '../services/request-array.service';
 
 enum SortingType {
   Ascending, Descending, None
@@ -20,7 +21,7 @@ enum SortingType {
 })
 export class HomeComponent {
   fetchedData?: Currencies;
-  reqestClass?: RequestArray;
+  reqestClass?: RequestArrayService;
 
   categories = [
     {
@@ -127,16 +128,16 @@ export class HomeComponent {
   static mainData: Currencies;
 
 
-  constructor(private currencyService: CurrenciesService) {
-    this.reqestClass = RequestArray.requestArrayInstance(currencyService)
-    // this.reqestClass.setupMainData()
+  constructor(private requestArray: RequestArrayService) {
+    this.reqestClass = requestArray
+    // this.reqestClass = RequestArray.requestArrayInstance(currencyService)
+    this.reqestClass.setupMainData()
     
-    this.reqestClass?.setupMainData();
-    this.setCurrentCategory(currency_title);
 
-    console.log('req? constructor: ' + this.reqestClass)
+    // console.log('req? constructor: ' + this.reqestClass)
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {      
+
       if (window.innerWidth <= 624) {
         this.change24hText.set('24h')
       }
@@ -272,6 +273,7 @@ export class HomeComponent {
 
   setCurrentCategory (title: string) {
     this.currentCategory.set(title)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 
     switch(title) {
       case favories_title:
@@ -508,6 +510,9 @@ export class HomeComponent {
   }
 
   ngOnInit () {
+    // this.reqestClass = RequestArray.requestArrayInstance(this.currencyService)
+    // this.reqestClass?.setupMainData();
+    this.setCurrentCategory(currency_title);
     
     if (typeof window !== 'undefined') {
       
@@ -535,6 +540,7 @@ export class HomeComponent {
   }
 
   ngAfterViewInit () {
+    // this.reqestClass = RequestArray.requestArrayInstance(this.currencyService)
     // if (this.reqestClass.dataFetced) {
       // console.log('fetched? ' + this.reqestClass.dataFetced)
       // console.log('req? after init: ' + this.reqestClass)
@@ -543,6 +549,7 @@ export class HomeComponent {
     // }
     
     if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
 
       fromEvent(window, 'click').subscribe((event: Event) => {
         if ((event.target as HTMLElement).id !== 'searchInput') {

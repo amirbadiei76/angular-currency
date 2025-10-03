@@ -4,6 +4,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { RequestArray } from '../components/RequestArrays';
 import { CurrenciesService } from '../services/currencies.service';
 import { StarIconComponent } from '../star-icon/star-icon.component';
+import { RequestArrayService } from '../services/request-array.service';
 
 
 @Component({
@@ -15,21 +16,23 @@ import { StarIconComponent } from '../star-icon/star-icon.component';
 export class CurrencyItemComponent {
     
   @Input() currencyItem?: CurrencyItem;
-  requestArray?: RequestArray;
+  requestArray?: RequestArrayService;
 
   currentCurrencyItem?: CurrencyItem;
   
-  constructor(private service: CurrenciesService) {
-    this.requestArray = RequestArray.requestArrayInstance(service)
+  constructor(private requestService: RequestArrayService) {
+    this.requestArray = requestService
     this.currentCurrencyItem = this.currencyItem;
   }
 
   addToFav() {
-    this.requestArray?.addToFavorite(this.currencyItem!!)
+    this.requestArray?.addToFavorite(this.currencyItem!)
+    console.log('add')
   }
 
   removeFromFav() {
-    this.requestArray?.removeFromFavorite(this.currencyItem?.id!!)
+    this.requestArray?.removeFromFavorite(this.currencyItem?.id!)
+    console.log('remove')
   }
 
 }

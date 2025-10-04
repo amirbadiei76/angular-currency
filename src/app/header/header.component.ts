@@ -11,15 +11,9 @@ import { CurrenciesService } from '../services/currencies.service';
 export class HeaderComponent {
 
   isDark: boolean = false;
-  // reqestClass: RequestArray;
 
-  constructor (private currencyService: CurrenciesService) {
-    // this.reqestClass = RequestArray.requestArrayInstance(currencyService)
-    // this.reqestClass.setupMainData()
-  }
+  constructor () {
 
-  ngOnInit() {
-    // this.reqestClass.setupMainData()
     if (typeof window !== 'undefined') {
       if (localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
       else {
@@ -30,6 +24,10 @@ export class HeaderComponent {
         else this.isDark = false;
       }
     }
+  }
+
+  ngOnInit() {
+    
   }
 
   changeTheme() {

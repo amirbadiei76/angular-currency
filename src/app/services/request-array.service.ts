@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CurrenciesService } from './currencies.service';
 import { Currencies, CurrencyItem, Current } from '../interface/Currencies';
-import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, pound_unit, PRECIOUS_METALS_PREFIX, rial_unit, WORLD_MARKET_PREFIX } from '../constants/Values';
+import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, pound_unit, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../constants/Values';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,10 @@ export class RequestArrayService {
 
 
     favIds: string[] = []
-    favList: CurrencyItem[] = []
+    favList: CurrencyItem[] = [];
+
+    currentState = '+';
+    currentItem = '';
 
   constructor(private currencyService: CurrenciesService) {
     
@@ -30,19 +33,23 @@ export class RequestArrayService {
   
 
   addToFavorite(item: CurrencyItem) {
-    if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
-        item.isFav = true;
-        this.favList.push(item)
-        this.favIds.push(item.id)
-
-        let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
-        items.push(item.id)
-        localStorage.setItem('fav', JSON.stringify(items))
-    } else {
-        item.isFav = true;
-        this.favIds.push(item.id)
-        this.favList.push(item)
-        localStorage.setItem('fav', JSON.stringify(this.favIds))
+    if (window.navigator.onLine) {
+        this.currentState = '+';
+        this.currentItem = item.title;
+        if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
+            item.isFav = true;
+            this.favList.push(item)
+            this.favIds.push(item.id)
+            
+            let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
+            items.push(item.id)
+            localStorage.setItem('fav', JSON.stringify(items))
+        } else {
+            item.isFav = true;
+            this.favIds.push(item.id)
+            this.favList.push(item)
+            localStorage.setItem('fav', JSON.stringify(this.favIds))
+        }
     }
   }
 
@@ -60,37 +67,60 @@ export class RequestArrayService {
   }
 
   removeFromFavorite(id: string) {
-    let itemToRemove: CurrencyItem | undefined = this.allItemsList.find(item => item.id === id)
+    if (window.navigator.onLine) {
+        let itemToRemove: CurrencyItem | undefined = this.allItemsList.find(item => item.id === id)
+        this.currentState = '-';
+        this.currentItem = itemToRemove!.title;
 
-    console.log(itemToRemove?.id)
-    if (typeof window !== 'undefined' && itemToRemove !== undefined) {
-        let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
-        this.favIds = items;
+        if (typeof window !== 'undefined' && itemToRemove !== undefined) {
+            let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
+            this.favIds = items;
 
-        itemToRemove.isFav = false;
-        this.favList = this.favList.filter(item => item.id !== id)
-        this.favIds = this.favIds.filter(itemId => itemId !== id)
-        localStorage.setItem('fav', JSON.stringify(this.favIds))
+            itemToRemove.isFav = false;
+            this.favList = this.favList.filter(item => item.id !== id)
+            this.favIds = this.favIds.filter(itemId => itemId !== id)
+            localStorage.setItem('fav', JSON.stringify(this.favIds))
+        }
     }
   }
   
-  calculateRealPrice(list: CurrencyItem[], current: Current) {
+  calculateOtherCurrenccyPrices(list: CurrencyItem[], current: Current) {
+
     list.forEach(item => {
         let priceValue = +(item.lastPriceInfo.p.replaceAll(',', ''))
+        // convert all to rial for real price
         if (item.unit === dollar_unit) {
             let dollarValue = +(current.price_dollar_rl.p.replaceAll(',', ''))
             item.realPrice = Math.round((priceValue * dollarValue) * 100) / 100;
+
+            item.dollarPrice = priceValue;
+            item.dollarStringPrice = this.commafy(priceValue)
         }
         else if (item.unit === pound_unit) {
             let poundValue = +(current.price_gbp.p.replaceAll(',', ''))
             item.realPrice = Math.round((priceValue * poundValue) * 100) / 100;
+
+            item.poundAsk = current['gbp-usd-ask'].p;
+
+            let priceDollarValue = priceValue * (+current['gbp-usd-ask'].p)
+            let roundedDollarPrice = Math.round(priceDollarValue * 100) / 100;
+            item.dollarPrice = roundedDollarPrice;
+            item.dollarStringPrice = this.commafy(roundedDollarPrice)
+            
         }
         else {
             item.realPrice = priceValue;
-        }
 
+            let dollarMainValue = item.realPrice / (+(current.price_dollar_rl.p.replaceAll(',', '')));
+            item.dollarPrice = Math.round(dollarMainValue * 100) / 100
+            item.dollarStringPrice = this.commafy(item.dollarPrice)
+        }
         item.rialStringRealPrice = this.commafy(item.realPrice)
-        item.rialUnit = rial_unit
+
+        // convert to toman
+        item.tomanPrice = Math.round((item.realPrice / 10) * 100) / 100
+        item.tomanStringPrice = this.commafy(item.tomanPrice);
+
 
         // fix 24h changes problem
         if (item.lastPriceInfo.dt === 'low' && item.lastPriceInfo.dp === 0) item.lastPriceInfo.dt = 'high'
@@ -102,28 +132,28 @@ export class RequestArrayService {
       this.mainData = data;
       
       this.setupMainCurrenciesList(data.current)
-      this.calculateRealPrice(this.mainCurrencyList, data.current)
+      this.calculateOtherCurrenccyPrices(this.mainCurrencyList, data.current)
 
       this.setupCryptoList(data.current)
-      this.calculateRealPrice(this.cryptoList, data.current)
+      this.calculateOtherCurrenccyPrices(this.cryptoList, data.current)
 
       this.setupWorldMarketList(data.current)
-      this.calculateRealPrice(this.worldMarketList, data.current)
+      this.calculateOtherCurrenccyPrices(this.worldMarketList, data.current)
 
       this.setupCoinList(data.current)
-      this.calculateRealPrice(this.coinList, data.current)
+      this.calculateOtherCurrenccyPrices(this.coinList, data.current)
 
       this.setupGoldList(data.current)
-      this.calculateRealPrice(this.goldList, data.current)
+      this.calculateOtherCurrenccyPrices(this.goldList, data.current)
 
       this.setupPreciousMetals(data.current)
-      this.calculateRealPrice(this.preciousMetalList, data.current)
+      this.calculateOtherCurrenccyPrices(this.preciousMetalList, data.current)
 
       this.setupBaseMetals(data.current)
-      this.calculateRealPrice(this.baseMetalList, data.current)
+      this.calculateOtherCurrenccyPrices(this.baseMetalList, data.current)
 
       this.setupCommodityMarket(data.current)
-      this.calculateRealPrice(this.commodityList, data.current)
+      this.calculateOtherCurrenccyPrices(this.commodityList, data.current)
 
       this.setupAllItemsList()
       this.getFavorites()
@@ -143,7 +173,7 @@ export class RequestArrayService {
         shortedName: "USD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/us.svg',
     });
     this.mainCurrencyList.push({
@@ -154,7 +184,7 @@ export class RequestArrayService {
         shortedName: "EUR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/eu.svg'
     });
     this.mainCurrencyList.push({
@@ -165,7 +195,7 @@ export class RequestArrayService {
         shortedName: "AED",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ae.svg'
     });
     this.mainCurrencyList.push({
@@ -176,7 +206,7 @@ export class RequestArrayService {
         shortedName: "GBP",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/gb.svg'
     });
     this.mainCurrencyList.push({
@@ -187,7 +217,7 @@ export class RequestArrayService {
         shortedName: "TRY",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tr.svg'
     });
     this.mainCurrencyList.push({
@@ -198,7 +228,7 @@ export class RequestArrayService {
         shortedName: "CHF",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ch.svg'
     });
     this.mainCurrencyList.push({
@@ -209,7 +239,7 @@ export class RequestArrayService {
         shortedName: "CNY",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cn.svg'
     });
     this.mainCurrencyList.push({
@@ -220,7 +250,7 @@ export class RequestArrayService {
         shortedName: "JPY",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/jp.svg'
     });
     this.mainCurrencyList.push({
@@ -231,7 +261,7 @@ export class RequestArrayService {
         shortedName: "KRW",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/kr.svg'
     });
     this.mainCurrencyList.push({
@@ -242,7 +272,7 @@ export class RequestArrayService {
         shortedName: "CAD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ca.svg'
     });
     this.mainCurrencyList.push({
@@ -253,7 +283,7 @@ export class RequestArrayService {
         shortedName: "AUD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/au.svg'
     });
     this.mainCurrencyList.push({
@@ -264,7 +294,7 @@ export class RequestArrayService {
         shortedName: "NZD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/nz.svg'
     });
     this.mainCurrencyList.push({
@@ -275,7 +305,7 @@ export class RequestArrayService {
         shortedName: "SGD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sg.svg'
     });
     this.mainCurrencyList.push({
@@ -286,7 +316,7 @@ export class RequestArrayService {
         shortedName: "INR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/in.svg'
     });
     this.mainCurrencyList.push({
@@ -297,7 +327,7 @@ export class RequestArrayService {
         shortedName: "PKR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/pk.svg'
     });
     this.mainCurrencyList.push({
@@ -308,7 +338,7 @@ export class RequestArrayService {
         shortedName: "IQD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/iq.svg'
     });
     this.mainCurrencyList.push({
@@ -319,7 +349,7 @@ export class RequestArrayService {
         shortedName: "SYP",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sy.svg'
     });
     this.mainCurrencyList.push({
@@ -330,7 +360,7 @@ export class RequestArrayService {
         shortedName: "AFN",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/af.svg'
     });
     this.mainCurrencyList.push({
@@ -341,7 +371,7 @@ export class RequestArrayService {
         shortedName: "DKK",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/dk.svg'
     });
     this.mainCurrencyList.push({
@@ -352,7 +382,7 @@ export class RequestArrayService {
         shortedName: "SEK",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/se.svg'
     });
     this.mainCurrencyList.push({
@@ -363,7 +393,7 @@ export class RequestArrayService {
         shortedName: "NOK",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/no.svg'
     });
     this.mainCurrencyList.push({
@@ -374,7 +404,7 @@ export class RequestArrayService {
         shortedName: "SAR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sa.svg'
     });
     this.mainCurrencyList.push({
@@ -385,7 +415,7 @@ export class RequestArrayService {
         shortedName: "QAR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/qa.svg'
     });
     this.mainCurrencyList.push({
@@ -396,7 +426,7 @@ export class RequestArrayService {
         shortedName: "OMR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/om.svg'
     });
     this.mainCurrencyList.push({
@@ -407,7 +437,7 @@ export class RequestArrayService {
         shortedName: "KWD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/kw.svg'
     });
     this.mainCurrencyList.push({
@@ -418,7 +448,7 @@ export class RequestArrayService {
         shortedName: "BHD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bh.svg'
     });
     this.mainCurrencyList.push({
@@ -429,7 +459,7 @@ export class RequestArrayService {
         shortedName: "MYR",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/my.svg'
     });
     this.mainCurrencyList.push({
@@ -440,7 +470,7 @@ export class RequestArrayService {
         shortedName: "THB",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/th.svg'
     });
     this.mainCurrencyList.push({
@@ -451,7 +481,7 @@ export class RequestArrayService {
         shortedName: "HKD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/hk.svg'
     });
     this.mainCurrencyList.push({
@@ -462,7 +492,7 @@ export class RequestArrayService {
         shortedName: "RUB",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ru.svg'
     });
     this.mainCurrencyList.push({
@@ -473,7 +503,7 @@ export class RequestArrayService {
         shortedName: "AZN",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/az.svg'
     });
     this.mainCurrencyList.push({
@@ -484,7 +514,7 @@ export class RequestArrayService {
         shortedName: "AMD",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/am.svg'
     });
     this.mainCurrencyList.push({
@@ -495,7 +525,7 @@ export class RequestArrayService {
         shortedName: "GEL",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ge.svg'
     });
     this.mainCurrencyList.push({
@@ -506,7 +536,7 @@ export class RequestArrayService {
         shortedName: "KGS",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/kg.svg'
     });
     this.mainCurrencyList.push({
@@ -517,7 +547,7 @@ export class RequestArrayService {
         shortedName: "TJS",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tj.svg'
     });
     this.mainCurrencyList.push({
@@ -528,7 +558,7 @@ export class RequestArrayService {
         shortedName: "TMT",
         filterName: filter_main_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tm.svg'
     });
 
@@ -543,7 +573,7 @@ export class RequestArrayService {
         shortedName: "ALL",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/al.svg'
     });
     this.mainCurrencyList.push({
@@ -554,7 +584,7 @@ export class RequestArrayService {
         shortedName: "BBD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bb.svg'
     });
     this.mainCurrencyList.push({
@@ -565,7 +595,7 @@ export class RequestArrayService {
         shortedName: "BDT",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bd.svg'
     });
     this.mainCurrencyList.push({
@@ -576,7 +606,7 @@ export class RequestArrayService {
         shortedName: "BGN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bg.svg'
     });
     this.mainCurrencyList.push({
@@ -587,7 +617,7 @@ export class RequestArrayService {
         shortedName: "BIF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bi.svg'
     });
     this.mainCurrencyList.push({
@@ -598,7 +628,7 @@ export class RequestArrayService {
         shortedName: "BHD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bn.svg'
     });
     this.mainCurrencyList.push({
@@ -609,7 +639,7 @@ export class RequestArrayService {
         shortedName: "BSD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bs.svg'
     });
     this.mainCurrencyList.push({
@@ -620,7 +650,7 @@ export class RequestArrayService {
         shortedName: "BWP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bw.svg'
     });
     this.mainCurrencyList.push({
@@ -631,7 +661,7 @@ export class RequestArrayService {
         shortedName: "BYN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/by.svg'
     });
     this.mainCurrencyList.push({
@@ -642,7 +672,7 @@ export class RequestArrayService {
         shortedName: "BZD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bz.svg'
     });
     this.mainCurrencyList.push({
@@ -653,7 +683,7 @@ export class RequestArrayService {
         shortedName: "CUP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cu.svg'
     });
     this.mainCurrencyList.push({
@@ -664,7 +694,7 @@ export class RequestArrayService {
         shortedName: "CZK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cz.svg'
     });
     this.mainCurrencyList.push({
@@ -675,7 +705,7 @@ export class RequestArrayService {
         shortedName: "DJF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/dj.svg'
     });
     this.mainCurrencyList.push({
@@ -686,7 +716,7 @@ export class RequestArrayService {
         shortedName: "DOP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/do.svg'
     });
     this.mainCurrencyList.push({
@@ -697,7 +727,7 @@ export class RequestArrayService {
         shortedName: "DZD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/dz.svg'
     });
     this.mainCurrencyList.push({
@@ -708,7 +738,7 @@ export class RequestArrayService {
         shortedName: "ETB",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/et.svg'
     });
     this.mainCurrencyList.push({
@@ -719,7 +749,7 @@ export class RequestArrayService {
         shortedName: "GNF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/gn.svg'
     });
     this.mainCurrencyList.push({
@@ -730,7 +760,7 @@ export class RequestArrayService {
         shortedName: "GTQ",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/gt.svg'
     });
     this.mainCurrencyList.push({
@@ -741,7 +771,7 @@ export class RequestArrayService {
         shortedName: "GYD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/gy.svg'
     });
     this.mainCurrencyList.push({
@@ -752,7 +782,7 @@ export class RequestArrayService {
         shortedName: "HNL",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/hn.svg'
     });
     this.mainCurrencyList.push({
@@ -763,7 +793,7 @@ export class RequestArrayService {
         shortedName: "HRK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/hr.svg'
     });
     this.mainCurrencyList.push({
@@ -774,7 +804,7 @@ export class RequestArrayService {
         shortedName: "HTG",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ht.svg'
     });
     this.mainCurrencyList.push({
@@ -785,7 +815,7 @@ export class RequestArrayService {
         shortedName: "ISK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/is.svg'
     });
     this.mainCurrencyList.push({
@@ -796,7 +826,7 @@ export class RequestArrayService {
         shortedName: "JMD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/jm.svg'
     });
     this.mainCurrencyList.push({
@@ -807,7 +837,7 @@ export class RequestArrayService {
         shortedName: "KES",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ke.svg'
     });
     this.mainCurrencyList.push({
@@ -818,7 +848,7 @@ export class RequestArrayService {
         shortedName: "KHR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/kh.svg'
     });
     this.mainCurrencyList.push({
@@ -829,7 +859,7 @@ export class RequestArrayService {
         shortedName: "KMF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/km.svg'
     });
     this.mainCurrencyList.push({
@@ -840,7 +870,7 @@ export class RequestArrayService {
         shortedName: "KZT",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/kz.svg'
     });
     this.mainCurrencyList.push({
@@ -851,7 +881,7 @@ export class RequestArrayService {
         shortedName: "LAK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/la.svg'
     });
     this.mainCurrencyList.push({
@@ -862,7 +892,7 @@ export class RequestArrayService {
         shortedName: "LBP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/lb.svg'
     });
     this.mainCurrencyList.push({
@@ -873,7 +903,7 @@ export class RequestArrayService {
         shortedName: "LKR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/lk.svg'
     });
     this.mainCurrencyList.push({
@@ -884,7 +914,7 @@ export class RequestArrayService {
         shortedName: "LRD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/lr.svg'
     });
     this.mainCurrencyList.push({
@@ -895,7 +925,7 @@ export class RequestArrayService {
         shortedName: "LSL",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ls.svg'
     });
     this.mainCurrencyList.push({
@@ -906,7 +936,7 @@ export class RequestArrayService {
         shortedName: "LYD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ly.svg'
     });
     this.mainCurrencyList.push({
@@ -917,7 +947,7 @@ export class RequestArrayService {
         shortedName: "MAD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ma.svg'
     });
     this.mainCurrencyList.push({
@@ -928,7 +958,7 @@ export class RequestArrayService {
         shortedName: "MGA",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mg.svg'
     });
     this.mainCurrencyList.push({
@@ -939,7 +969,7 @@ export class RequestArrayService {
         shortedName: "MKD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mk.svg'
     });
     this.mainCurrencyList.push({
@@ -950,7 +980,7 @@ export class RequestArrayService {
         shortedName: "MMK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mm.svg'
     });
     this.mainCurrencyList.push({
@@ -961,7 +991,7 @@ export class RequestArrayService {
         shortedName: "MOP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mo.svg'
     });
     this.mainCurrencyList.push({
@@ -972,7 +1002,7 @@ export class RequestArrayService {
         shortedName: "MUR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mu.svg'
     });
     this.mainCurrencyList.push({
@@ -983,7 +1013,7 @@ export class RequestArrayService {
         shortedName: "MVR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mv.svg'
     });
     this.mainCurrencyList.push({
@@ -994,7 +1024,7 @@ export class RequestArrayService {
         shortedName: "MWK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mw.svg'
     });
     this.mainCurrencyList.push({
@@ -1005,7 +1035,7 @@ export class RequestArrayService {
         shortedName: "MZN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mz.svg'
     });
     this.mainCurrencyList.push({
@@ -1016,7 +1046,7 @@ export class RequestArrayService {
         shortedName: "NAD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/na.svg'
     });
     this.mainCurrencyList.push({
@@ -1027,7 +1057,7 @@ export class RequestArrayService {
         shortedName: "NGN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ng.svg'
     });
     this.mainCurrencyList.push({
@@ -1038,7 +1068,7 @@ export class RequestArrayService {
         shortedName: "NPR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/np.svg'
     });
     this.mainCurrencyList.push({
@@ -1049,7 +1079,7 @@ export class RequestArrayService {
         shortedName: "PAB",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/pa.svg'
     });
     this.mainCurrencyList.push({
@@ -1060,7 +1090,7 @@ export class RequestArrayService {
         shortedName: "PGK",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/pg.svg'
     });
     this.mainCurrencyList.push({
@@ -1071,7 +1101,7 @@ export class RequestArrayService {
         shortedName: "PHP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ph.svg'
     });
     this.mainCurrencyList.push({
@@ -1082,7 +1112,7 @@ export class RequestArrayService {
         shortedName: "RON",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ro.svg'
     });
     this.mainCurrencyList.push({
@@ -1093,7 +1123,7 @@ export class RequestArrayService {
         shortedName: "RSD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/rs.svg'
     });
     this.mainCurrencyList.push({
@@ -1104,7 +1134,7 @@ export class RequestArrayService {
         shortedName: "RWF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/rw.svg'
     });
     this.mainCurrencyList.push({
@@ -1115,7 +1145,7 @@ export class RequestArrayService {
         shortedName: "SCR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sc.svg'
     });
     this.mainCurrencyList.push({
@@ -1126,7 +1156,7 @@ export class RequestArrayService {
         shortedName: "SDG",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sd.svg'
     });
     this.mainCurrencyList.push({
@@ -1137,7 +1167,7 @@ export class RequestArrayService {
         shortedName: "SHP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sh.svg'
     });
     this.mainCurrencyList.push({
@@ -1148,7 +1178,7 @@ export class RequestArrayService {
         shortedName: "SOS",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/so.svg'
     });
     this.mainCurrencyList.push({
@@ -1159,7 +1189,7 @@ export class RequestArrayService {
         shortedName: "SVC",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sv.svg'
     });
     this.mainCurrencyList.push({
@@ -1170,7 +1200,7 @@ export class RequestArrayService {
         shortedName: "SZL",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sz.svg'
     });
     this.mainCurrencyList.push({
@@ -1181,7 +1211,7 @@ export class RequestArrayService {
         shortedName: "TND",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tn.svg'
     });
     this.mainCurrencyList.push({
@@ -1192,7 +1222,7 @@ export class RequestArrayService {
         shortedName: "TTD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tt.svg'
     });
     this.mainCurrencyList.push({
@@ -1203,7 +1233,7 @@ export class RequestArrayService {
         shortedName: "TZS",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tz.svg'
     });
     this.mainCurrencyList.push({
@@ -1214,7 +1244,7 @@ export class RequestArrayService {
         shortedName: "UGX",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ug.svg'
     });
     this.mainCurrencyList.push({
@@ -1225,7 +1255,7 @@ export class RequestArrayService {
         shortedName: "YER",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ye.svg'
     });
     this.mainCurrencyList.push({
@@ -1236,7 +1266,7 @@ export class RequestArrayService {
         shortedName: "ZMW",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/zm.svg'
     });
     this.mainCurrencyList.push({
@@ -1247,7 +1277,7 @@ export class RequestArrayService {
         shortedName: "GHS",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/gh.svg'
     });
     this.mainCurrencyList.push({
@@ -1258,7 +1288,7 @@ export class RequestArrayService {
         shortedName: "PEN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/pe.svg'
     });
     this.mainCurrencyList.push({
@@ -1269,7 +1299,7 @@ export class RequestArrayService {
         shortedName: "CLP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cl.svg'
     });
     this.mainCurrencyList.push({
@@ -1280,7 +1310,7 @@ export class RequestArrayService {
         shortedName: "EGP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/eg.svg'
     });
     this.mainCurrencyList.push({
@@ -1291,7 +1321,7 @@ export class RequestArrayService {
         shortedName: "MXN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mx.svg'
     });
     this.mainCurrencyList.push({
@@ -1302,7 +1332,7 @@ export class RequestArrayService {
         shortedName: "JOD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/jo.svg'
     });
     this.mainCurrencyList.push({
@@ -1313,7 +1343,7 @@ export class RequestArrayService {
         shortedName: "BRL",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/br.svg'
     });
     this.mainCurrencyList.push({
@@ -1324,7 +1354,7 @@ export class RequestArrayService {
         shortedName: "UYU",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/uy.svg'
     });
     this.mainCurrencyList.push({
@@ -1335,7 +1365,7 @@ export class RequestArrayService {
         shortedName: "COP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/co.svg'
     });
     this.mainCurrencyList.push({
@@ -1346,7 +1376,7 @@ export class RequestArrayService {
         shortedName: "PLN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/pl.svg'
     });
     this.mainCurrencyList.push({
@@ -1357,7 +1387,7 @@ export class RequestArrayService {
         shortedName: "ARS",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ar.svg'
     });
     this.mainCurrencyList.push({
@@ -1368,7 +1398,7 @@ export class RequestArrayService {
         shortedName: "KYD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ky.svg'
     });
     this.mainCurrencyList.push({
@@ -1379,7 +1409,7 @@ export class RequestArrayService {
         shortedName: "HUF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/hu.svg'
     });
     this.mainCurrencyList.push({
@@ -1390,7 +1420,7 @@ export class RequestArrayService {
         shortedName: "PYG",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/py.svg'
     });
     this.mainCurrencyList.push({
@@ -1401,7 +1431,7 @@ export class RequestArrayService {
         shortedName: "UAH",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ua.svg'
     });
     this.mainCurrencyList.push({
@@ -1412,7 +1442,7 @@ export class RequestArrayService {
         shortedName: "ZAR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/za.svg'
     });
     this.mainCurrencyList.push({
@@ -1423,7 +1453,7 @@ export class RequestArrayService {
         shortedName: "NIO",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ni.svg'
     });
     this.mainCurrencyList.push({
@@ -1434,7 +1464,7 @@ export class RequestArrayService {
         shortedName: "FJD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/fj.svg'
     });
     this.mainCurrencyList.push({
@@ -1445,7 +1475,7 @@ export class RequestArrayService {
         shortedName: "TWD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/tw.svg'
     });
     this.mainCurrencyList.push({
@@ -1456,7 +1486,7 @@ export class RequestArrayService {
         shortedName: "UZS",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/uz.svg'
     });
     this.mainCurrencyList.push({
@@ -1467,7 +1497,7 @@ export class RequestArrayService {
         shortedName: "IDR",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/id.svg'
     });
     this.mainCurrencyList.push({
@@ -1478,7 +1508,7 @@ export class RequestArrayService {
         shortedName: "XOF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/za.svg'
     });
     this.mainCurrencyList.push({
@@ -1489,7 +1519,7 @@ export class RequestArrayService {
         shortedName: "XPF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/pf.svg'
     });
     this.mainCurrencyList.push({
@@ -1500,7 +1530,7 @@ export class RequestArrayService {
         shortedName: "VND",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/vn.svg'
     });
     this.mainCurrencyList.push({
@@ -1511,7 +1541,7 @@ export class RequestArrayService {
         shortedName: "GMD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/gm.svg'
     });
     this.mainCurrencyList.push({
@@ -1522,7 +1552,7 @@ export class RequestArrayService {
         shortedName: "XAF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cf.svg'
     });
     this.mainCurrencyList.push({
@@ -1533,7 +1563,7 @@ export class RequestArrayService {
         shortedName: "VUV",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/vu.svg'
     });
     this.mainCurrencyList.push({
@@ -1544,7 +1574,7 @@ export class RequestArrayService {
         shortedName: "MRO",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/mr.svg'
     });
     this.mainCurrencyList.push({
@@ -1555,7 +1585,7 @@ export class RequestArrayService {
         shortedName: "ANG",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ang.svg'
     });
     this.mainCurrencyList.push({
@@ -1566,7 +1596,7 @@ export class RequestArrayService {
         shortedName: "STD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/st.svg'
     });
     this.mainCurrencyList.push({
@@ -1577,7 +1607,7 @@ export class RequestArrayService {
         shortedName: "XCD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/zw.svg'
     });
     this.mainCurrencyList.push({
@@ -1588,7 +1618,7 @@ export class RequestArrayService {
         shortedName: "BAM",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ba.svg'
     });
     this.mainCurrencyList.push({
@@ -1599,7 +1629,7 @@ export class RequestArrayService {
         shortedName: "BTN",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bt.svg'
     });
     this.mainCurrencyList.push({
@@ -1610,7 +1640,7 @@ export class RequestArrayService {
         shortedName: "CDF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cd.svg'
     });
     this.mainCurrencyList.push({
@@ -1621,7 +1651,7 @@ export class RequestArrayService {
         shortedName: "CRC",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cr.svg'
     });
     this.mainCurrencyList.push({
@@ -1632,7 +1662,7 @@ export class RequestArrayService {
         shortedName: "CVE",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cv.svg'
     });
     this.mainCurrencyList.push({
@@ -1643,7 +1673,7 @@ export class RequestArrayService {
         shortedName: "BMD",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/bm.svg'
     });
     this.mainCurrencyList.push({
@@ -1654,7 +1684,7 @@ export class RequestArrayService {
         shortedName: "AWG",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/aw.svg'
     });
     this.mainCurrencyList.push({
@@ -1665,7 +1695,7 @@ export class RequestArrayService {
         shortedName: "SLL",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/sl.svg'
     });
     this.mainCurrencyList.push({
@@ -1676,7 +1706,7 @@ export class RequestArrayService {
         shortedName: "VEF",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/ve.svg'
     });
     this.mainCurrencyList.push({
@@ -1687,7 +1717,7 @@ export class RequestArrayService {
         shortedName: "CYP",
         filterName: filter_other_currencies,
         groupName: MAIN_CURRENCY_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/country-flags/cy.svg'
     });
 
@@ -2278,7 +2308,7 @@ export class RequestArrayService {
         shortedName: "Imami Coin",
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2289,7 +2319,7 @@ export class RequestArrayService {
         shortedName: "Bahar Coin",
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2300,7 +2330,7 @@ export class RequestArrayService {
         shortedName: "Half Coin",
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2311,7 +2341,7 @@ export class RequestArrayService {
         shortedName: "Quarter Coin",
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2322,7 +2352,7 @@ export class RequestArrayService {
         shortedName: "Gram Coin",
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
 
@@ -2336,7 +2366,7 @@ export class RequestArrayService {
         shortedName: "Retail Imami Coin",
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2347,7 +2377,7 @@ export class RequestArrayService {
         shortedName: "Retail Bahar Coin",
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2358,7 +2388,7 @@ export class RequestArrayService {
         shortedName: "Retail Half Coin",
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2369,7 +2399,7 @@ export class RequestArrayService {
         shortedName: "Retail Quarter Coin",
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2380,7 +2410,7 @@ export class RequestArrayService {
         shortedName: "Retail Gram Coin",
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
 
@@ -2394,7 +2424,7 @@ export class RequestArrayService {
         shortedName: "Coin Blubber",
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2405,7 +2435,7 @@ export class RequestArrayService {
         shortedName: "Imami Coin Blubber",
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2416,7 +2446,7 @@ export class RequestArrayService {
         shortedName: "Half Coin Blubber",
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2427,7 +2457,7 @@ export class RequestArrayService {
         shortedName: "Quarter Coin Blubber",
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2438,7 +2468,7 @@ export class RequestArrayService {
         shortedName: "Quarter Coin Blubber",
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
 
@@ -2452,7 +2482,7 @@ export class RequestArrayService {
         shortedName: "تمام سکه طرح جدید 0310 صادرات",
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2463,7 +2493,7 @@ export class RequestArrayService {
         shortedName: "تمام سکه طرح جدید 0211 ملت",
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2474,7 +2504,7 @@ export class RequestArrayService {
         shortedName: "تمام سکه طرح جدید 0312 رفاه",
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2485,7 +2515,7 @@ export class RequestArrayService {
         shortedName: "تمام سکه طرح جدید 0411 آینده",
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2496,7 +2526,7 @@ export class RequestArrayService {
         shortedName: "تمام سکه طرح جدید 0412 سامان",
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2507,7 +2537,7 @@ export class RequestArrayService {
         shortedName: "تمام سکه طرح جدید 001 مرکزی",
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
 
@@ -2521,7 +2551,7 @@ export class RequestArrayService {
         shortedName: "Bahar Coin Down",
         filterName: filter_other_coins,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2532,7 +2562,7 @@ export class RequestArrayService {
         shortedName: "Half Coin Down",
         filterName: filter_other_coins,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
     this.coinList.push({
@@ -2543,7 +2573,7 @@ export class RequestArrayService {
         shortedName: "Quarter Coin Down",
         filterName: filter_other_coins,
         groupName: COIN_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/sekee.png'
     });
 
@@ -2561,7 +2591,7 @@ export class RequestArrayService {
         shortedName: "Gram Gold 18",
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/ingots2.png'
     });
     this.goldList.push({
@@ -2572,7 +2602,7 @@ export class RequestArrayService {
         shortedName: "Gold 740k",
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/ingots2.png'
     });
     this.goldList.push({
@@ -2583,7 +2613,7 @@ export class RequestArrayService {
         shortedName: "Gram Gold 24",
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/ingots2.png'
     });
     this.goldList.push({
@@ -2594,7 +2624,7 @@ export class RequestArrayService {
         shortedName: "Gold Mini Size",
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/ingots2.png'
     });
 
@@ -2608,7 +2638,7 @@ export class RequestArrayService {
         shortedName: "Silver 925",
         filterName: filter_silver,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/silver2.png'
     });
     this.goldList.push({
@@ -2619,7 +2649,7 @@ export class RequestArrayService {
         shortedName: "Silver 999",
         filterName: filter_silver,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/silver2.png'
     });
 
@@ -2633,7 +2663,7 @@ export class RequestArrayService {
         shortedName: "Mesghal",
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
     this.goldList.push({
@@ -2644,7 +2674,7 @@ export class RequestArrayService {
         shortedName: "Mesghal / Global Gold",
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
     this.goldList.push({
@@ -2655,7 +2685,7 @@ export class RequestArrayService {
         shortedName: "Mesghal / Transfer",
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
     this.goldList.push({
@@ -2666,7 +2696,7 @@ export class RequestArrayService {
         shortedName: "Mesghal / Coin base",
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
 
@@ -2680,7 +2710,7 @@ export class RequestArrayService {
         shortedName: "Gold Futures",
         filterName: filter_melted,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
     this.goldList.push({
@@ -2691,7 +2721,7 @@ export class RequestArrayService {
         shortedName: "Gold melted wholesale",
         filterName: filter_melted,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
     this.goldList.push({
@@ -2702,7 +2732,7 @@ export class RequestArrayService {
         shortedName: "Gold melted under kilo",
         filterName: filter_melted,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/bar2.png'
     });
 
@@ -2717,7 +2747,7 @@ export class RequestArrayService {
         shortedName: "Ayar Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2728,7 +2758,7 @@ export class RequestArrayService {
         shortedName: "Lotus Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2739,7 +2769,7 @@ export class RequestArrayService {
         shortedName: "Zar Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2750,7 +2780,7 @@ export class RequestArrayService {
         shortedName: "Gohar Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2761,7 +2791,7 @@ export class RequestArrayService {
         shortedName: "Ganj Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2772,7 +2802,7 @@ export class RequestArrayService {
         shortedName: "Nafis Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2783,7 +2813,7 @@ export class RequestArrayService {
         shortedName: "Nahal Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2794,7 +2824,7 @@ export class RequestArrayService {
         shortedName: "Kahroba Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2805,7 +2835,7 @@ export class RequestArrayService {
         shortedName: "Zarfam Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2816,7 +2846,7 @@ export class RequestArrayService {
         shortedName: "Mesghal Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2827,7 +2857,7 @@ export class RequestArrayService {
         shortedName: "Alton Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2838,7 +2868,7 @@ export class RequestArrayService {
         shortedName: "Tabesh Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2849,7 +2879,7 @@ export class RequestArrayService {
         shortedName: "Javaher Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
     this.goldList.push({
@@ -2860,7 +2890,7 @@ export class RequestArrayService {
         shortedName: "Naab Gold ETF",
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
-        unit: rial_unit,
+        unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.png'
     });
 
@@ -3367,7 +3397,7 @@ export class RequestArrayService {
         str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
     }
     if (str[1] && str[1].length >= 5) {
-        str[1] = str[1].replace(/(\d{3})/g, '$1 ');
+        str[1] = str[1].replace(/(\d{3})/g, '$1');
     }
     return str.join('.');
   }

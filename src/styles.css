@@ -52,6 +52,13 @@
     --sorting-green-dark: #4ef09d;
     --sorting-green-light: #02a67f;
 
+    --popup-green-light: #eaf7ea;
+    --popup-green-dark: #0d1a16;
+
+    --popup-border-green-dark: #00412d;
+    --popup-border-green-light: #ade2c0;
+
+
 
     --green-btn: #00d890;
     --yellow-star: #e7c400;
@@ -103,6 +110,12 @@
 
     --color-sorting-green-dark: var(--sorting-green-dark);
     --color-sorting-green-light: var(--sorting-green-light);
+
+    --color-popup-green-light: var(--popup-green-light);
+    --color-popup-green-dark: var(--popup-green-dark);
+
+    --color-popup-border-green-light: var(--popup-border-green-light);
+    --color-popup-border-green-dark: var(--popup-border-green-dark);
 
 
     --title-width: calc(100% - 30px);

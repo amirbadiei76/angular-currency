@@ -595,5 +595,9 @@ export interface CurrencyItem {
     isFav?: boolean;
     realPrice?: number;
     rialStringRealPrice?: string;
-    rialUnit?: string
+    tomanPrice?: number;
+    tomanStringPrice?: string;
+    dollarPrice?: number;
+    dollarStringPrice?: string;
+    poundAsk?: string;
 }

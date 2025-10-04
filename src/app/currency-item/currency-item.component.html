@@ -7,8 +7,12 @@
         <strong class="font-normal font-vazir text-xs {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}{{currencyItem?.lastPriceInfo?.dp}}%</strong>
     </div>
     <div class="flex flex-col items-end justify-center w-[25%]">    
-        <strong class="text-dark-text dark:text-light-text font-normal font-vazir text-xs md:text-sm leading-4.5 md:leading-5">{{currencyItem?.lastPriceInfo?.p}}</strong>
-        <strong class="text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs md:text-sm">{{currencyItem?.unit}}</strong>
+        <strong *ngIf="currencyItem?.groupName !== 'World_Market'" class="text-dark-text dark:text-light-text font-normal font-vazir text-xs md:text-sm leading-4.5 md:leading-5">{{showCurrencyId === 0 ? currencyItem?.tomanStringPrice : currencyItem?.dollarStringPrice }}</strong>
+        <strong *ngIf="currencyItem?.groupName === 'World_Market'" class="text-dark-text dark:text-light-text font-normal font-vazir text-xs md:text-sm leading-4.5 md:leading-5">{{ currencyItem?.lastPriceInfo?.p }}</strong>
+        <div class="flex justify-center items-start gap-2">
+            <i *ngIf="currencyItem?.poundAsk" class="bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative peer-hover:flex"><div class="peer z-[3] hidden relative bg-amber-600 rounded-md after:content-[''] after:absolute after:top-0 after:left-1/2 after:w-4 after:h-8"></div></i>
+            <strong class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs md:text-sm">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</strong>
+        </div>
     </div>
     <div class="flex justify-end items-start gap-1.5 flex-1">
         <div class="flex pl-0.5 overflow-hidden text-ellipsis">

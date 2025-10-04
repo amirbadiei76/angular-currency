@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { Currencies, CurrencyItem } from '../interface/Currencies';
 import { CurrencyItemComponent } from '../currency-item/currency-item.component';
-import { base_metal_title, coin_title, commodity_title, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_silver, filter_us_base_metals, gold_title, precious_metal_title, rial_unit, world_title } from '../constants/Values';
+import { base_metal_title, coin_title, commodity_title, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, gold_title, precious_metal_title, toman_unit, world_title } from '../constants/Values';
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
 import { fromEvent } from 'rxjs';
@@ -96,6 +96,17 @@ export class HomeComponent {
       ]
     }
 
+  ];
+
+  supportedCurrencies = [
+    {
+      id: 0,
+      title: 'تومان IRT'
+    },
+    {
+      id: 1,
+      title: 'دلار USD'
+    }
   ]
 
   currentList?: CurrencyItem[] = [];
@@ -113,9 +124,11 @@ export class HomeComponent {
   @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>; 
   @ViewChild('rightSubCategoryArrow') rightSubCategoryArrow?: ElementRef<HTMLDivElement>; 
   @ViewChild('leftSubCategoryArrow') leftSubCategoryArrow?: ElementRef<HTMLDivElement>;
+  @ViewChild('successMsg') successMsg?: ElementRef<HTMLDivElement>;
 
   showRightSubCategoryArrow: WritableSignal<Boolean> = signal(true);
   showLeftSubCategoryArrow: WritableSignal<Boolean> = signal(true);
+  currentSupportCurrencyId: number = 0;
 
   private scrollAmount: number = 70;
   
@@ -128,13 +141,13 @@ export class HomeComponent {
 
   constructor(private requestArray: RequestArrayService) {
     this.reqestClass = requestArray
-    // this.reqestClass = RequestArray.requestArrayInstance(currencyService)
     this.reqestClass.setupMainData()
-    
 
-    // console.log('req? constructor: ' + this.reqestClass)
-
-    if (typeof window !== 'undefined') {      
+    if (typeof window !== 'undefined') {    
+      
+      window.onbeforeunload = () => {
+        window.scrollTo(0, 0)  
+      }
 
       if (window.innerWidth <= 624) {
         this.change24hText.set('24h')
@@ -271,37 +284,41 @@ export class HomeComponent {
 
   setCurrentCategory (title: string) {
     this.currentCategory.set(title)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
 
     switch(title) {
       case favories_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.favList;
         this.initializeFavFilters();
+        this.currentSupportCurrencyId = 0;
         this.currentSubCategoryList = this.categories[0].subtitles
         break;
 
       case currency_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.mainCurrencyList;
+        this.currentSupportCurrencyId = 0;
         this.currentSubCategoryList = this.categories[1].subtitles
         break;
       
       case gold_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.goldList;
+        this.currentSupportCurrencyId = 0;
         this.currentSubCategoryList = this.categories[2].subtitles
         break;
 
       case coin_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.coinList;
+        this.currentSupportCurrencyId = 0;
         this.currentSubCategoryList = this.categories[3].subtitles
         break;
 
       case crypto_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.cryptoList;
+        this.currentSupportCurrencyId = 1;
         this.currentSubCategoryList = this.categories[4].subtitles
         break;
 
@@ -314,18 +331,21 @@ export class HomeComponent {
       case precious_metal_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.preciousMetalList;
+        this.currentSupportCurrencyId = 1;
         this.currentSubCategoryList = this.categories[6].subtitles
         break;
 
       case base_metal_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.baseMetalList;
+        this.currentSupportCurrencyId = 1;
         this.currentSubCategoryList = this.categories[7].subtitles
         break;
 
       case commodity_title:
         this.priceSortingText.set('قیمت');
         this.currentList = this.reqestClass?.commodityList;
+        this.currentSupportCurrencyId = 1;
         this.currentSubCategoryList = this.categories[8].subtitles
         break;
     }
@@ -333,9 +353,11 @@ export class HomeComponent {
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
-    // this.scrollToStart()
-    // this.scrollViewSubCategory?.nativeElement?.scrollTo({ left: this.scrollViewSubCategory.nativeElement.scrollWidth!! + this.scrollViewSubCategory.nativeElement.clientWidth!!});
     this.updateSubCategoryArrowVisibility()
+  }
+
+  canShowSupportedCurrencyToggle () {
+    return this.currentCategory() !== world_title && (this.currentCategory() !== favories_title || (this.currentSubCategory() !== filter_overview && this.currentSubCategory() !== filter_pair_currencies))
   }
 
 
@@ -373,7 +395,7 @@ export class HomeComponent {
       if (this.currentList?.at(0)?.unit === dollar_unit) {
           let convertedList: CurrencyItem[] = [...this.currenTemptList!!]
           convertedList.forEach((item: CurrencyItem) => {
-            item.unit = rial_unit;
+            item.unit = toman_unit;
           })
       }
       else {
@@ -508,13 +530,11 @@ export class HomeComponent {
   }
 
   ngOnInit () {
-    // this.reqestClass = RequestArray.requestArrayInstance(this.currencyService)
-    // this.reqestClass?.setupMainData();
     this.setCurrentCategory(currency_title);
     
     if (typeof window !== 'undefined') {
       
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // window.scrollTo({ top: 0, behavior: 'instant' })
       
       fromEvent(window, 'resize')
       .subscribe((event: Event) => {
@@ -538,16 +558,9 @@ export class HomeComponent {
   }
 
   ngAfterViewInit () {
-    // this.reqestClass = RequestArray.requestArrayInstance(this.currencyService)
-    // if (this.reqestClass.dataFetced) {
-      // console.log('fetched? ' + this.reqestClass.dataFetced)
-      // console.log('req? after init: ' + this.reqestClass)
-      // console.log('req? after init: ' + this.reqestClass)
-
-    // }
     
     if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // window.scrollTo({ top: 0, behavior: 'instant' })
 
       fromEvent(window, 'click').subscribe((event: Event) => {
         if ((event.target as HTMLElement).id !== 'searchInput') {
@@ -556,10 +569,7 @@ export class HomeComponent {
           this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
         }
       })
-
       
-   
-      // this.scrollToStart();
     }
   }
 }

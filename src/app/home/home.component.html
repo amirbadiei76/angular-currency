@@ -30,20 +30,16 @@
         </div>
     </div>
 
-    <div class="order-1 sm:order-2 flex margin-inline-7 padding-inline-4 justify-between padding-vertical-2 items-center bg-light dark:bg-dark border-b border-b-light-text3 dark:border-b-dark-text3">
-        <!-- <div class="overflow-hidden flex flex-row-reverse rounded-semi border border-dark-text2 dark:border-light-text2">
-            <div
-                class="w-18 h-[3.6875rem] flex justify-center items-center bg-amber-500 cursor-pointer"
-                (click)="convertToRial()"
-                >
-                <p class="rtl text-dark-text2 dark:text-light-text2 font-vazir text-sm">تومان IRR</p>
-            </div>
-            <div *ngIf="currentList?.at(0)?.unit === 'دلار'"
-                (click)="currenTemptList = currentList"
-                class="w-18 h-[3.6875rem] flex justify-center items-center bg-amber-900 cursor-pointer">
-                <p class="rtl text-dark-text2 dark:text-light-text2 font-vazir text-sm">دلار USD</p>
-            </div>
-        </div> -->
+    <div class="order-1 sm:order-2 flex margin-inline-7 padding-inline-4 gap-4 {{ canShowSupportedCurrencyToggle() ? 'justify-between' : 'justify-end' }} padding-vertical-2 items-start bg-light dark:bg-dark border-b border-b-light-text3 dark:border-b-dark-text3">
+        <div *ngIf="canShowSupportedCurrencyToggle()" class="overflow-hidden flex flex-row-reverse">
+            @for (currency of supportedCurrencies; track currency.id) {
+                <div
+                    (click)="currentSupportCurrencyId = currency.id"
+                    class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} sm:w-18 w-25 h-12 flex justify-center padding-inline-0.25 items-center cursor-pointer">
+                    <p class="rtl {{ currency.id === currentSupportCurrencyId ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} font-vazir text-2xs sm:text-xs">{{currency.title}}</p>
+                </div>
+            }
+        </div>
         <div class="relative w-full sm:w-[40%] h-12">
             <svg
                 viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
@@ -110,10 +106,10 @@
     </div>
     <div *ngIf="currenTemptList2" class="order-4 mx-0 margin-inline-7">
         @for (item of currenTemptList2; track item.id) {
-            <currency-item [currencyItem]="item"/>
+            <currency-item [showCurrencyId]="currentSupportCurrencyId" [currencyItem]="item"/>
         }
     </div>
-    <div *ngIf="!currenTemptList2" class="order-5 mx-0 w-full margin-inline-7 bg-amber-500">
+    <div *ngIf="!reqestClass?.mainData" class="order-4 mx-0 w-full margin-inline-7 bg-amber-500">
         <div class="h-100 w-full">
 
         </div>
@@ -128,3 +124,8 @@
         </div>
     </div>
 </main>
+
+<!-- <div #successMsg class="absolute w-[75%] sm:w-auto padding-inline-8 top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light font-vazir dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
+    <i class="bi bi-x-lg"></i>
+    {{ reqestClass?.currentState === '+' ? 'با موفقیت به دیده بان اضافه شد' : 'با موفقیت از دیده بان حذف شد' }}
+</div> -->

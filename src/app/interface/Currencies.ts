@@ -600,4 +600,8 @@ export interface CurrencyItem {
     dollarPrice?: number;
     dollarStringPrice?: string;
     poundAsk?: string;
+    rialChanges?: string;
+    rialChangeState?: string;
+    dollarChanges?: string;
+    dollarChangeState?: string;
 }

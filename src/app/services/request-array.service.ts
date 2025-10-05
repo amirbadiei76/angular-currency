@@ -53,6 +53,41 @@ export class RequestArrayService {
     }
   }
 
+  convertUnitChanges (item: CurrencyItem, current: Current) {
+    let dollarChanges = (current.price_dollar_rl.dt === 'low' ? -1 : 1) * (current.price_dollar_rl.dp);
+    let itemChanges = (item.lastPriceInfo.dt === 'low' ? -1 : 1) * (item.lastPriceInfo.dp)
+    if (item.unit === toman_unit) {
+        item.rialChangeState = item.lastPriceInfo.dt
+        item.rialChanges = item.lastPriceInfo.dp + '';
+        let itemDollarChanges = (((1 + itemChanges) / (1 + dollarChanges)) - 1);
+        item.dollarChangeState = itemDollarChanges >= 0 ? 'high' : 'low';
+        itemDollarChanges = Math.floor(itemDollarChanges * 100) / 100
+        item.dollarChanges = Math.abs(itemDollarChanges) + '';
+    }
+    else if (item.unit === dollar_unit) {
+        item.dollarChangeState = item.lastPriceInfo.dt
+        item.dollarChanges = item.lastPriceInfo.dp + '';
+        let itemRialChanges = (((1 + itemChanges) * (1 + dollarChanges)) + 1);
+        item.rialChangeState = itemRialChanges >= 0 ? 'high' : 'low';
+        itemRialChanges = Math.floor(itemRialChanges * 100) / 100
+        item.rialChanges = Math.abs(itemRialChanges) + '';
+    } else if (item.unit === pound_unit) {
+        let poundChanges = (current.price_gbp.dt === 'low' ? -1 : 1) * (current.price_gbp.dp)
+        let poundAskChanges = (current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (current['gbp-usd-ask'].dp)
+        
+        let itemDollarChanges = (((1 + itemChanges) / (1 + poundAskChanges)) - 1);
+        let itemRialChanges = (((1 + itemChanges) * (1 + poundChanges)) + 1);
+
+        item.dollarChangeState = itemDollarChanges >= 0 ? 'high' : 'low';
+        item.rialChangeState = itemRialChanges >= 0 ? 'high' : 'low'
+        
+        itemDollarChanges = Math.floor(itemDollarChanges * 100) / 100;
+        itemRialChanges = Math.floor(itemRialChanges * 100) / 100;
+        item.dollarChanges = Math.abs(itemDollarChanges) + '';
+        item.rialChanges = Math.abs(itemRialChanges) + '';
+    }
+  }
+
   getFavorites() {
     if (typeof window !== 'undefined') {
         let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
@@ -121,6 +156,7 @@ export class RequestArrayService {
         item.tomanPrice = Math.round((item.realPrice / 10) * 100) / 100
         item.tomanStringPrice = this.commafy(item.tomanPrice);
 
+        this.convertUnitChanges(item, current)
 
         // fix 24h changes problem
         if (item.lastPriceInfo.dt === 'low' && item.lastPriceInfo.dp === 0) item.lastPriceInfo.dt = 'high'

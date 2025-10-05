@@ -108,6 +108,9 @@
     }
 }
 
+.animate-entry {
+    /* transform: 0.4s ease; */
+}
 
 @keyframes tranlate-entry {
     0% {

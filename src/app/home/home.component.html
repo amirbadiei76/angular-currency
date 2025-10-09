@@ -23,7 +23,7 @@
                             {{item.title}}
                         </span>
                         <div
-                            class="bg-green-btn h-0.5 w-8 {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
+                            class="bg-green-btn h-0.5 w-8 duration-300 transition {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
                     </div>
                 </div>
             }
@@ -104,24 +104,19 @@
             </div>
         </div>
     </div>
-    <div *ngIf="currenTemptList2" class="order-4 mx-0 margin-inline-7">
+    <div *ngIf="currenTemptList2?.length !== 0" class="order-4 mx-0 margin-inline-7">
         @for (item of currenTemptList2; track item.id) {
             <currency-item [showCurrencyId]="currentSupportCurrencyId" [currencyItem]="item"/>
         }
+        
     </div>
-    <div *ngIf="!reqestClass?.mainData" class="order-4 mx-0 w-full margin-inline-7 bg-amber-500">
-        <div class="h-100 w-full">
-
-        </div>
-        <div class="h-100 w-full">
-
-        </div><div class="h-100 w-full">
-
-        </div><div class="h-100 w-full">
-
-        </div><div class="h-100 w-full">
-
-        </div>
+    <div
+        *ngIf="currenTemptList2?.length === 0"
+        class="order-5 mx-0 margin-inline-7"
+        >
+        <empty-item />
+        <empty-item />
+        <empty-item />
     </div>
 </main>
 

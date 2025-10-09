@@ -30,7 +30,13 @@ export class RequestArrayService {
     
   }
 
-  
+    listHasItems() {
+        return this.allItemsList.length > 0
+    }
+
+    listIsEmpty () {
+        return this.allItemsList.length === 0
+    }
 
   addToFavorite(item: CurrencyItem) {
     if (window.navigator.onLine) {

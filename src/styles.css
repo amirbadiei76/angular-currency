@@ -148,6 +148,56 @@
     direction: ltr;
 }
 
+.transition-background-300 {
+    transition: 0.3s ease background-color;
+}
+
+.transition-background-500 {
+    transition: 0.5s ease background-color;
+}
+
+
+.transition-text-300 {
+    transition: 0.3s ease text;
+}
+
+.transition-text-500 {
+    transition: 0.5s ease text;
+}
+
+.transition-padding-300 {
+    transition: 0.3s ease padding;
+}
+
+.transition-padding-500 {
+    transition: 0.5s ease padding;
+}
+
+.transition-margin {
+    transition: 0.3s ease margin;
+}
+
+.transition-opacity {
+    transition: 0.3s ease opacity;
+}
+
+.transition-border-300 {
+    transition: 0.3s ease border;
+}
+
+.transition-border-500 {
+    transition: 0.5s ease border;
+}
+
+
+.transition-color-300 {
+    transition: 0.3s ease color;
+}
+
+.transition-color-500 {
+    transition: 0.5s ease color;
+}
+
 
 .scroll-snap-x {
     scroll-snap-type: x mandatory;

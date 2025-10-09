@@ -6,6 +6,7 @@ import { StarIconComponent } from '../star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
 import { fromEvent } from 'rxjs';
 import { RequestArrayService } from '../services/request-array.service';
+import { EmptyItemComponent } from '../empty-item/empty-item.component';
 
 enum SortingType {
   Ascending, Descending, None
@@ -13,12 +14,11 @@ enum SortingType {
 
 @Component({
   selector: 'app-home',
-  imports: [CurrencyItemComponent, NgIf, StarIconComponent],
+  imports: [CurrencyItemComponent, NgIf, StarIconComponent, EmptyItemComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  fetchedData?: Currencies;
   reqestClass?: RequestArrayService;
 
   categories = [

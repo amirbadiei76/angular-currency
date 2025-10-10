@@ -30,14 +30,6 @@ export class RequestArrayService {
     
   }
 
-    listHasItems() {
-        return this.allItemsList.length > 0
-    }
-
-    listIsEmpty () {
-        return this.allItemsList.length === 0
-    }
-
   addToFavorite(item: CurrencyItem) {
     if (window.navigator.onLine) {
         this.currentState = '+';
@@ -2223,7 +2215,7 @@ export class RequestArrayService {
         shortedName: "EUR/USD Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/eu-usd.png'
+        img: '/assets/images/ask-flags/eu-usd.webp'
     });
     this.worldMarketList.push({
         id: "1000182",
@@ -2233,7 +2225,7 @@ export class RequestArrayService {
         shortedName: "GBP/USD Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/gb-us.png'
+        img: '/assets/images/ask-flags/gb-us.webp'
     });
     this.worldMarketList.push({
         id: "1000183",
@@ -2243,7 +2235,7 @@ export class RequestArrayService {
         shortedName: "USD/JPY Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-jp.png'
+        img: '/assets/images/ask-flags/us-jp.webp'
     });
     this.worldMarketList.push({
         id: "1000184",
@@ -2253,7 +2245,7 @@ export class RequestArrayService {
         shortedName: "USD/CHF Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-ch.png'
+        img: '/assets/images/ask-flags/us-ch.webp'
     });
     this.worldMarketList.push({
         id: "1000185",
@@ -2263,7 +2255,7 @@ export class RequestArrayService {
         shortedName: "AUD/USD Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/au-us.png'
+        img: '/assets/images/ask-flags/au-us.webp'
     });
     this.worldMarketList.push({
         id: "1000186",
@@ -2273,7 +2265,7 @@ export class RequestArrayService {
         shortedName: "USD/CAD Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-ca.png'
+        img: '/assets/images/ask-flags/us-ca.webp'
     });
     this.worldMarketList.push({
         id: "1000187",
@@ -2283,7 +2275,7 @@ export class RequestArrayService {
         shortedName: "USD/NZD Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-nz.png'
+        img: '/assets/images/ask-flags/us-nz.webp'
     });
     this.worldMarketList.push({
         id: "1000188",
@@ -2293,7 +2285,7 @@ export class RequestArrayService {
         shortedName: "USD/TRY Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-tr.png'
+        img: '/assets/images/ask-flags/us-tr.webp'
     });
     this.worldMarketList.push({
         id: "1000189",
@@ -2303,7 +2295,7 @@ export class RequestArrayService {
         shortedName: "USD/SEK Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-se.png'
+        img: '/assets/images/ask-flags/us-se.webp'
     });
     this.worldMarketList.push({
         id: "1000190",
@@ -2313,7 +2305,7 @@ export class RequestArrayService {
         shortedName: "USD/SAR Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-sa.png'
+        img: '/assets/images/ask-flags/us-sa.webp'
     });
     this.worldMarketList.push({
         id: "1000191",
@@ -2323,7 +2315,7 @@ export class RequestArrayService {
         shortedName: "USD/KRW Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-kr.png'
+        img: '/assets/images/ask-flags/us-kr.webp'
     });
     this.worldMarketList.push({
         id: "1000192",
@@ -2333,7 +2325,7 @@ export class RequestArrayService {
         shortedName: "USD/CNY Ask",
         filterName: filter_pair_currencies,
         groupName: WORLD_MARKET_PREFIX,
-        img: '/assets/images/ask-flags/us-cn.png'
+        img: '/assets/images/ask-flags/us-cn.webp'
     });
 
   }
@@ -2351,7 +2343,7 @@ export class RequestArrayService {
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000194",
@@ -2362,7 +2354,7 @@ export class RequestArrayService {
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000195",
@@ -2373,7 +2365,7 @@ export class RequestArrayService {
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000196",
@@ -2384,7 +2376,7 @@ export class RequestArrayService {
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000197",
@@ -2395,7 +2387,7 @@ export class RequestArrayService {
         filterName: filter_coin_cash,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
 
     
@@ -2409,7 +2401,7 @@ export class RequestArrayService {
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000199",
@@ -2420,7 +2412,7 @@ export class RequestArrayService {
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000200",
@@ -2431,7 +2423,7 @@ export class RequestArrayService {
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000201",
@@ -2442,7 +2434,7 @@ export class RequestArrayService {
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000202",
@@ -2453,7 +2445,7 @@ export class RequestArrayService {
         filterName: filter_coin_retail,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
 
 
@@ -2467,7 +2459,7 @@ export class RequestArrayService {
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000204",
@@ -2478,7 +2470,7 @@ export class RequestArrayService {
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000205",
@@ -2489,7 +2481,7 @@ export class RequestArrayService {
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000206",
@@ -2500,7 +2492,7 @@ export class RequestArrayService {
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000207",
@@ -2511,7 +2503,7 @@ export class RequestArrayService {
         filterName: filter_coin_blubber,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
 
 
@@ -2525,7 +2517,7 @@ export class RequestArrayService {
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000209",
@@ -2536,7 +2528,7 @@ export class RequestArrayService {
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000210",
@@ -2547,7 +2539,7 @@ export class RequestArrayService {
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000211",
@@ -2558,7 +2550,7 @@ export class RequestArrayService {
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000212",
@@ -2569,7 +2561,7 @@ export class RequestArrayService {
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000213",
@@ -2580,7 +2572,7 @@ export class RequestArrayService {
         filterName: filter_coin_exchange,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
 
 
@@ -2594,7 +2586,7 @@ export class RequestArrayService {
         filterName: filter_other_coins,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000215",
@@ -2605,7 +2597,7 @@ export class RequestArrayService {
         filterName: filter_other_coins,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
     this.coinList.push({
         id: "1000216",
@@ -2616,7 +2608,7 @@ export class RequestArrayService {
         filterName: filter_other_coins,
         groupName: COIN_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/sekee.png'
+        img: '/assets/images/coins/sekee.webp'
     });
 
   }
@@ -2634,7 +2626,7 @@ export class RequestArrayService {
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/ingots2.png'
+        img: '/assets/images/coins/ingots2.webp'
     });
     this.goldList.push({
         id: "1000218",
@@ -2645,7 +2637,7 @@ export class RequestArrayService {
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/ingots2.png'
+        img: '/assets/images/coins/ingots2.webp'
     });
     this.goldList.push({
         id: "1000219",
@@ -2656,7 +2648,7 @@ export class RequestArrayService {
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/ingots2.png'
+        img: '/assets/images/coins/ingots2.webp'
     });
     this.goldList.push({
         id: "1000220",
@@ -2667,7 +2659,7 @@ export class RequestArrayService {
         filterName: filter_gold,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/ingots2.png'
+        img: '/assets/images/coins/ingots2.webp'
     });
 
 
@@ -2681,7 +2673,7 @@ export class RequestArrayService {
         filterName: filter_silver,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/silver2.png'
+        img: '/assets/images/coins/silver2.webp'
     });
     this.goldList.push({
         id: "1000222",
@@ -2692,7 +2684,7 @@ export class RequestArrayService {
         filterName: filter_silver,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/silver2.png'
+        img: '/assets/images/coins/silver2.webp'
     });
 
 
@@ -2706,7 +2698,7 @@ export class RequestArrayService {
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
     this.goldList.push({
         id: "1000224",
@@ -2717,7 +2709,7 @@ export class RequestArrayService {
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
     this.goldList.push({
         id: "1000225",
@@ -2728,7 +2720,7 @@ export class RequestArrayService {
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
     this.goldList.push({
         id: "1000226",
@@ -2739,7 +2731,7 @@ export class RequestArrayService {
         filterName: filter_mesghal,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
 
 
@@ -2753,7 +2745,7 @@ export class RequestArrayService {
         filterName: filter_melted,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
     this.goldList.push({
         id: "1000228",
@@ -2764,7 +2756,7 @@ export class RequestArrayService {
         filterName: filter_melted,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
     this.goldList.push({
         id: "1000229",
@@ -2775,7 +2767,7 @@ export class RequestArrayService {
         filterName: filter_melted,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/bar2.png'
+        img: '/assets/images/coins/bar2.webp'
     });
 
 
@@ -2790,7 +2782,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000231",
@@ -2801,7 +2793,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000232",
@@ -2812,7 +2804,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000233",
@@ -2823,7 +2815,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000234",
@@ -2834,7 +2826,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000235",
@@ -2845,7 +2837,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000236",
@@ -2856,7 +2848,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000237",
@@ -2867,7 +2859,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000238",
@@ -2878,7 +2870,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000239",
@@ -2889,7 +2881,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000240",
@@ -2900,7 +2892,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000241",
@@ -2911,7 +2903,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000242",
@@ -2922,7 +2914,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
     this.goldList.push({
         id: "1000243",
@@ -2933,7 +2925,7 @@ export class RequestArrayService {
         filterName: filter_etf,
         groupName: GOLD_PREFIX,
         unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.png'
+        img: '/assets/images/coins/treasure-chest2.webp'
     });
 
   }
@@ -2951,7 +2943,7 @@ export class RequestArrayService {
         filterName: filter_global_ounces,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/gold.png'
+        img: '/assets/images/coins/gold.webp'
     });
     this.preciousMetalList.push({
         id: "1000245",
@@ -2962,7 +2954,7 @@ export class RequestArrayService {
         filterName: filter_global_ounces,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/silver.png'
+        img: '/assets/images/coins/silver.webp'
     });
     this.preciousMetalList.push({
         id: "1000246",
@@ -2973,7 +2965,7 @@ export class RequestArrayService {
         filterName: filter_global_ounces,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/platinum.png'
+        img: '/assets/images/coins/platinum.webp'
     });
     this.preciousMetalList.push({
         id: "1000247",
@@ -2984,7 +2976,7 @@ export class RequestArrayService {
         filterName: filter_global_ounces,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/palladium.png'
+        img: '/assets/images/coins/palladium.webp'
     });
 
 
@@ -2998,7 +2990,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
     this.preciousMetalList.push({
         id: "1000249",
@@ -3009,7 +3001,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
     this.preciousMetalList.push({
         id: "1000250",
@@ -3020,7 +3012,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
     this.preciousMetalList.push({
         id: "1000251",
@@ -3031,7 +3023,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
     this.preciousMetalList.push({
         id: "1000252",
@@ -3042,7 +3034,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
     this.preciousMetalList.push({
         id: "1000253",
@@ -3053,7 +3045,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
     this.preciousMetalList.push({
         id: "1000254",
@@ -3064,7 +3056,7 @@ export class RequestArrayService {
         filterName: filter_gold_vs_other,
         groupName: PRECIOUS_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/coins/coin-vs2.png'
+        img: '/assets/images/coins/coin-vs2.webp'
     });
 
   }

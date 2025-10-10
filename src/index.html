@@ -7,6 +7,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <script>
+      function getCookies(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`)
+        if (parts.length === 2) return parts.pop().split(';').shift()
+      }
+
+      const theme = getCookies('user-theme');
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+      else document.documentElement.classList.remove('dark')
+  </script>
 </head>
 <body class="bg-light dark:bg-dark">
   <app-root></app-root>

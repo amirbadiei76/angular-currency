@@ -1,6 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { CurrenciesService } from '../services/currencies.service';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -12,33 +13,28 @@ export class HeaderComponent {
 
   isDark: boolean = false;
 
-  constructor () {
+  themeService: ThemeService;
 
-    if (typeof window !== 'undefined') {
-      if (localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
-      else {
-        if (localStorage.getItem("theme") === 'dark') {
-          document.documentElement.classList.add("dark")
-          this.isDark = true
-        }
-        else this.isDark = false;
-      }
-    }
+  constructor (private theme: ThemeService) {
+    this.themeService = theme;
+    this.themeService.getStringTheme();
+    // if (typeof window !== 'undefined') {
+    //   if (localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
+    //   else {
+    //     if (localStorage.getItem("theme") === 'dark') {
+    //       document.documentElement.classList.add("dark")
+    //       this.isDark = true
+    //     }
+    //     else this.isDark = false;
+    //   }
+    // }
   }
 
   ngOnInit() {
-    
+    this.themeService.getStringTheme();
   }
 
-  changeTheme() {
-    
-    document.documentElement.classList.toggle("dark")
-    this.isDark = document.documentElement.classList.contains("dark")!!
-
-    if (document.documentElement.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark")
-    }
-    else localStorage.setItem("theme", "light");
-    
+  changeTheme() {    
+    this.themeService.toggleTheme();
   }
 }

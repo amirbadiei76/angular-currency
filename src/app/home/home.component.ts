@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { Currencies, CurrencyItem } from '../interface/Currencies';
 import { CurrencyItemComponent } from '../currency-item/currency-item.component';
 import { base_metal_title, coin_title, commodity_title, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, gold_title, precious_metal_title, toman_unit, world_title } from '../constants/Values';
@@ -158,50 +158,16 @@ export class HomeComponent {
     }
   }
   
-  // checkSubCategoryArrows (element: HTMLDivElement) {
-    
-  //   if (Math.floor(element.scrollLeft) + element.scrollWidth ===  element.clientWidth) {
-    //     this.rightSubCategoryArrow?.nativeElement.classList.remove('hidden')
-    //     this.leftSubCategoryArrow?.nativeElement.classList.add('hidden')
-    //   }
-    //   else if (Math.round(element.scrollLeft)  <= 1) {
-      //     // divElement.scrollTo({ left: 0 })
-      //     this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
-      //     this.rightSubCategoryArrow?.nativeElement.classList.add('hidden')
-      //   }
-      //   // else if (Math.floor(element.scrollLeft) + element.scrollWidth !==  element.clientWidth) {
-        //   // }
-        
-        //   else {
-          //     console.log('else')
-          //     this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
-  //     this.rightSubCategoryArrow?.nativeElement.classList.remove('hidden')
-  //   }
-
-
-    
-  // }
-  
-  // resetSubCategoryArrows () {
-  //   let divElement = (this.scrollViewSubCategory?.nativeElement as HTMLDivElement)
-  //   divElement?.scrollTo({ left: divElement.clientWidth - divElement.scrollWidth })
-  //   this.leftSubCategoryArrow?.nativeElement.classList.remove('hidden')
-  //   this.rightSubCategoryArrow?.nativeElement.classList.add('hidden')
-  // }
-  
   
   subCategoryLeft () {
     const element = this.scrollViewSubCategory?.nativeElement;
     this.showRightSubCategoryArrow.set(true)
     element?.scrollBy({ behavior: 'smooth', left: -this.scrollAmount })
-    this.updateSubCategoryArrowVisibility()
   }
   
   subCategoryRight () {
     const element = this.scrollViewSubCategory?.nativeElement;
-    this.showLeftSubCategoryArrow.set(true)
     element?.scrollBy({ behavior: 'smooth', left: this.scrollAmount })
-    this.updateSubCategoryArrowVisibility()
   }
 
   scrollToStart () {
@@ -209,64 +175,12 @@ export class HomeComponent {
     element?.scrollTo({ left: 0, behavior: 'smooth' })
   }
 
-  onSubCategoryScroll () {
-    this.updateSubCategoryArrowVisibility()
-  }
-
   getMaxScrollLeft () {
     const element = this.scrollViewSubCategory?.nativeElement;
     return Math.max(0, element?.scrollWidth!! - element?.clientWidth!!)
   }
 
-  
-  
-  updateSubCategoryArrowVisibility() {
-    const scrollElement = this.scrollViewSubCategory?.nativeElement;
-    const scrollLeft = scrollElement?.scrollLeft;
-    const scrollWidth = scrollElement?.scrollWidth;
-    const clientWidth = scrollElement?.clientWidth;
 
-    const maxScroll = this.getMaxScrollLeft()
-
-    const EPS = 1
-
-    // this.showLeftSubCategoryArrow = scrollLeft! > EPS;
-    // this.showRightSubCategoryArrow = scrollLeft! <= clientWidth! - scrollLeft!
-
-    // console.log('sc left: ' + scrollLeft!!)
-    // console.log('floor sc left: ' + Math.floor(scrollLeft!!))
-    // console.log('sc width: ' + scrollWidth!!)
-    // console.log('cl width: ' + clientWidth!!)
-    // console.log('left side: ' + (scrollLeft!! + scrollWidth!!))
-    // console.log('right side: ' + (clientWidth!!))
-    // console.log('show right arrow: ' + ((Math.floor(scrollLeft!!) + clientWidth!!) >= (scrollWidth!! - 1)))
-    // console.log('________________')
-
-    // if (scrollWidth!! + scrollLeft!! < clientWidth!!)
-    // {
-    //   this.showLeftSubCategoryArrow = false
-    //   this.showRightSubCategoryArrow = true
-    //   return;
-    // }
-    
-    if (scrollLeft! === 0) {
-      console.log('scroll: 0')
-      this.showRightSubCategoryArrow.set(false)
-    }
-    else if ((Math.floor(scrollLeft!) + scrollWidth!) === clientWidth) {
-      this.showLeftSubCategoryArrow.set(false)
-      console.log('(scrollLeft! + scrollWidth!) === clientWidth')
-    }
-
-
-    // this.showLeftSubCategoryArrow = scrollLeft! <= 1;
-    // this.showRightSubCategoryArrow = ((Math.floor(scrollLeft!) + clientWidth!) < (scrollWidth!));
-      
-    
-    console.log('show left? ' + this.showLeftSubCategoryArrow())
-    console.log('show right? ' + this.showRightSubCategoryArrow())
-    console.log('__________________________________')
-  }
 
 
 
@@ -353,7 +267,8 @@ export class HomeComponent {
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
-    this.updateSubCategoryArrowVisibility()
+    this.scrollToStart();
+    this.checkScrollPosition()
   }
 
   canShowSupportedCurrencyToggle () {
@@ -571,5 +486,29 @@ export class HomeComponent {
       })
       
     }
+    this.checkScrollPosition()
+  }
+
+  onScrollEventHandler () {
+    this.checkScrollPosition()
+  }
+
+  checkScrollPosition () {
+    const element = this.scrollViewSubCategory?.nativeElement;
+    if (!element) return;
+    const scrollLeft = element.scrollLeft;
+    const scrollWidth = element.scrollWidth;
+    const clientWidth = element.clientWidth;
+
+    const maxScroll = scrollWidth - clientWidth;
+    const currentScroll = Math.abs(scrollLeft)
+
+    this.showRightSubCategoryArrow.set(currentScroll > 5)
+    this.showLeftSubCategoryArrow.set(currentScroll < (maxScroll - 5))
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkScrollPosition()
   }
 }

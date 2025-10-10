@@ -1,35 +1,35 @@
 <div class="min-h-[4.853rem] animate-pulse padding-inline-4 sm:min-h-[5.8rem] relative w-full flex items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
     <div class="justify-start items-center gap-1.5 w-[20%] hidden md:flex">
-        <i class="text-xs opacity-0 bi bi-caret-left-fill text-dark-text3 dark:text-light-text3 font-normal"></i>
-        <strong class="font-normal font-yekan animate-pulse bg-light-border dark:bg-dark-border text-transparent rounded-sm">اطلاعات بیشتر</strong>
+        <i class="text-xs bi bi-caret-left-fill text-dark-text3 dark:text-light-text3 font-normal opacity-0"></i>
+        <strong class="text-transparent bg-light-border dark:bg-dark-border rounded-sm animate-pulse font-normal font-yekan">اطلاعات بیشتر</strong>
     </div>
     <div class="flex justify-start md:justify-center items-center gap-2 w-[15%]">
         
         <!-- <strong class="font-normal font-vazir text-xs {{(currencyItem?.lastPriceInfo?.dt === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currencyItem?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{ currencyItem?.lastPriceInfo?.dp}}%</strong> -->
-        <strong class="font-normal font-vazir text-xs text-transparent rounded-sm animate-pulse bg-light-border dark:bg-dark-border">+1.3%</strong>
+        <strong class="font-normal font-vazir text-xs text-transparent bg-light-border dark:bg-dark-border rounded-sm animate-pulse">+1.2%</strong>
     </div>
-    <div class="flex flex-col items-end justify-center w-[25%] relative">    
-        <strong class="text-transparent rounded-sm animate-pulse bg-light-border dark:bg-dark-border font-normal font-vazir text-xs md:text-sm leading-4.5 md:leading-5">112,000</strong>
-        <strong class="text-dark-text dark:text-light-text font-normal font-vazir text-xs md:text-sm leading-4.5 md:leading-5 opacity-0">112</strong>
-        <div class="flex justify-center items-start gap-2 relative">
-            <strong class="text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs md:text-sm"></strong>
+    <div class="flex flex-col items-end justify-center w-[25%] relative">
+
+        <strong class="font-normal font-vazir text-xs md:text-sm leading-4.5 md:leading-5 text-transparent bg-light-border dark:bg-dark-border rounded-sm animate-pulse">us dollar</strong>
+        <div class="flex justify-center items-start gap-2 relative ">
+            <strong class="font-normal font-yekan text-2xs md:text-sm opacity-0">usd</strong>
         </div>
     </div>
     <div class="flex justify-end items-start gap-1.5 flex-1">
         <div class="flex pl-0.5 overflow-hidden text-ellipsis">
             <div class="flex flex-col items-end justify-start">
-                <p class="text-transparent rounded-sm animate-pulse bg-light-border dark:bg-dark-border order-2 sm:order-1 w-full text-end font-byekan-plus text-2xs sm:text-xs md:text-base leading-6">US Dollar</p>
-                <p class="text-dark order-1 sm:order-2 mt-1 whitespace-nowrap ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal text-xs sm:text-sm opacity-0">1222</p>
+                <p class="text-transparent bg-transparent rounded-none opacity-0 sm:opacity-100 sm:rounded-sm sm:bg-light-border sm:dark:bg-dark-border order-2 sm:order-1 w-full text-end font-byekan-plus text-2xs sm:text-xs md:text-base leading-6">usd dollar</p>
+                <p class="order-1 sm:order-2 mt-1 whitespace-nowrap ml-1 text-transparent bg-light-border dark:bg-dark-border opacity-100 sm:opacity-0 rounded-sm sm:bg-transparent sm:rounded-none font-normal text-xs sm:text-sm">usd dollar</p>
             </div>
         </div>
         <div class="mr-5 flex gap-0 md:gap-1.5 flex-row sm:flex-col md:flex-row">
-            <div class="md:w-8 md:h-8 w-6 h-6 object-cover rounded-full mr-2 mt-1 animate-pulse bg-light-border dark:bg-dark-border" src="" alt=""></div>
+            <div class="md:w-8 md:h-8 w-6 h-6 object-cover rounded-full mr-2 mt-1 bg-light-border dark:bg-dark-border animate-pulse" ></div>
         
             <div class="flex">
-                <span class="w-6 h-7">
-                    <span class="relative opacity-0">
+                <!-- <span class="w-6 h-7">
+                    <span class="relative">
                         <svg
-                            class="w-4 h-4 left-2 top-1.5 sm:top-3 fill-yellow-star absolute opacity-0"
+                            class="w-4 h-4 left-2 top-1.5 sm:top-3 fill-yellow-star absolute"
                             version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 288.259 288.259"
                             xml:space="preserve">
@@ -53,6 +53,9 @@
                             <path d="M256 38.013c-22.458 0-66.472 110.3-84.64 123.502-18.17 13.2-136.674 20.975-143.614 42.334-6.94 21.358 84.362 97.303 91.302 118.662 6.94 21.36-22.286 136.465-4.116 149.665 18.17 13.2 118.61-50.164 141.068-50.164 22.458 0 122.9 63.365 141.068 50.164 18.17-13.2-11.056-128.306-4.116-149.665 6.94-21.36 98.242-97.304 91.302-118.663-6.94-21.36-125.444-29.134-143.613-42.335-18.168-13.2-62.182-123.502-84.64-123.502z"/>
                         </svg>
                     </span>
+                </span> -->
+                <span class="w-6 h-7 flex justify-end items-center sm:items-end opacity-0" >
+                    <star-icon />
                 </span>
             </div>
         </div>

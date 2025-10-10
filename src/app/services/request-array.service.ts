@@ -27,7 +27,7 @@ export class RequestArrayService {
     currentItem = '';
 
   constructor(private currencyService: CurrenciesService) {
-    
+    this.setupMainData();
   }
 
   addToFavorite(item: CurrencyItem) {

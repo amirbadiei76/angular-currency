@@ -1879,7 +1879,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/shiba_inu2.png'
+        img: '/assets/images/crypto-icons/shiba_inu2.webp'
     });
     this.cryptoList.push({
         id: "1000152",
@@ -1989,7 +1989,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/ftm.png'
+        img: '/assets/images/crypto-icons/ftm.webp'
     });
     this.cryptoList.push({
         id: "1000162",
@@ -2000,7 +2000,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/egld.png'
+        img: '/assets/images/crypto-icons/egld.webp'
     });
     this.cryptoList.push({
         id: "1000163",
@@ -2044,7 +2044,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/flow.png'
+        img: '/assets/images/crypto-icons/flow.webp'
     });
     this.cryptoList.push({
         id: "1000167",
@@ -2055,7 +2055,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/gala.png'
+        img: '/assets/images/crypto-icons/gala.webp'
     });
     this.cryptoList.push({
         id: "1000168",
@@ -2077,7 +2077,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/cakeswap.png'
+        img: '/assets/images/crypto-icons/cakeswap.webp'
     });
     this.cryptoList.push({
         id: "1000170",
@@ -2121,7 +2121,7 @@ export class RequestArrayService {
         filterName: filter_cryptocurrency,
         groupName: CRYPTO_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/crypto-icons/cashaa.png'
+        img: '/assets/images/crypto-icons/cashaa.webp'
     });
     this.cryptoList.push({
         id: "1000174",
@@ -3074,7 +3074,7 @@ export class RequestArrayService {
         filterName: filter_global_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/copper2.png'
+        img: '/assets/images/metals/copper2.webp'
     });
     this.baseMetalList.push({
         id: "1000256",
@@ -3085,7 +3085,7 @@ export class RequestArrayService {
         filterName: filter_global_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/copper2.png'
+        img: '/assets/images/metals/copper2.webp'
     });
     this.baseMetalList.push({
         id: "1000257",
@@ -3096,7 +3096,7 @@ export class RequestArrayService {
         filterName: filter_global_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/tin2.png'
+        img: '/assets/images/metals/tin2.webp'
     });
     this.baseMetalList.push({
         id: "1000258",
@@ -3107,7 +3107,7 @@ export class RequestArrayService {
         filterName: filter_global_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/nickel2.png'
+        img: '/assets/images/metals/nickel2.webp'
     });
     this.baseMetalList.push({
         id: "1000259",
@@ -3118,7 +3118,7 @@ export class RequestArrayService {
         filterName: filter_global_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/lead2.png'
+        img: '/assets/images/metals/lead2.webp'
     });
     this.baseMetalList.push({
         id: "1000260",
@@ -3129,7 +3129,7 @@ export class RequestArrayService {
         filterName: filter_global_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/zinc2.png'
+        img: '/assets/images/metals/zinc2.webp'
     });
 
 
@@ -3144,7 +3144,7 @@ export class RequestArrayService {
         filterName: filter_us_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/aluminium2.png'
+        img: '/assets/images/metals/aluminium2.webp'
     });
     this.baseMetalList.push({
         id: "1000262",
@@ -3155,7 +3155,7 @@ export class RequestArrayService {
         filterName: filter_us_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/uranium2.png'
+        img: '/assets/images/metals/uranium2.webp'
     });
     this.baseMetalList.push({
         id: "1000263",
@@ -3166,7 +3166,7 @@ export class RequestArrayService {
         filterName: filter_us_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/iron2.png'
+        img: '/assets/images/metals/iron2.webp'
     });
     this.baseMetalList.push({
         id: "1000264",
@@ -3177,7 +3177,7 @@ export class RequestArrayService {
         filterName: filter_us_base_metals,
         groupName: BASE_METALS_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/metals/iron2.png'
+        img: '/assets/images/metals/iron2.webp'
     });
   }
 
@@ -3194,7 +3194,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/wheat2.png'
+        img: '/assets/images/commodity/wheat2.webp'
     });
     this.commodityList.push({
         id: "1000266",
@@ -3205,7 +3205,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: pound_unit,
-        img: '/assets/images/commodity/wheat2.png'
+        img: '/assets/images/commodity/wheat2.webp'
     });
     this.commodityList.push({
         id: "1000267",
@@ -3216,7 +3216,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/corn.png'
+        img: '/assets/images/commodity/corn.webp'
     });
     this.commodityList.push({
         id: "1000268",
@@ -3227,7 +3227,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/oat.png'
+        img: '/assets/images/commodity/oat.webp'
     });
     this.commodityList.push({
         id: "1000269",
@@ -3238,7 +3238,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/rice-bowl.png'
+        img: '/assets/images/commodity/rice-bowl.webp'
     });
     this.commodityList.push({
         id: "1000270",
@@ -3249,7 +3249,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/soybean.png'
+        img: '/assets/images/commodity/soybean.webp'
     });
     this.commodityList.push({
         id: "1000271",
@@ -3260,7 +3260,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/soybean-meal.png'
+        img: '/assets/images/commodity/soybean-meal.webp'
     });
     this.commodityList.push({
         id: "1000272",
@@ -3271,7 +3271,7 @@ export class RequestArrayService {
         filterName: filter_agricultural_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/olives.png'
+        img: '/assets/images/commodity/olives.webp'
     });
 
 
@@ -3286,7 +3286,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/sugar.png'
+        img: '/assets/images/commodity/sugar.webp'
     });
     this.commodityList.push({
         id: "1000274",
@@ -3297,7 +3297,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/sugar.png'
+        img: '/assets/images/commodity/sugar.webp'
     });
     this.commodityList.push({
         id: "1000275",
@@ -3308,7 +3308,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/coffee-seed.png'
+        img: '/assets/images/commodity/coffee-seed.webp'
     });
     this.commodityList.push({
         id: "1000276",
@@ -3319,7 +3319,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/coffee-seed.png'
+        img: '/assets/images/commodity/coffee-seed.webp'
     });
     this.commodityList.push({
         id: "1000277",
@@ -3330,7 +3330,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/cocoa.png'
+        img: '/assets/images/commodity/cocoa.webp'
     });
     this.commodityList.push({
         id: "1000278",
@@ -3341,7 +3341,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: pound_unit,
-        img: '/assets/images/commodity/cocoa.png'
+        img: '/assets/images/commodity/cocoa.webp'
     });
     this.commodityList.push({
         id: "1000279",
@@ -3352,7 +3352,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/wood.png'
+        img: '/assets/images/commodity/wood.webp'
     });
     this.commodityList.push({
         id: "1000280",
@@ -3363,7 +3363,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/cotton.png'
+        img: '/assets/images/commodity/cotton.webp'
     });
     this.commodityList.push({
         id: "1000281",
@@ -3374,7 +3374,7 @@ export class RequestArrayService {
         filterName: filter_crop_yields,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/juice.png'
+        img: '/assets/images/commodity/juice.webp'
     });
 
 
@@ -3388,7 +3388,7 @@ export class RequestArrayService {
         filterName: filter_animal_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/meat.png'
+        img: '/assets/images/commodity/meat.webp'
     });
     this.commodityList.push({
         id: "1000283",
@@ -3399,7 +3399,7 @@ export class RequestArrayService {
         filterName: filter_animal_products,
         groupName: COMMODITY_PREFIX,
         unit: dollar_unit,
-        img: '/assets/images/commodity/cattle.png'
+        img: '/assets/images/commodity/cattle.webp'
     });
 
   }

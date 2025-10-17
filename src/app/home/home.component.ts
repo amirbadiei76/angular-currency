@@ -121,13 +121,15 @@ export class HomeComponent {
   change24hSorting: SortingType = SortingType.None;
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
-  @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>; 
-  @ViewChild('rightSubCategoryArrow') rightSubCategoryArrow?: ElementRef<HTMLDivElement>; 
-  @ViewChild('leftSubCategoryArrow') leftSubCategoryArrow?: ElementRef<HTMLDivElement>;
+  @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>;
+  @ViewChild('scrollViewCategory') scrollViewCategory?: ElementRef<HTMLDivElement>;
   @ViewChild('successMsg') successMsg?: ElementRef<HTMLDivElement>;
 
   showRightSubCategoryArrow: WritableSignal<Boolean> = signal(true);
   showLeftSubCategoryArrow: WritableSignal<Boolean> = signal(true);
+
+  showRightCategoryArrow: WritableSignal<Boolean> = signal(true);
+  showLeftCategoryArrow: WritableSignal<Boolean> = signal(true);
   currentSupportCurrencyId: number = 0;
 
   private scrollAmount: number = 70;
@@ -157,12 +159,21 @@ export class HomeComponent {
       }
     }
   }
+
+  categoryLeft () {
+    const element = this.scrollViewCategory?.nativeElement;
+    element?.scrollBy({ behavior: 'smooth', left: -this.scrollAmount })
+  }
   
   
   subCategoryLeft () {
     const element = this.scrollViewSubCategory?.nativeElement;
-    this.showRightSubCategoryArrow.set(true)
     element?.scrollBy({ behavior: 'smooth', left: -this.scrollAmount })
+  }
+  
+  categoryRight () {
+    const element = this.scrollViewCategory?.nativeElement;
+    element?.scrollBy({ behavior: 'smooth', left: this.scrollAmount })
   }
   
   subCategoryRight () {
@@ -173,11 +184,6 @@ export class HomeComponent {
   scrollToStart () {
     const element = this.scrollViewSubCategory?.nativeElement;
     element?.scrollTo({ left: 0, behavior: 'smooth' })
-  }
-
-  getMaxScrollLeft () {
-    const element = this.scrollViewSubCategory?.nativeElement;
-    return Math.max(0, element?.scrollWidth!! - element?.clientWidth!!)
   }
 
 
@@ -268,7 +274,8 @@ export class HomeComponent {
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
     this.scrollToStart();
-    this.checkScrollPosition()
+    this.checkSubCategoryScrollPosition();
+    this.checkCategoryScrollPosition();
   }
 
   canShowSupportedCurrencyToggle () {
@@ -475,7 +482,6 @@ export class HomeComponent {
   ngAfterViewInit () {
     
     if (typeof window !== 'undefined') {
-      // window.scrollTo({ top: 0, behavior: 'instant' })
 
       fromEvent(window, 'click').subscribe((event: Event) => {
         if ((event.target as HTMLElement).id !== 'searchInput') {
@@ -486,14 +492,19 @@ export class HomeComponent {
       })
       
     }
-    this.checkScrollPosition()
+    this.checkSubCategoryScrollPosition()
+    this.checkCategoryScrollPosition()
   }
 
   onScrollEventHandler () {
-    this.checkScrollPosition()
+    this.checkSubCategoryScrollPosition()
   }
 
-  checkScrollPosition () {
+  onScrollCategoryEventHandler() {
+    this.checkCategoryScrollPosition()
+  }
+
+  checkSubCategoryScrollPosition () {
     const element = this.scrollViewSubCategory?.nativeElement;
     if (!element) return;
     const scrollLeft = element.scrollLeft;
@@ -507,8 +518,24 @@ export class HomeComponent {
     this.showLeftSubCategoryArrow.set(currentScroll < (maxScroll - 5))
   }
 
+  
+  checkCategoryScrollPosition () {
+    const element = this.scrollViewCategory?.nativeElement;
+    if (!element) return;
+    const scrollLeft = element.scrollLeft;
+    const scrollWidth = element.scrollWidth;
+    const clientWidth = element.clientWidth;
+
+    const maxScroll = scrollWidth - clientWidth;
+    const currentScroll = Math.abs(scrollLeft)
+
+    this.showRightCategoryArrow.set(currentScroll > 5)
+    this.showLeftCategoryArrow.set(currentScroll < (maxScroll - 5))
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    this.checkScrollPosition()
+    this.checkSubCategoryScrollPosition()
+    this.checkCategoryScrollPosition()
   }
 }

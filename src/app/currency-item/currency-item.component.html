@@ -14,7 +14,7 @@
             
             <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-start relative"> 
                   <!--    -->
-                <div class="z-[3] group-hover:flex hidden bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-38 speech-bubble">
+                <div class="z-[3] group-hover:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-38 speech-bubble">
                     <span class="text-xs font-vazir rtl text-dark-text dark:text-light-text">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} یورو</span>
                     <span class="text-xs font-vazir rtl text-dark-text dark:text-light-text">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
                 </div>

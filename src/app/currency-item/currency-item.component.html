@@ -13,12 +13,11 @@
         <div class="flex justify-center items-start gap-2 relative ">
             
             <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-start relative"> 
-                  <!--    -->
-                <div class="z-[3] group-hover:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-38 speech-bubble">
+                <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-38 speech-bubble">
                     <span class="text-xs font-vazir rtl text-dark-text dark:text-light-text">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} یورو</span>
                     <span class="text-xs font-vazir rtl text-dark-text dark:text-light-text">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
                 </div>
-                <i class="hover:cursor-pointer peer z-[3] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
             </div>
             <strong class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs md:text-sm">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</strong>
         </div>

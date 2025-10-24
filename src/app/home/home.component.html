@@ -142,7 +142,7 @@
     </div>
 </main>
 
-<!-- <div #successMsg class="absolute w-[75%] sm:w-auto padding-inline-8 top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light font-vazir dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
-    <i class="bi bi-x-lg"></i>
-    {{ reqestClass?.currentState === '+' ? 'با موفقیت به دیده بان اضافه شد' : 'با موفقیت از دیده بان حذف شد' }}
-</div> -->
+<div animate.enter="enter-animation" animate.leave="leave-animation" #successMsg class="transform translate-y-[-15rem] translate-x-0 absolute w-[75%] sm:w-auto padding-inline-8 top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light font-vazir dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
+    <i (click)="removeNotification()" class="bi bi-x-lg hover:cursor-pointer"></i>
+    {{ currentNotification }}
+</div>

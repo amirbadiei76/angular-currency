@@ -115,6 +115,12 @@ export class HomeComponent {
   currenTemptList2?: CurrencyItem[] = [];
   currentCategory: WritableSignal<string> = signal(this.categories[0].title)
   currentSubCategory: WritableSignal<string> = signal(filter_overview)
+  
+  notificationQueue: string[] = [];
+  isNotifying: boolean = false;
+  currentNotification: string | null = null;
+  notificationState: 'visible' | 'hidden' = 'hidden';
+  
 
   titleSorting: SortingType = SortingType.None;
   priceSorting: SortingType = SortingType.None;
@@ -279,14 +285,75 @@ export class HomeComponent {
   }
 
   onFavAddItem = (id: string) => {
+    this.showAnimation('با موفقیت به دیده بان اضافه شد')
+    this.processQueue();
+  }
+
+  showAnimation (type: string) {
+    this.notificationQueue.push(type)
+    this.processQueue()
+  }
+
+  processQueue () {
+    if (this.isNotifying || this.notificationQueue.length === 0) return;
+
+    this.isNotifying = true;
+
+    this.currentNotification = this.notificationQueue.shift()!;
+    this.notificationState = 'visible';
+
+    this.successMsg?.nativeElement.classList.remove('translate-y-[-15rem]')
+    this.successMsg?.nativeElement.classList.add('enter-animation')
     
+
+    setTimeout(() => {
+      this.successMsg?.nativeElement.classList.remove('enter-animation')
+      this.successMsg?.nativeElement.classList.add('leave-animation')
+
+      setTimeout(() => {
+        this.successMsg?.nativeElement.classList.remove('leave-animation')
+        this.successMsg?.nativeElement.classList.add('translate-x-0')
+        this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
+
+        if (this.notificationState === 'hidden') {
+          this.currentNotification = null;
+          this.isNotifying = false;
+          this.processQueue()
+        }
+      }, 1000);
+    }, 4000);
+
+    setTimeout(() => {
+        this.notificationState = 'hidden'
+    }, 5000);
+
+  }
+
+  removeNotification () {
+    this.successMsg?.nativeElement.classList.remove('enter-animation')
+    this.successMsg?.nativeElement.classList.add('leave-animation')
+
+    setTimeout(() => {
+      this.successMsg?.nativeElement.classList.remove('leave-animation')
+      this.successMsg?.nativeElement.classList.add('translate-x-0')
+      this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
+
+      if (this.notificationState === 'hidden') {
+        this.currentNotification = null;
+        this.isNotifying = false;
+        this.processQueue()
+      }
+    }, 1000);
   }
   
   onFavRemoveItem = (id: string) =>  {
+      this.showAnimation('با موفقیت از دیده بان حذف شد')
+      this.processQueue()
+
       if (this.currentCategory() == favories_title) {
         this.currentList = this.currentList?.filter((item) => item.id !== id)
         this.currenTemptList = this.currenTemptList?.filter((item) => item.id !== id)
-        this.currenTemptList2 = this.currenTemptList2?.filter((item) => item.id !== id)
+        this.currenTemptList2 = this.currenTemptList2?.filter((item) => item.id !== id) 
       }
   }
 

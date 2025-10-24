@@ -250,6 +250,43 @@
 	margin-left: -0.8rem;
 }
 
+.enter-animation {
+    animation: slide-fade 4s;
+}
+
+.leave-animation {
+    animation: slide-leave-fade 1s;
+}
+
+@keyframes slide-leave-fade {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0)
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(1em)
+    }
+}
+
+@keyframes slide-fade {
+    0% {
+      opacity: 0;
+      transform: translateX(0);
+      transform: translateY(-15rem);
+    }
+    25% {
+        opacity: 1;
+        transform: translateX(0);
+        transform: translateY(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+      transform: translateY(0);
+    }
+}
+
 /* sm */
 @media (width >= 40rem /* 640px */) {
 

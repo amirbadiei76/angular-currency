@@ -107,16 +107,3 @@
         padding-bottom: 1.2rem;
     }
 }
-
-.animate-entry {
-    /* transform: 0.4s ease; */
-}
-
-@keyframes tranlate-entry {
-    0% {
-        transform: translateY(100px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}

@@ -278,6 +278,18 @@ export class HomeComponent {
     this.checkCategoryScrollPosition();
   }
 
+  onFavAddItem = (id: string) => {
+    
+  }
+  
+  onFavRemoveItem = (id: string) =>  {
+      if (this.currentCategory() == favories_title) {
+        this.currentList = this.currentList?.filter((item) => item.id !== id)
+        this.currenTemptList = this.currenTemptList?.filter((item) => item.id !== id)
+        this.currenTemptList2 = this.currenTemptList2?.filter((item) => item.id !== id)
+      }
+  }
+
   canShowSupportedCurrencyToggle () {
     return this.currentCategory() !== world_title && (this.currentCategory() !== favories_title || (this.currentSubCategory() !== filter_overview && this.currentSubCategory() !== filter_pair_currencies))
   }

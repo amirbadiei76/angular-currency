@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { CurrencyItem } from '../interface/Currencies';
 import { CommonModule, NgIf } from '@angular/common';
 import { StarIconComponent } from '../star-icon/star-icon.component';
@@ -16,6 +16,8 @@ export class CurrencyItemComponent {
     
   @Input() currencyItem?: CurrencyItem;
   @Input() showCurrencyId?: number;
+  @Output() favRemoved = new EventEmitter<string>();
+  @Output() favAdded = new EventEmitter<string>();
 
   requestArray?: RequestArrayService;
 
@@ -33,10 +35,12 @@ export class CurrencyItemComponent {
 
   addToFav() {
     this.requestArray?.addToFavorite(this.currencyItem!)
+    this.favAdded.emit(this.currencyItem!.id)
   }
 
   removeFromFav() {
     this.requestArray?.removeFromFavorite(this.currencyItem?.id!)
+    this.favRemoved.emit(this.currencyItem!.id)
   }
 
 }

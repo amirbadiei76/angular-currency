@@ -14,21 +14,23 @@
     <div class="order-2 relative sm:order-1 mx-0 margin-inline-7 padding-inline-4 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
         
         
-        <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl">
-            @for (item of categories; track item.title) {
-                <div class="inline-block text-center align-middle margin-left-1">
-                    <div class="flex flex-col justify-center items-center relative">
-                        <span
-                            (click)="setCurrentCategory(item.title)"
-                            class="padding-block-1 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 font-yekan text-base sm:text-lg">
-                            <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
-                            {{item.title}}
-                        </span>
-                        <div
-                            class="bg-green-btn h-0.5 w-8 duration-300 transition {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
+        <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
+            <div class="inline-block scroll-hide w-full text-right">
+                @for (item of categories; track item.title) {
+                    <div class="inline-block text-center align-middle margin-left-1">
+                        <div class="flex flex-col justify-center items-center relative">
+                            <span
+                                (click)="setCurrentCategory(item.title)"
+                                class="padding-block-1 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 font-yekan text-base sm:text-lg">
+                                <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
+                                {{item.title}}
+                            </span>
+                            <div
+                                class="bg-green-btn h-0.5 w-8 duration-300 transition {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
         
         <div #rightCategoryArrow [class.hidden]="!showRightCategoryArrow()" id="rightCategoryArrow" class="absolute h-full text-start align-middle right-0 top-1/2 -translate-y-1/2 padding-block-1-arrow padding-inline-1-arrow bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
@@ -120,7 +122,12 @@
     </div>
     <div *ngIf="currenTemptList?.length !== 0" class="order-4 mx-0 margin-inline-7">
         @for (item of currenTemptList2; track item.id) {
-            <currency-item [showCurrencyId]="currentSupportCurrencyId" [currencyItem]="item"/>
+            <currency-item
+                [showCurrencyId]="currentSupportCurrencyId"
+                [currencyItem]="item"
+                (favRemoved)="onFavRemoveItem($event)"
+                (favAdded)="onFavAddItem($event)"
+            />
         }
         
     </div>

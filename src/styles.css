@@ -11,6 +11,8 @@
 }
 
 :root {
+    --bg-speech: #a7a9a8;
+
     --theme-white: #f2f2f2;
     --theme-black: #1a1a1a;
     
@@ -64,6 +66,10 @@
     --yellow-star: #e7c400;
 
     --margin: 2rem;
+
+    &:where(html.dark, html.dark *) {
+        --bg-speech: #292a2a;
+    }
 
 }
 
@@ -140,6 +146,14 @@
     touch-action: pan-x;
 }
 
+.visible-hidden {
+    visibility: hidden;
+}
+
+.visible-visible {
+    visibility: visible;
+}
+
 .rtl {
     direction: rtl;
 }
@@ -212,6 +226,67 @@
 
 .scroll-snap-align-end {
     scroll-snap-align: end;
+}
+
+.speech-bubble {
+	border-radius: .4em;
+    padding-inline: 0.3rem;
+	left: 1.4rem;
+	padding-inline: 0.7rem;
+	padding-block: 0.5rem;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 0.813em solid transparent;
+	margin-top: -0.812em;
+	left: 0;
+	border-left: 0;
+	border-right-color: var(--bg-speech);
+	margin-left: -0.8rem;
+}
+
+/* sm */
+@media (width >= 40rem /* 640px */) {
+
+	.speech-bubble::after {
+		left: 0;
+		border-left: 0;
+		border-right-color: var(--bg-speech);
+		margin-left: -0.8rem;
+	}
+    
+}
+
+
+/* md */
+@media (width >= 48rem /* 768px */) {
+	.speech-bubble {
+		left: -10.5rem;
+	}
+
+	.speech-bubble::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		width: 0;
+		height: 0;
+		border: 0.813em solid transparent;
+		margin-top: -0.812em;
+
+		left: auto !important;
+		right: -0.75rem;
+		border-right: 0;
+		border: 0.813em solid transparent;
+		border-left-color: var(--bg-speech);
+		margin-right: -0.8rem;
+	}
+	
+    
 }
 
 

@@ -148,8 +148,7 @@ export class HomeComponent {
 
 
   constructor(private requestArray: RequestArrayService) {
-    this.reqestClass = requestArray
-    // this.reqestClass.setupMainData()
+    this.reqestClass = requestArray;
 
     if (typeof window !== 'undefined') {    
       

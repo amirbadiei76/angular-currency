@@ -63,12 +63,13 @@
 
         <div #leftSubCategoryArrow [class.hidden]="!showLeftSubCategoryArrow()" id="leftSubCategoryArrow" class="absolute h-[99.9%] align-middle left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
             <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex self-end justify-center items-center translate-y-4 -translate-x-2 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
-                <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"></i>
+                <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"> </i>
             </div>
         </div>
 
         <div #scrollViewSubCategory (scroll)="onScrollEventHandler()" class="scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x text-right whitespace-nowrap">
             <div class="inline-block scroll-hide w-full">
+
                 @for (item of currentSubCategoryList; track item) {
                     <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer font-byekan-plus text-sm sm:text-base">{{item}}</p>
                 }

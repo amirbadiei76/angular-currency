@@ -604,4 +604,5 @@ export interface CurrencyItem {
     rialChangeState?: string;
     dollarChanges?: string;
     dollarChangeState?: string;
+    slugText?: string;
 }

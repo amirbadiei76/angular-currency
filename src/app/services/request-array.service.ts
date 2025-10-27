@@ -156,6 +156,8 @@ export class RequestArrayService {
 
         this.convertUnitChanges(item, current)
 
+        item.slugText = item.shortedName?.replaceAll(' ', '').replaceAll(',', '').replaceAll('(', '').replaceAll(')', '')
+
         // fix 24h changes problem
         if (item.lastPriceInfo.dt === 'low' && item.lastPriceInfo.dp === 0) item.lastPriceInfo.dt = 'high'
     })

@@ -4,11 +4,12 @@ import { CommonModule, NgIf } from '@angular/common';
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { RequestArrayService } from '../services/request-array.service';
 import { toman_unit } from '../constants/Values';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
   selector: 'currency-item',
-  imports: [CommonModule, NgIf, StarIconComponent],
+  imports: [CommonModule, NgIf, StarIconComponent, RouterModule],
   templateUrl: './currency-item.component.html',
   styleUrl: './currency-item.component.css'
 })

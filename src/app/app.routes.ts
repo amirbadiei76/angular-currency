@@ -4,5 +4,5 @@ import { CurrencyItemDetailsComponent } from './currency-item-details/currency-i
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { path: '/:title', component: CurrencyItemDetailsComponent }
+    { path: ':title', component: CurrencyItemDetailsComponent }
 ];

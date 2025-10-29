@@ -162,7 +162,7 @@ export class RequestArrayService {
         .replace(/^_+|_+$/g, '').toLocaleLowerCase();
 
         // fix 24h changes problem
-        if (item.lastPriceInfo.dt === 'low' && item.lastPriceInfo.dp === 0) item.lastPriceInfo.dt = 'high'
+        if (item.lastPriceInfo.dt === 'low' && item.lastPriceInfo.dp == 0) item.lastPriceInfo.dt = 'high'
     })
   }
 

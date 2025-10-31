@@ -19,6 +19,7 @@ export class CurrencyItemComponent {
   @Input() showCurrencyId?: number;
   @Output() favRemoved = new EventEmitter<string>();
   @Output() favAdded = new EventEmitter<string>();
+  @Output() itemSelected = new EventEmitter<string>();
 
   requestArray?: RequestArrayService;
 
@@ -42,6 +43,10 @@ export class CurrencyItemComponent {
   removeFromFav() {
     this.requestArray?.removeFromFavorite(this.currencyItem?.id!)
     this.favRemoved.emit(this.currencyItem!.id)
+  }
+
+  onSelectItem() {
+    this.itemSelected.emit(this.currencyItem!.id)
   }
 
 }

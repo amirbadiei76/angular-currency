@@ -157,7 +157,7 @@ export class RequestArrayService {
         this.convertUnitChanges(item, current)
 
         // add slug text
-        item.slugText = item.shortedName?.replace(/[\d()\-\s]+/g, '_')
+        item.slugText = item.shortedName?.replace(/[\d()/\-\s]+/g, '_')
         .replace(/_+/g, '_')
         .replace(/^_+|_+$/g, '').toLocaleLowerCase();
 

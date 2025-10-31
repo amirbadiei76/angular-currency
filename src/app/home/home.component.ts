@@ -344,6 +344,10 @@ export class HomeComponent {
       }
     }, 1000);
   }
+
+  onItemSelect = (id: string) => {
+    console.log(id)
+  }
   
   onFavRemoveItem = (id: string) =>  {
       this.showAnimation('با موفقیت از دیده بان حذف شد')

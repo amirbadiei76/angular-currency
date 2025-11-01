@@ -10,7 +10,7 @@
 :root {
     --bg-speech: #a7a9a8;
 
-    --theme-white: #f2f2f2;
+    --theme-white: #e9e9e9;
     --theme-black: #1a1a1a;
     
     --background: #ffffff;
@@ -82,6 +82,9 @@
     /* light/dark */
     --color-light: var(--light-theme);
     --color-dark: var(--dark-theme);
+
+    --color-theme-white: var(--theme-white);
+    --color-theme-black: var(--theme-black);
 
     --color-light-border: var(--light-border);
     --color-dark-border: var(--dark-border);

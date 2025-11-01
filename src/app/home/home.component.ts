@@ -136,6 +136,7 @@ export class HomeComponent {
 
   showRightCategoryArrow: WritableSignal<Boolean> = signal(true);
   showLeftCategoryArrow: WritableSignal<Boolean> = signal(true);
+  selectedCategory: WritableSignal<String> = signal('');
   currentSupportCurrencyId: number = 0;
 
   private scrollAmount: number = 70;
@@ -149,6 +150,8 @@ export class HomeComponent {
 
   constructor(private requestArray: RequestArrayService) {
     this.reqestClass = requestArray;
+    this.setCurrentCategory(currency_title)
+    // this.selectedCategory().length == 0 ? this.setCurrentCategory(currency_title) : this.selectedCategory.set(this.currentCategory())
 
     if (typeof window !== 'undefined') {    
       
@@ -534,7 +537,6 @@ export class HomeComponent {
   }
 
   ngOnInit () {
-    this.setCurrentCategory(currency_title);
     
     if (typeof window !== 'undefined') {
       

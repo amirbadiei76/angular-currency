@@ -165,6 +165,7 @@ export class HomeComponent {
   constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService) {
     this.reqestClass = requestArray;
     this.setCurrentCategory(this.lastHomeState.currentCategory);
+    this.resetStoredValues();
 
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
@@ -301,7 +302,7 @@ export class HomeComponent {
         break;
     }
     this.currentSubCategory.set(filter_overview)
-    this.lastHomeState.currentSubCategory = filter_overview;
+    this.lastHomeState.setSubCategory(filter_overview);
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
@@ -590,9 +591,6 @@ export class HomeComponent {
   }
 
   ngAfterViewInit () {
-    
-    this.resetStoredValues();
-    
     if (typeof window !== 'undefined') {
 
       fromEvent(window, 'click').subscribe((event: Event) => {

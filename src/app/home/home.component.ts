@@ -4,9 +4,10 @@ import { CurrencyItemComponent } from '../currency-item/currency-item.component'
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../constants/Values';
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
-import { fromEvent } from 'rxjs';
+import { fromEvent, single } from 'rxjs';
 import { RequestArrayService } from '../services/request-array.service';
 import { EmptyItemComponent } from '../empty-item/empty-item.component';
+import { HomeStateService } from '../services/home-state.service';
 
 enum SortingType {
   Ascending, Descending, None
@@ -125,7 +126,9 @@ export class HomeComponent {
   currentCategory: WritableSignal<string> = signal(this.categories[0].title)
   currentSubCategory: WritableSignal<string> = signal(filter_overview);
 
-  lastCategory: WritableSignal<string> = signal(this.categories[0].title)
+  lastCategory: WritableSignal<string> = signal(this.categories[0].title);
+  categoryScrollValue: WritableSignal<number> = signal(0);
+  subCategoryScrollValue: WritableSignal<number> = signal(0);
   
   notificationQueue: string[] = [];
   isNotifying: boolean = false;
@@ -159,13 +162,11 @@ export class HomeComponent {
   static mainData: Currencies;
 
 
-  constructor(private requestArray: RequestArrayService) {
+  constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService) {
     this.reqestClass = requestArray;
-    this.setCurrentCategory(currency_title)
-    // this.selectedCategory().length == 0 ? this.setCurrentCategory(currency_title) : this.selectedCategory.set(this.currentCategory())
+    this.setCurrentCategory(this.lastHomeState.currentCategory);
 
-    if (typeof window !== 'undefined') {    
-      
+    if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
       }
@@ -177,6 +178,16 @@ export class HomeComponent {
         this.change24hText.set('تغییر 24 ساعت')
       }
     }
+  }
+
+  resetStoredValues () {
+    this.currentCategory.set(this.lastHomeState.currentCategory)
+    this.currentSubCategory.set(this.lastHomeState.currentSubCategory);
+
+    this.categoryScrollValue.set(this.lastHomeState.categoryScrollValue);
+    this.subCategoryScrollValue.set(this.lastHomeState.subCategoryScrollValue);
+    this.scrollViewSubCategory?.nativeElement.scrollTo({ left: this.subCategoryScrollValue(), behavior: 'smooth' })
+    this.scrollViewCategory?.nativeElement.scrollTo({ left: this.categoryScrollValue(), behavior: 'smooth' })
   }
 
   categoryLeft () {
@@ -223,6 +234,7 @@ export class HomeComponent {
 
   setCurrentCategory (title: string) {
     this.currentCategory.set(title)
+    this.lastHomeState.setCategory(title)
 
     switch(title) {
       case favories_title:
@@ -289,6 +301,7 @@ export class HomeComponent {
         break;
     }
     this.currentSubCategory.set(filter_overview)
+    this.lastHomeState.currentSubCategory = filter_overview;
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
@@ -360,8 +373,7 @@ export class HomeComponent {
   }
 
   onItemSelect = (id: string) => {
-    console.log(id)
-    // this.lastCategory.set()
+    
   }
   
   onFavRemoveItem = (id: string) =>  {
@@ -390,6 +402,8 @@ export class HomeComponent {
 
   filterByCategory (name: string) {
     this.currentSubCategory.set(name);
+    this.lastHomeState.setSubCategory(name);
+
     if (this.currentSubCategory() === filter_overview) {
       this.currenTemptList = this.currentList;
       this.currenTemptList2 = this.currentList;
@@ -577,6 +591,8 @@ export class HomeComponent {
 
   ngAfterViewInit () {
     
+    this.resetStoredValues();
+    
     if (typeof window !== 'undefined') {
 
       fromEvent(window, 'click').subscribe((event: Event) => {
@@ -610,6 +626,7 @@ export class HomeComponent {
     const maxScroll = scrollWidth - clientWidth;
     const currentScroll = Math.abs(scrollLeft)
 
+    this.subCategoryScrollValue.set(scrollLeft);
     this.showRightSubCategoryArrow.set(currentScroll > 5)
     this.showLeftSubCategoryArrow.set(currentScroll < (maxScroll - 5))
   }
@@ -625,6 +642,7 @@ export class HomeComponent {
     const maxScroll = scrollWidth - clientWidth;
     const currentScroll = Math.abs(scrollLeft)
 
+    this.categoryScrollValue.set(scrollLeft);
     this.showRightCategoryArrow.set(currentScroll > 5)
     this.showLeftCategoryArrow.set(currentScroll < (maxScroll - 5))
   }

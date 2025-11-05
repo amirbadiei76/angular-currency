@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { Currencies, CurrencyItem } from '../interface/Currencies';
 import { CurrencyItemComponent } from '../currency-item/currency-item.component';
-import { base_metal_title, coin_title, commodity_title, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, gold_title, precious_metal_title, toman_unit, world_title } from '../constants/Values';
+import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../constants/Values';
 import { StarIconComponent } from '../star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
 import { fromEvent } from 'rxjs';
@@ -24,12 +24,14 @@ export class HomeComponent {
   categories = [
     {
       title: favories_title,
+      enTitle: favories_title,
       subtitles: [
 
       ]
     },
     {
       title: currency_title,
+      enTitle: MAIN_CURRENCY_PREFIX,
       subtitles: [
         filter_overview,
         filter_main_currencies,
@@ -38,6 +40,7 @@ export class HomeComponent {
     },
     {
       title: gold_title,
+      enTitle: GOLD_PREFIX,
       subtitles: [
         filter_overview,
         filter_gold,
@@ -49,6 +52,7 @@ export class HomeComponent {
     },
     {
       title: coin_title,
+      enTitle: COIN_PREFIX,
       subtitles: [
         filter_overview,
         filter_coin_cash,
@@ -60,18 +64,21 @@ export class HomeComponent {
     },
     {
       title: crypto_title,
+      enTitle: CRYPTO_PREFIX,
       subtitles: [
         filter_overview,
       ]
     },
     {
       title: world_title,
+      enTitle: WORLD_MARKET_PREFIX,
       subtitles: [
         filter_overview,
       ]
     },
     {
       title: precious_metal_title,
+      enTitle: PRECIOUS_METALS_PREFIX,
       subtitles: [
         filter_overview,
         filter_global_ounces,
@@ -80,6 +87,7 @@ export class HomeComponent {
     },
     {
       title: base_metal_title,
+      enTitle: BASE_METALS_PREFIX,
       subtitles: [
         filter_overview,
         filter_global_base_metals,
@@ -88,6 +96,7 @@ export class HomeComponent {
     },
     {
       title: commodity_title,
+      enTitle: COMMODITY_PREFIX,
       subtitles: [
         filter_overview,
         filter_agricultural_products,
@@ -114,7 +123,9 @@ export class HomeComponent {
   currenTemptList?: CurrencyItem[] = [];
   currenTemptList2?: CurrencyItem[] = [];
   currentCategory: WritableSignal<string> = signal(this.categories[0].title)
-  currentSubCategory: WritableSignal<string> = signal(filter_overview)
+  currentSubCategory: WritableSignal<string> = signal(filter_overview);
+
+  lastCategory: WritableSignal<string> = signal(this.categories[0].title)
   
   notificationQueue: string[] = [];
   isNotifying: boolean = false;
@@ -350,6 +361,7 @@ export class HomeComponent {
 
   onItemSelect = (id: string) => {
     console.log(id)
+    // this.lastCategory.set()
   }
   
   onFavRemoveItem = (id: string) =>  {

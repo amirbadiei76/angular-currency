@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { CurrencyItem } from '../interface/Currencies';
+import { CurrencyItem } from '../../../../interface/Currencies';
 import { CommonModule, NgIf } from '@angular/common';
-import { StarIconComponent } from '../star-icon/star-icon.component';
-import { RequestArrayService } from '../services/request-array.service';
-import { toman_unit } from '../constants/Values';
+import { StarIconComponent } from '../../../shared/star-icon/star-icon.component';
+import { RequestArrayService } from '../../../../services/request-array.service';
+import { toman_unit } from '../../../../constants/Values';
 import { RouterModule } from '@angular/router';
 
 

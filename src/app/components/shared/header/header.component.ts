@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { CurrenciesService } from '../services/currencies.service';
-import { ThemeService } from '../services/theme.service';
+import { CurrenciesService } from '../../../services/currencies.service';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-header',

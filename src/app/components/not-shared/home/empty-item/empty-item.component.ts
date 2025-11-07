@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StarIconComponent } from '../star-icon/star-icon.component';
+import { StarIconComponent } from '../../../shared/star-icon/star-icon.component';
 
 @Component({
   selector: 'empty-item',

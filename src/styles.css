@@ -329,30 +329,30 @@
 
 @font-face {
     font-family: 'YekanP';
-    src: url('./assets/fonts/yekanp.TTF');
+    src: url('../public/assets/fonts/yekanp.TTF');
 }
 
 @font-face {
     font-family: 'YekanPersian';
-    src: url('./assets/fonts/Persian-Yekan.ttf');
+    src: url('../public/assets/fonts/Persian-Yekan.ttf');
 }
 
 @font-face {
     font-family: 'BYekan';
-    src: url('./assets/fonts/BYekan.ttf');
+    src: url('../public/assets/fonts/BYekan.ttf');
 }
 
 @font-face {
     font-family: 'Yekan';
-    src: url('./assets/fonts/Yekan.ttf');
+    src: url('../public/assets/fonts/Yekan.ttf');
 }
 
 @font-face {
     font-family: 'Vazir';
-    src: url('./assets/fonts/Vazir-Regular-FD.ttf');
+    src: url('../public/assets/fonts/Vazir-Regular-FD.ttf');
 }
 
 @font-face {
     font-family: 'BYekanPLUS';
-    src: url('./assets/fonts/BYekan_Bold.ttf');
+    src: url('../public/assets/fonts/BYekan_Bold.ttf');
 }

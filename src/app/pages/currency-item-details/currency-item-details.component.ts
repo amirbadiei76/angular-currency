@@ -25,16 +25,16 @@ export class CurrencyItemDetailsComponent {
     this.route.params.subscribe((params) => {
       this.title = params['title'];
 
-      this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
+      // this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
 
-      this.breadCrumbItems = [
-        {
-          title: 'صفحه اصلی', link: '/'
-        },
-        {
-          title: this.currencyItem.title,
-        }
-      ]
+      // this.breadCrumbItems = [
+      //   {
+      //     title: 'صفحه اصلی', link: '/'
+      //   },
+      //   {
+      //     title: this.currencyItem.title,
+      //   }
+      // ]
     })
   }
 }

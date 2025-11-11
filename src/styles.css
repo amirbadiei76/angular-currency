@@ -42,6 +42,9 @@
     --light-text3: #d5d8d7;
     --dark-text3: #676767;
 
+    --light-text4: #b2b2b2;
+    --dark-text4: #666;
+
     --dark-green-text: #1dbb7e;
     --dark-red-text: #d02633;
 
@@ -103,6 +106,9 @@
     
     --color-light-text3: var(--light-text3);
     --color-dark-text3: var(--dark-text3);
+    
+    --color-light-text4: var(--light-text4);
+    --color-dark-text4: var(--dark-text4);
 
 
     --color-dark-green-text: var(--dark-green-text);

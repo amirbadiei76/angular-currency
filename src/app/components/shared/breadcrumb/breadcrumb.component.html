@@ -1,21 +1,21 @@
 <nav aria-label="breadcrumb" *ngIf="items?.length">
-    <ol class="flex list-none gap-2 p-0 m-0 text-sm">
+    <ol class="flex flex-row-reverse list-none gap-2 p-0 m-0 text-sm">
         <li
             *ngFor="let item of items; let last = last"
             [attr.aria-current]="last ? 'page' : null"
-            class="flex items-center text-gray-500"
+            class="flex items-center"
         >
+            <span *ngIf="!last" class="mx-2 text-dark-text4 dark:text-light-text4">&lt;</span>
             <ng-container *ngIf="!last && item.link; else currentPage">
                 <a
                     [routerLink]="item.link"
-                    class="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                    class="text-dark-text4 dark:text-light-text4 font-byekan-plus transition-colors duration-300"
                 >{{ item.title }}</a>
             </ng-container>
     
             <ng-template #currentPage>
-            <span class="font-semibold text-gray-800">{{ item.title }}</span>
+            <span class="font-byekan-plus text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
             </ng-template>
     
-            <span *ngIf="!last" class="mx-2 text-gray-400">/</span>
         </li>
 </ol>

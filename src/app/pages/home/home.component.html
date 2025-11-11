@@ -9,7 +9,7 @@
                         <div class="flex flex-col justify-center items-center relative">
                             <span
                                 (click)="setCurrentCategory(item.title)"
-                                class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 font-yekan text-base sm:text-lg">
+                                class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 text-xs font-medium sm:text-sm">
                                 <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
                                 {{item.title}}
                             </span>
@@ -40,7 +40,7 @@
                 <div
                     (click)="currentSupportCurrencyId = currency.id"
                     class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} sm:w-18 w-25 h-12 flex justify-center px-[0.25rem] items-center cursor-pointer">
-                    <p class="rtl {{ currency.id === currentSupportCurrencyId ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} font-vazir text-2xs sm:text-xs">{{currency.title}}</p>
+                    <p class="rtl {{ currency.id === currentSupportCurrencyId ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} text-2xs sm:text-xs">{{currency.title}}</p>
                 </div>
             }
         </div>
@@ -50,7 +50,7 @@
                 <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                 <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
             </svg>
-            <input #searchInput type="text" id="searchInput" name="searchInput" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi font-byekan-plus font-thin outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 text-sm w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
+            <input #searchInput type="text" id="searchInput" name="searchInput" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 text-sm w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
         </div>
     </div>
 
@@ -71,7 +71,7 @@
             <div class="inline-block scroll-hide w-full">
 
                 @for (item of currentSubCategoryList; track item) {
-                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer font-byekan-plus text-sm sm:text-base">{{item}}</p>
+                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-sm sm:text-base">{{item}}</p>
                 }
             </div>
         </div>
@@ -87,7 +87,7 @@
                     <i class="{{change24hSorting.toString() === '0' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
                     <i class="{{change24hSorting.toString() === '1' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <span class="font-byekan-plus sm:font-byekan-persian text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{change24hText()}}</span>
+                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{change24hText()}}</span>
             </div>
         </div>
         <div class="w-[15%] md:w-[25%] flex justify-end">
@@ -96,7 +96,7 @@
                     <i class="{{priceSorting.toString() === '0' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
                     <i class="{{priceSorting.toString() === '1' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <span class="font-byekan-persian text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{priceSortingText()}}</span>
+                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{priceSortingText()}}</span>
             </div>
         </div>
         <div class="flex flex-1 justify-end">
@@ -105,7 +105,7 @@
                     <i class="{{titleSorting.toString() === '0' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
                     <i class="{{titleSorting.toString() === '1' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <span class="font-byekan-persian text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">عنوان</span>
+                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">عنوان</span>
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@
     </div>
 </main>
 
-<div animate.enter="enter-animation" animate.leave="leave-animation" #successMsg class="transform translate-y-[-15rem] translate-x-0 fixed w-[75%] sm:w-auto px-[1.3rem] top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light font-vazir dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
+<div animate.enter="enter-animation" animate.leave="leave-animation" #successMsg class="transform translate-y-[-15rem] translate-x-0 fixed w-[75%] sm:w-auto px-[1.3rem] top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
     <i (click)="removeNotification()" class="bi bi-x-lg hover:cursor-pointer"></i>
     {{ currentNotification }}
 </div>

@@ -5,6 +5,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: 'IranYekan';
 }
 
 :root {
@@ -140,6 +141,7 @@
     --font-byekan: 'BYekan';
     --font-byekan-plus: 'BYekanPLUS';
     --font-vazir: 'Vazir';
+    --font-iranyekan: 'IranYekan';
 
     --leading-4.\5: 1.125rem;
     --radius-semi: 0.625rem;
@@ -356,6 +358,12 @@
 @font-face {
     font-family: 'Vazir';
     src: url('../public/assets/fonts/Vazir-Regular-FD.ttf');
+}
+
+
+@font-face {
+    font-family: 'IranYekan';
+    src: url('../public/assets/fonts/IRANYekanFN.ttf');
 }
 
 @font-face {

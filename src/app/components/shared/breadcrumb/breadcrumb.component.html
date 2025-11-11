@@ -9,12 +9,12 @@
             <ng-container *ngIf="!last && item.link; else currentPage">
                 <a
                     [routerLink]="item.link"
-                    class="text-dark-text4 dark:text-light-text4 font-byekan-plus transition-colors duration-300"
-                >{{ item.title}}</a>
+                    class="text-dark-text4 dark:text-light-text4 font-byekan-persian text-sm transition-colors duration-300"
+                >{{ item.title }}</a>
             </ng-container>
     
             <ng-template #currentPage>
-            <span class="font-byekan-plus text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
+            <span class="font-byekan-persian text-sm text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
             </ng-template>
     
         </li>

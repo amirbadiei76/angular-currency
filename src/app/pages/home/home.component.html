@@ -3,13 +3,13 @@
         
         
         <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
-            <div class="inline-block scroll-hide w-full text-right">
+            <div class="inline-block scroll-hide w-full text-right text-xs leading-5 font-medium sm:text-sm">
                 @for (item of categories; track item.title) {
                     <div class="inline-block text-center align-middle ml-[0.7rem] sm:ml-4">
                         <div class="flex flex-col justify-center items-center relative">
                             <span
                                 (click)="setCurrentCategory(item.title)"
-                                class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5 text-xs font-medium sm:text-sm">
+                                class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5">
                                 <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
                                 {{item.title}}
                             </span>

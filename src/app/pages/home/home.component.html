@@ -71,7 +71,7 @@
             <div class="inline-block scroll-hide w-full">
 
                 @for (item of currentSubCategoryList; track item) {
-                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-sm sm:text-base">{{item}}</p>
+                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-xs leading-5 font-medium sm:text-sm">{{item}}</p>
                 }
             </div>
         </div>

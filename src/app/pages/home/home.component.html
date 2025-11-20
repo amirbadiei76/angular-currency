@@ -3,7 +3,7 @@
         
         
         <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
-            <div class="inline-block scroll-hide w-full text-right text-xs leading-5 font-medium sm:text-sm">
+            <div class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">
                 @for (item of categories; track item.title) {
                     <div class="inline-block text-center align-middle ml-[0.7rem] sm:ml-4">
                         <div class="flex flex-col justify-center items-center relative">
@@ -71,7 +71,7 @@
             <div class="inline-block scroll-hide w-full">
 
                 @for (item of currentSubCategoryList; track item) {
-                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-xs leading-5 font-medium sm:text-sm">{{item}}</p>
+                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">{{item}}</p>
                 }
             </div>
         </div>
@@ -87,7 +87,7 @@
                     <i class="{{change24hSorting.toString() === '0' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
                     <i class="{{change24hSorting.toString() === '1' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{change24hText()}}</span>
+                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm leading-4.5 sm:leading-5 pointer-events-none">{{change24hText()}}</span>
             </div>
         </div>
         <div class="w-[15%] md:w-[25%] flex justify-end">
@@ -96,7 +96,7 @@
                     <i class="{{priceSorting.toString() === '0' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
                     <i class="{{priceSorting.toString() === '1' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">{{priceSortingText()}}</span>
+                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm leading-4.5 sm:leading-5 pointer-events-none">{{priceSortingText()}}</span>
             </div>
         </div>
         <div class="flex flex-1 justify-end">
@@ -105,7 +105,7 @@
                     <i class="{{titleSorting.toString() === '0' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
                     <i class="{{titleSorting.toString() === '1' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
                 </div>
-                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm md:text-base pointer-events-none">عنوان</span>
+                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm leading-4.5 sm:leading-5 pointer-events-none">عنوان</span>
             </div>
         </div>
     </div>

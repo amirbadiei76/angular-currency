@@ -1,10 +1,10 @@
 <article (click)="onSelectItem()" [routerLink]="[currencyItem?.slugText]" class="min-h-[4.853rem] px-4 sm:px-0 sm:min-h-[5.8rem] relative w-full flex items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border md:hover:bg-light-hover md:hover:dark:bg-dark-hover hover:cursor-pointer">
-    <div class="justify-start items-center gap-1.5 w-[20%] hidden md:flex">
-        <i class="text-xs bi bi-caret-left-fill text-dark-text3 dark:text-light-text3 font-normal"></i>
+    <div class="justify-start items-center gap-1.5 w-[20%] hidden md:flex leading-5 font-normal text-sm">
+        <i class="bi bi-caret-left-fill text-dark-text3 dark:text-light-text3 font-normal text-xs"></i>
         <strong class="text-dark-text3 dark:text-light-text3 font-normal">اطلاعات بیشتر</strong>
     </div>
     <div class="flex justify-start md:justify-center items-center gap-2 w-[15%]">
-        <strong class="font-normal text-xs {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</strong>
+        <strong class="font-normal text-xs leading-4.5 {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</strong>
     </div>
     <div class="flex flex-col items-end justify-center w-[25%] relative">
 
@@ -14,12 +14,12 @@
             
             <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-start relative"> 
                 <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-38 speech-bubble">
-                    <span class="text-xs rtl text-dark-text dark:text-light-text">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} یورو</span>
-                    <span class="text-xs rtl text-dark-text dark:text-light-text">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
+                    <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} یورو</span>
+                    <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
                 </div>
                 <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
             </div>
-            <strong class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs md:text-sm">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</strong>
+            <strong class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</strong>
         </div>
     </div>
     <div class="flex justify-end items-start gap-1.5 flex-1">

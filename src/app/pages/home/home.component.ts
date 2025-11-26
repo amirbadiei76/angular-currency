@@ -4,7 +4,8 @@ import { CurrencyItemComponent } from '../../components/not-shared/home/currency
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../../constants/Values';
 import { StarIconComponent } from '../../components/shared/star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
-import { fromEvent, single } from 'rxjs';
+import { fromEvent, single, Subject, BehaviorSubject, of, timer } from 'rxjs';
+import { concatMap, debounceTime, distinctUntilChanged, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators'
 import { RequestArrayService } from '../../services/request-array.service';
 import { EmptyItemComponent } from '../../components/not-shared/home/empty-item/empty-item.component';
 import { HomeStateService } from '../../services/home-state.service';
@@ -140,6 +141,10 @@ export class HomeComponent {
   priceSorting: SortingType = SortingType.None;
   change24hSorting: SortingType = SortingType.None;
 
+  private destroySubject = new Subject<void>();
+  private notificationQueueSubject = new Subject<string>();
+  private removeNotificationSubject = new Subject<void>();
+
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
   @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollViewCategory') scrollViewCategory?: ElementRef<HTMLDivElement>;
@@ -167,6 +172,12 @@ export class HomeComponent {
     this.setCurrentCategory(this.lastHomeState.currentCategory);
     this.resetStoredValues();
 
+    this.notificationQueueSubject.pipe(
+      concatMap((msg) => this.showNotificationSequence(msg)),
+      takeUntil(this.destroySubject)
+    ).subscribe({
+      error: (err) => console.error('notificationQueue$ error', err)
+    })
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
@@ -187,8 +198,7 @@ export class HomeComponent {
 
     this.categoryScrollValue.set(this.lastHomeState.categoryScrollValue);
     this.subCategoryScrollValue.set(this.lastHomeState.subCategoryScrollValue);
-    this.scrollViewSubCategory?.nativeElement.scrollTo({ left: this.subCategoryScrollValue(), behavior: 'smooth' })
-    this.scrollViewCategory?.nativeElement.scrollTo({ left: this.categoryScrollValue(), behavior: 'smooth' })
+    
   }
 
   categoryLeft () {
@@ -313,12 +323,13 @@ export class HomeComponent {
 
   onFavAddItem = (id: string) => {
     this.showAnimation('با موفقیت به دیده بان اضافه شد')
-    this.processQueue();
+    // this.processQueue();
   }
 
   showAnimation (type: string) {
     this.notificationQueue.push(type)
-    this.processQueue()
+    // this.processQueue()
+    this.notificationQueueSubject.next(type)
   }
 
   processQueue () {
@@ -357,20 +368,21 @@ export class HomeComponent {
   }
 
   removeNotification () {
-    this.successMsg?.nativeElement.classList.remove('enter-animation')
-    this.successMsg?.nativeElement.classList.add('leave-animation')
+    this.removeNotificationSubject.next()
+    // this.successMsg?.nativeElement.classList.remove('enter-animation')
+    // this.successMsg?.nativeElement.classList.add('leave-animation')
 
-    setTimeout(() => {
-      this.successMsg?.nativeElement.classList.remove('leave-animation')
-      this.successMsg?.nativeElement.classList.add('translate-x-0')
-      this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
+    // setTimeout(() => {
+    //   this.successMsg?.nativeElement.classList.remove('leave-animation')
+    //   this.successMsg?.nativeElement.classList.add('translate-x-0')
+    //   this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
 
-      if (this.notificationState === 'hidden') {
-        this.currentNotification = null;
-        this.isNotifying = false;
-        this.processQueue()
-      }
-    }, 1000);
+    //   if (this.notificationState === 'hidden') {
+    //     this.currentNotification = null;
+    //     this.isNotifying = false;
+    //     this.processQueue()
+    //   }
+    // }, 1000);
   }
 
   onItemSelect = (id: string) => {
@@ -570,8 +582,13 @@ export class HomeComponent {
       // window.scrollTo({ top: 0, behavior: 'instant' })
       
       fromEvent(window, 'resize')
-      .subscribe((event: Event) => {
-        const width = document.body.clientWidth;
+      .pipe(
+        map(() => document.body.clientWidth),
+        debounceTime(150),
+        distinctUntilChanged(),
+        takeUntil(this.destroySubject)
+      )
+      .subscribe((width: number) => {
         if (width <= 624) {
           this.change24hText.set('24h')
         }
@@ -590,10 +607,70 @@ export class HomeComponent {
     
   }
 
+  private showNotificationSequence(msg: string) {
+    const displayDuration = 4000;
+    const leaveDuration = 1000;
+
+    return of(msg).pipe(
+      tap((m) => {
+        this.currentNotification = m;
+        this.notificationState = 'visible';
+        this.isNotifying = true;
+
+        try {
+          this.successMsg?.nativeElement.classList.remove('translate-y-[-15rem]');
+          this.successMsg?.nativeElement.classList.add('enter-animation');
+        } catch (e) {}
+
+      }),
+      switchMap(() => timer(displayDuration).pipe(takeUntil(this.removeNotificationSubject))),
+      tap(() => {
+        try {
+          this.successMsg?.nativeElement.classList.remove('enter-animation');
+          this.successMsg?.nativeElement.classList.add('leave-animation');
+        } catch (e) {}
+      }),
+      switchMap(() => timer(leaveDuration).pipe(takeUntil(this.removeNotificationSubject))),
+      tap(() => {
+        try {
+          this.successMsg?.nativeElement.classList.remove('leave-animation');
+          this.successMsg?.nativeElement.classList.add('translate-x-0');
+          this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]');
+        } catch (e) {}
+
+        this.notificationState = 'hidden';
+        this.currentNotification = null;
+        this.isNotifying = false;
+
+        if (this.notificationQueue.length) {
+          this.notificationQueue.shift();
+        }
+      })
+    )
+  }
+
+
+  ngOnDestroy(): void {
+    this.destroySubject.next();
+    this.destroySubject.complete();
+
+    try {
+      this.notificationQueueSubject.complete();
+    } catch (e) {}
+    try {
+      this.removeNotificationSubject.complete();
+    } catch (e) {}
+  }
+
   ngAfterViewInit () {
     if (typeof window !== 'undefined') {
 
-      fromEvent(window, 'click').subscribe((event: Event) => {
+      fromEvent(window, 'click')
+      .pipe(
+        filter((event: Event) => (event.target as HTMLElement).id !== 'searchInput'),
+        takeUntil(this.destroySubject)
+      )
+      .subscribe((event: Event) => {
         if ((event.target as HTMLElement).id !== 'searchInput') {
           this.searchInput?.nativeElement.classList.remove('border-green-btn');
           this.searchInput?.nativeElement.classList.add('border-light-text2');

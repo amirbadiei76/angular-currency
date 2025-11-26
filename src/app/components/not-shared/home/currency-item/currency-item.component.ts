@@ -4,7 +4,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { StarIconComponent } from '../../../shared/star-icon/star-icon.component';
 import { RequestArrayService } from '../../../../services/request-array.service';
 import { toman_unit } from '../../../../constants/Values';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
@@ -21,12 +21,14 @@ export class CurrencyItemComponent {
   @Output() favAdded = new EventEmitter<string>();
   @Output() itemSelected = new EventEmitter<string>();
 
+  @ViewChild('starElement') starElement?: ElementRef<HTMLDivElement>
+
   requestArray?: RequestArrayService;
 
   currentCurrencyItem?: CurrencyItem;
   priceValue?: string | number;
   
-  constructor(private requestService: RequestArrayService) {
+  constructor(private requestService: RequestArrayService, private router: Router) {
     this.requestArray = requestService
     this.currentCurrencyItem = this.currencyItem;
   }
@@ -45,8 +47,11 @@ export class CurrencyItemComponent {
     this.favRemoved.emit(this.currencyItem!.id)
   }
 
-  onSelectItem() {
-    this.itemSelected.emit(this.currencyItem!.id)
+  onSelectItem(event: MouseEvent) {
+    if (!this.starElement?.nativeElement.contains((event.target as Node))) {
+      this.itemSelected.emit(this.currencyItem!.id)
+      this.router.navigate([`/${this.currencyItem!.slugText}`])
+    }
   }
 
 }

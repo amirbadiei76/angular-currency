@@ -37,21 +37,21 @@ export class CurrencyItemComponent {
     this.priceValue = (this.currencyItem?.unit === toman_unit) ? this.currencyItem.tomanStringPrice : this.currencyItem?.lastPriceInfo.p
   }
 
-  addToFav() {
+  addToFav(event: MouseEvent) {
+    event.stopPropagation()
     this.requestArray?.addToFavorite(this.currencyItem!)
     this.favAdded.emit(this.currencyItem!.id)
   }
 
-  removeFromFav() {
+  removeFromFav(event: MouseEvent) {
+    event.stopPropagation()
     this.requestArray?.removeFromFavorite(this.currencyItem?.id!)
     this.favRemoved.emit(this.currencyItem!.id)
   }
 
-  onSelectItem(event: MouseEvent) {
-    if (!this.starElement?.nativeElement.contains((event.target as Node))) {
-      this.itemSelected.emit(this.currencyItem!.id)
-      this.router.navigate([`/${this.currencyItem!.slugText}`])
-    }
+  onSelectItem() {
+    this.itemSelected.emit(this.currencyItem!.id)
+    this.router.navigate([`/${this.currencyItem!.slugText}`])
   }
 
 }

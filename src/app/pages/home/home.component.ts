@@ -142,8 +142,6 @@ export class HomeComponent {
   change24hSorting: SortingType = SortingType.None;
 
   private destroySubject = new Subject<void>();
-  private notificationQueueSubject = new Subject<string>();
-  private removeNotificationSubject = new Subject<void>();
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
   @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>;
@@ -172,12 +170,6 @@ export class HomeComponent {
     this.setCurrentCategory(this.lastHomeState.currentCategory);
     this.resetStoredValues();
 
-    this.notificationQueueSubject.pipe(
-      concatMap((msg) => this.showNotificationSequence(msg)),
-      takeUntil(this.destroySubject)
-    ).subscribe({
-      error: (err) => console.error('notificationQueue$ error', err)
-    })
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
@@ -323,13 +315,11 @@ export class HomeComponent {
 
   onFavAddItem = (id: string) => {
     this.showAnimation('با موفقیت به دیده بان اضافه شد')
-    // this.processQueue();
+    this.processQueue();
   }
 
   showAnimation (type: string) {
     this.notificationQueue.push(type)
-    // this.processQueue()
-    this.notificationQueueSubject.next(type)
   }
 
   processQueue () {
@@ -367,22 +357,21 @@ export class HomeComponent {
 
   }
 
-  removeNotification () {
-    this.removeNotificationSubject.next()
-    // this.successMsg?.nativeElement.classList.remove('enter-animation')
-    // this.successMsg?.nativeElement.classList.add('leave-animation')
+  removeNotification () {    
+    this.successMsg?.nativeElement.classList.remove('enter-animation')
+    this.successMsg?.nativeElement.classList.add('leave-animation')
 
-    // setTimeout(() => {
-    //   this.successMsg?.nativeElement.classList.remove('leave-animation')
-    //   this.successMsg?.nativeElement.classList.add('translate-x-0')
-    //   this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
+    setTimeout(() => {
+      this.successMsg?.nativeElement.classList.remove('leave-animation')
+      this.successMsg?.nativeElement.classList.add('translate-x-0')
+      this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
 
-    //   if (this.notificationState === 'hidden') {
-    //     this.currentNotification = null;
-    //     this.isNotifying = false;
-    //     this.processQueue()
-    //   }
-    // }, 1000);
+      if (this.notificationState === 'hidden') {
+        this.currentNotification = null;
+        this.isNotifying = false;
+        this.processQueue()
+      }
+    }, 1000);
   }
 
   onItemSelect = (id: string) => {
@@ -607,59 +596,9 @@ export class HomeComponent {
     
   }
 
-  private showNotificationSequence(msg: string) {
-    const displayDuration = 4000;
-    const leaveDuration = 1000;
-
-    return of(msg).pipe(
-      tap((m) => {
-        this.currentNotification = m;
-        this.notificationState = 'visible';
-        this.isNotifying = true;
-
-        try {
-          this.successMsg?.nativeElement.classList.remove('translate-y-[-15rem]');
-          this.successMsg?.nativeElement.classList.add('enter-animation');
-        } catch (e) {}
-
-      }),
-      switchMap(() => timer(displayDuration).pipe(takeUntil(this.removeNotificationSubject))),
-      tap(() => {
-        try {
-          this.successMsg?.nativeElement.classList.remove('enter-animation');
-          this.successMsg?.nativeElement.classList.add('leave-animation');
-        } catch (e) {}
-      }),
-      switchMap(() => timer(leaveDuration).pipe(takeUntil(this.removeNotificationSubject))),
-      tap(() => {
-        try {
-          this.successMsg?.nativeElement.classList.remove('leave-animation');
-          this.successMsg?.nativeElement.classList.add('translate-x-0');
-          this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]');
-        } catch (e) {}
-
-        this.notificationState = 'hidden';
-        this.currentNotification = null;
-        this.isNotifying = false;
-
-        if (this.notificationQueue.length) {
-          this.notificationQueue.shift();
-        }
-      })
-    )
-  }
-
-
   ngOnDestroy(): void {
     this.destroySubject.next();
     this.destroySubject.complete();
-
-    try {
-      this.notificationQueueSubject.complete();
-    } catch (e) {}
-    try {
-      this.removeNotificationSubject.complete();
-    } catch (e) {}
   }
 
   ngAfterViewInit () {

@@ -1,134 +1,137 @@
 <main class="w-full min-h-screen bg-light dark:bg-dark flex flex-col flex-1 pt-16 ">
-    <div class="order-2 relative sm:order-1 mx-0 sm:mx-[12.5%] px-4 sm:px-0 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">
-        
-        
-        <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
-            <div class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">
-                @for (item of categories; track item.title) {
-                    <div class="inline-block text-center align-middle ml-[0.7rem] sm:ml-4">
-                        <div class="flex flex-col justify-center items-center relative">
-                            <span
-                                (click)="setCurrentCategory(item.title)"
-                                class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center gap-2.5">
-                                <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
-                                {{item.title}}
-                            </span>
-                            <div
-                                class="bg-green-btn h-0.5 w-8 duration-300 transition {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
+    
+    <div class="mx-0 sm:mx-auto sm:max-w-256 sm:w-full px-0 sm:px-28 md:px-36">
+        <div class="order-2 relative sm:order-1 px-4 sm:px-0 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">        
+            <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
+                <div class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">
+                    @for (item of categories; track item.title) {
+                        <div class="inline-block text-center align-middle ml-[0.7rem] sm:ml-4">
+                            <div class="flex flex-col justify-center items-center relative">
+                                <span
+                                    (click)="setCurrentCategory(item.title)"
+                                    class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center {{ item.title === 'دیده بان' ? 'gap-2.5' : '' }}">
+                                    <div class="{{item.title === 'دیده بان' ? 'w-4 h-4' : ''}}">
+                                        <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
+                                    </div>
+                                    {{item.title}}
+                                </span>
+                                <div
+                                    class="bg-green-btn h-0.5 w-8 duration-300 transition {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
+                            </div>
                         </div>
+                    }
+                </div>
+            </div>
+            
+            <div #rightCategoryArrow [class.hidden]="!showRightCategoryArrow()" id="rightCategoryArrow" class="absolute h-[110%] flex justify-end right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
+                <div (click)="categoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 -translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                    <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
+                </div>
+            </div>
+    
+            <div #leftCategoryArrow [class.hidden]="!showLeftCategoryArrow()" id="leftCategoryArrow" class="absolute h-[110%] flex justify-start left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
+                <div (click)="categoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                    <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"></i>
+                </div>
+            </div>
+        </div>
+    
+        <div class="order-1 sm:order-2 flex px-4 sm:px-0 gap-4 {{ canShowSupportedCurrencyToggle() ? 'justify-between' : 'justify-end' }} py-2 sm:py-4 items-start bg-light dark:bg-dark border-b border-b-light-text3 dark:border-b-dark-text3">
+            <div *ngIf="canShowSupportedCurrencyToggle()" class="overflow-hidden flex flex-row-reverse">
+                @for (currency of supportedCurrencies; track currency.id) {
+                    <div
+                        (click)="currentSupportCurrencyId = currency.id"
+                        class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} sm:w-18 w-25 h-12 flex justify-center px-[0.25rem] items-center cursor-pointer">
+                        <p class="rtl {{ currency.id === currentSupportCurrencyId ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} text-2xs sm:text-xs">{{currency.title}}</p>
                     </div>
                 }
             </div>
-        </div>
-        
-        <div #rightCategoryArrow [class.hidden]="!showRightCategoryArrow()" id="rightCategoryArrow" class="absolute h-[110%] flex justify-end right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
-            <div (click)="categoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 -translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
-                <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
+            <div class="relative w-full sm:w-[40%] h-12 text-sm leading-5">
+                <svg
+                    viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
+                    <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                    <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                </svg>
+                <input #searchInput type="text" id="searchInput" name="searchInput" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
             </div>
         </div>
-
-        <div #leftCategoryArrow [class.hidden]="!showLeftCategoryArrow()" id="leftCategoryArrow" class="absolute h-[110%] flex justify-start left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
-            <div (click)="categoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
-                <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="order-1 sm:order-2 flex mx-0 sm:mx-[12.5%] px-4 sm:px-0 gap-4 {{ canShowSupportedCurrencyToggle() ? 'justify-between' : 'justify-end' }} py-2 sm:py-4 items-start bg-light dark:bg-dark border-b border-b-light-text3 dark:border-b-dark-text3">
-        <div *ngIf="canShowSupportedCurrencyToggle()" class="overflow-hidden flex flex-row-reverse">
-            @for (currency of supportedCurrencies; track currency.id) {
-                <div
-                    (click)="currentSupportCurrencyId = currency.id"
-                    class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} sm:w-18 w-25 h-12 flex justify-center px-[0.25rem] items-center cursor-pointer">
-                    <p class="rtl {{ currency.id === currentSupportCurrencyId ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} text-2xs sm:text-xs">{{currency.title}}</p>
-                </div>
-            }
-        </div>
-        <div class="relative w-full sm:w-[40%] h-12 text-sm leading-5">
-            <svg
-                viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
-                <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
-                <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
-            </svg>
-            <input #searchInput type="text" id="searchInput" name="searchInput" (input)="filterList($event)" (focusout)="inputMouseEnter($event)" (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" class="rtl transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
-        </div>
-    </div>
-
-    <div  class="order-3 rtl mx-0 sm:mx-[12.5%] relative text-right px-4 sm:px-0 justify-start py-[0.7rem] sm:py-[1.2rem] bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
-        <div #rightSubCategoryArrow [class.hidden]="!showRightSubCategoryArrow()" id="rightSubCategoryArrow" class="absolute h-[99.9%] align-middle right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
-            <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 sm:translate-x-0 -translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
-                <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
-            </div>
-        </div>
-
-        <div #leftSubCategoryArrow [class.hidden]="!showLeftSubCategoryArrow()" id="leftSubCategoryArrow" class="absolute h-[99.9%] align-middle left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
-            <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex self-end justify-center items-center translate-y-4 -translate-x-2 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
-                <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"> </i>
-            </div>
-        </div>
-
-        <div #scrollViewSubCategory (scroll)="onScrollEventHandler()" class="scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x text-right whitespace-nowrap">
-            <div class="inline-block scroll-hide w-full">
-
-                @for (item of currentSubCategoryList; track item) {
-                    <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} h-8 text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">{{item}}</p>
-                }
-            </div>
-        </div>
-        
-
-    </div>
     
-
-    <div class="order-4 mx-0 sm:mx-[12.5%] px-4 sm:px-0 flex justify-between padding-vertical-2 py-2 sm:py-4 items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
-        <div class="w-[25%] md:w-[35%] flex justify-start md:justify-end">
-            <div (click)="changeChange24hSortingType()" class="hover:cursor-pointer flex gap-3 flex-row items-center w-fit">
-                <div class="flex flex-col">
-                    <i class="{{change24hSorting.toString() === '0' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
-                    <i class="{{change24hSorting.toString() === '1' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+        <div  class="order-3 rtl relative text-right px-4 sm:px-0 justify-start py-[0.7rem] sm:py-[1.2rem] bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
+            <div #rightSubCategoryArrow [class.hidden]="!showRightSubCategoryArrow()" id="rightSubCategoryArrow" class="absolute h-[99.9%] align-middle right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
+                <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 sm:translate-x-0 -translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                    <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
                 </div>
-                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm leading-4.5 sm:leading-5 pointer-events-none">{{change24hText()}}</span>
             </div>
-        </div>
-        <div class="w-[15%] md:w-[25%] flex justify-end">
-            <div (click)="changePriceSortingType()" class="flex gap-3 w-fit flex-row items-center hover:cursor-pointer">
-                <div class="flex flex-col">
-                    <i class="{{priceSorting.toString() === '0' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
-                    <i class="{{priceSorting.toString() === '1' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+    
+            <div #leftSubCategoryArrow [class.hidden]="!showLeftSubCategoryArrow()" id="leftSubCategoryArrow" class="absolute h-[99.9%] align-middle left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
+                <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex self-end justify-center items-center translate-y-4 -translate-x-2 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                    <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"> </i>
                 </div>
-                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm leading-4.5 sm:leading-5 pointer-events-none">{{priceSortingText()}}</span>
             </div>
-        </div>
-        <div class="flex flex-1 justify-end">
-            <div (click)="changeTitleSortingType()" class="flex gap-3 flex-row justify-end items-center hover:cursor-pointer">
-                <div class="flex flex-col">
-                    <i class="{{titleSorting.toString() === '0' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
-                    <i class="{{titleSorting.toString() === '1' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+    
+            <div #scrollViewSubCategory (scroll)="onScrollEventHandler()" class="scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x text-right whitespace-nowrap">
+                <div class="inline-block scroll-hide w-full">
+    
+                    @for (item of currentSubCategoryList; track item) {
+                        <p (click)="filterByCategory(item)" class="{{item === currentSubCategory() ? 'bg-light-highlight dark:bg-dark-highlight rounded-md text-dark-text3 dark:text-light-text3' : 'text-dark-text2 dark:text-light-text2' }} text-center align-middle inline-block pt-[0.2rem] pb-[0.4rem] px-[0.3rem] ml-[0.6rem] mb-[0.3rem] hover:cursor-pointer text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">{{item}}</p>
+                    }
                 </div>
-                <span class="text-dark-text2 dark:text-light-text2 text-xs sm:text-sm leading-4.5 sm:leading-5 pointer-events-none">عنوان</span>
             </div>
+            
+    
         </div>
-    </div>
-    <div *ngIf="currenTemptList?.length !== 0" class="order-4 mx-0 sm:mx-[12.5%]">
-        @for (item of currenTemptList2; track item.id) {
-            <currency-item
-                [showCurrencyId]="currentSupportCurrencyId"
-                [currencyItem]="item"
-                (favRemoved)="onFavRemoveItem($event)"
-                (favAdded)="onFavAddItem($event)"
-                (itemSelected)="onItemSelect($event)"
-            />
-        }
         
-    </div>
-    <div
-        *ngIf="currentCategory() !== 'دیده بان' && currenTemptList?.length === 0"
-        class="order-5 mx-0 sm:mx-[12.5%]"
-        >
-        <empty-item />
-        <empty-item />
-        <empty-item />
-        <empty-item />
+    
+        <div class="order-4 px-4 sm:px-0 flex justify-between padding-vertical-2 py-2 sm:py-4 items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
+            <div class="w-[26%] md:w-[35%] flex justify-start md:justify-end">
+                <div (click)="changeChange24hSortingType()" class="hover:cursor-pointer flex gap-3 flex-row items-center w-fit">
+                    <div class="flex flex-col">
+                        <i class="{{change24hSorting.toString() === '0' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
+                        <i class="{{change24hSorting.toString() === '1' && change24hSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+                    </div>
+                    <span class="text-dark-text2 dark:text-light-text2 text-xs md:text-sm leading-4.5 md:leading-5 pointer-events-none">{{change24hText()}}</span>
+                </div>
+            </div>
+            <div class="w-[15%] md:w-[25%] flex justify-end">
+                <div (click)="changePriceSortingType()" class="flex gap-3 w-fit flex-row items-center hover:cursor-pointer">
+                    <div class="flex flex-col">
+                        <i class="{{priceSorting.toString() === '0' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
+                        <i class="{{priceSorting.toString() === '1' && priceSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+                    </div>
+                    <span class="text-dark-text2 dark:text-light-text2 text-xs md:text-sm leading-4.5 md:leading-5 pointer-events-none">{{priceSortingText()}}</span>
+                </div>
+            </div>
+            <div class="flex flex-1 justify-end">
+                <div (click)="changeTitleSortingType()" class="flex gap-3 flex-row justify-end items-center hover:cursor-pointer">
+                    <div class="flex flex-col">
+                        <i class="{{titleSorting.toString() === '0' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-up-fill"></i>
+                        <i class="{{titleSorting.toString() === '1' && titleSorting.toString() !== '2' ? 'text-sorting-green-light dark:text-sorting-green-dark' : 'text-dark-text2 dark:text-light-text2'}} pointer-events-none text-xs bi bi-caret-down-fill -translate-y-"></i>
+                    </div>
+                    <span class="text-dark-text2 dark:text-light-text2 text-xs md:text-sm leading-4.5 md:leading-5 pointer-events-none">عنوان</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="currenTemptList?.length !== 0" class="order-4">
+            @for (item of currenTemptList2; track item.id) {
+                <currency-item
+                    [showCurrencyId]="currentSupportCurrencyId"
+                    [currencyItem]="item"
+                    (favRemoved)="onFavRemoveItem($event)"
+                    (favAdded)="onFavAddItem($event)"
+                    (itemSelected)="onItemSelect($event)"
+                />
+            }
+            
+        </div>
+        <div
+            *ngIf="currentCategory() !== 'دیده بان' && currenTemptList?.length === 0"
+            class="order-5 mx-0 sm:mx-[12.5%]"
+            >
+            <empty-item />
+            <empty-item />
+            <empty-item />
+            <empty-item />
+        </div>
     </div>
 </main>
 

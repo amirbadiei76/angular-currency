@@ -4,10 +4,11 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../components/shared/bre
 import { CurrenciesService } from '../../services/currencies.service';
 import { CurrencyItem } from '../../interface/Currencies';
 import { RequestArrayService } from '../../services/request-array.service';
+import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent],
+  imports: [BreadcrumbComponent, ItemInfoComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -18,7 +19,7 @@ export class CurrencyItemDetailsComponent {
   breadCrumbItems: BreadcrumbItem[] = []
 
   constructor(private route: ActivatedRoute, private requestArray: RequestArrayService) {
-    console.log(this.breadCrumbItems)
+    
   }
 
   ngOnInit() {

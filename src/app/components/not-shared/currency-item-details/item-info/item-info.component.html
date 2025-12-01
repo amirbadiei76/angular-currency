@@ -1,10 +1,17 @@
-<div class="my-6 leading-[180%] flex w-full md:px-4 md:py-3 bg-light-hover dark:bg-dark-text rounded-lg">
-    <img class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover" src={{item?.img}} alt={{item?.title}}>
+<div class="my-6 leading-[180%] flex-1 flex w-full px-4 py-3 bg-light-hover dark:bg-dark-text rounded-lg">
+    
+    
+    <div>
+        
+    </div>
+
     <div>
 
-        <div>
-            <div class="flex">
-                <span *ngIf="item?.isFav" class="w-6 h-6 cursor-pointer" (click)="removeFromFav($event)">
+        <div class="flex flex-col justify-center">
+            <h1 class="text-xl dark:text-white text-dark-text mr-1 leading-[180%]">{{item?.title}}</h1>
+            <div class="flex justify-end mt-2 leading-[180%]">
+                <p class="text-xl dark:text-light-text4 text-dark-text4">{{item?.shortedName}}</p>
+                <span *ngIf="item?.isFav" class="w-6 h-6 cursor-pointer ml-1" (click)="removeFromFav($event)">
                     <span class="relative">
                         <svg
                             class="w-6 h-6 fill-yellow-star"
@@ -32,13 +39,12 @@
                         </svg>
                     </span>
                 </span>
-                <span *ngIf="!item?.isFav" class="w-6 h-6 cursor-pointer" (click)="addToFav($event)">
+                <span *ngIf="!item?.isFav" class="w-6 h-6 cursor-pointer ml-1" (click)="addToFav($event)">
                     <star-icon />
                 </span>
             </div>
         </div>
     </div>
-    <div>
-
-    </div>
+    <img class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover ml-2" src={{item?.img}} alt={{item?.title}}>
+    
 </div>

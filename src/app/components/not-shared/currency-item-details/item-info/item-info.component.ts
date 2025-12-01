@@ -20,7 +20,7 @@ export class ItemInfoComponent {
     }
 
     ngOnInit () {
-      console.log(this.item)
+      
     }
 
     addToFav(event: MouseEvent) {

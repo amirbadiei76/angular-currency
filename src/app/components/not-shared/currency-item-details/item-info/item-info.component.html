@@ -4,10 +4,10 @@
 
         <div>
             <div class="flex">
-                <span *ngIf="item?.isFav" class="w-6 h-6" (click)="removeFromFav($event)">
+                <span *ngIf="item?.isFav" class="w-6 h-6 cursor-pointer" (click)="removeFromFav($event)">
                     <span class="relative">
                         <svg
-                            class="w-6 h-6"
+                            class="w-6 h-6 fill-yellow-star"
                             version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 288.259 288.259"
                             xml:space="preserve">
@@ -32,7 +32,7 @@
                         </svg>
                     </span>
                 </span>
-                <span *ngIf="!item?.isFav" class="w-6 h-6" (click)="addToFav($event)">
+                <span *ngIf="!item?.isFav" class="w-6 h-6 cursor-pointer" (click)="addToFav($event)">
                     <star-icon />
                 </span>
             </div>

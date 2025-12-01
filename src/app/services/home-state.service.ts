@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { currency_title, filter_overview } from '../constants/Values';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class HomeStateService {
   categoryScrollValue: number = 0;
   currentSubCategory: string = filter_overview;
   subCategoryScrollValue: number = 0;
+
 
   setCategory(category: string) {
     this.currentCategory = category;
@@ -26,4 +27,7 @@ export class HomeStateService {
   setSubCategory(subCategory: string) {
     this.currentSubCategory = subCategory;
   }
+
+  
+  
 }

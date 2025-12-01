@@ -3,6 +3,7 @@ import { CurrencyItem } from '../../../../interface/Currencies';
 import { StarIconComponent } from '../../../shared/star-icon/star-icon.component';
 import { RequestArrayService } from '../../../../services/request-array.service';
 import { NgIf } from '@angular/common';
+import { NotificationService } from '../../../../services/notification.service';
 
 @Component({
   selector: 'app-item-info',
@@ -14,7 +15,7 @@ export class ItemInfoComponent {
     @Input() item?: CurrencyItem;
     requestArray?: RequestArrayService;
 
-    constructor (private requestService: RequestArrayService) {
+    constructor (private requestService: RequestArrayService, private notificationService: NotificationService) {
       this.requestArray = requestService
     }
 
@@ -23,12 +24,14 @@ export class ItemInfoComponent {
     }
 
     addToFav(event: MouseEvent) {
-      event.stopPropagation()
+      event.stopPropagation();
+      this.notificationService.show('با موفقیت به دیده بان اضافه شد')
       this.requestArray?.addToFavorite(this.item!)
     }
   
     removeFromFav(event: MouseEvent) {
-      event.stopPropagation()
+      event.stopPropagation();
+      this.notificationService.show('با موفقیت از دیده بان حذف شد')
       this.requestArray?.removeFromFavorite(this.item?.id!)
     }
 }

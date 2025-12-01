@@ -5,6 +5,7 @@ import { CurrenciesService } from '../../services/currencies.service';
 import { CurrencyItem } from '../../interface/Currencies';
 import { RequestArrayService } from '../../services/request-array.service';
 import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-currency-item-details',
@@ -17,6 +18,7 @@ export class CurrencyItemDetailsComponent {
   currencyItem?: CurrencyItem;
 
   breadCrumbItems: BreadcrumbItem[] = []
+
 
   constructor(private route: ActivatedRoute, private requestArray: RequestArrayService) {
     

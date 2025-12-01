@@ -9,6 +9,7 @@ import { concatMap, debounceTime, distinctUntilChanged, filter, map, switchMap, 
 import { RequestArrayService } from '../../services/request-array.service';
 import { EmptyItemComponent } from '../../components/not-shared/home/empty-item/empty-item.component';
 import { HomeStateService } from '../../services/home-state.service';
+import { NotificationService } from '../../services/notification.service';
 
 enum SortingType {
   Ascending, Descending, None
@@ -131,10 +132,10 @@ export class HomeComponent {
   categoryScrollValue: WritableSignal<number> = signal(0);
   subCategoryScrollValue: WritableSignal<number> = signal(0);
   
-  notificationQueue: string[] = [];
-  isNotifying: boolean = false;
-  currentNotification: string | null = null;
-  notificationState: 'visible' | 'hidden' = 'hidden';
+  // notificationQueue: string[] = [];
+  // isNotifying: boolean = false;
+  // currentNotification: string | null = null;
+  // notificationState: 'visible' | 'hidden' = 'hidden';
   
 
   titleSorting: SortingType = SortingType.None;
@@ -146,7 +147,7 @@ export class HomeComponent {
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
   @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollViewCategory') scrollViewCategory?: ElementRef<HTMLDivElement>;
-  @ViewChild('successMsg') successMsg?: ElementRef<HTMLDivElement>;
+  // @ViewChild('successMsg') successMsg?: ElementRef<HTMLDivElement>;
 
   showRightSubCategoryArrow: WritableSignal<Boolean> = signal(true);
   showLeftSubCategoryArrow: WritableSignal<Boolean> = signal(true);
@@ -165,7 +166,7 @@ export class HomeComponent {
   static mainData: Currencies;
 
 
-  constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService) {
+  constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService, private notificationService: NotificationService) {
     this.reqestClass = requestArray;
     this.setCurrentCategory(this.lastHomeState.currentCategory);
     this.resetStoredValues();
@@ -314,73 +315,17 @@ export class HomeComponent {
   }
 
   onFavAddItem = (id: string) => {
-    this.showAnimation('با موفقیت به دیده بان اضافه شد')
-    this.processQueue();
+    this.notificationService.show('با موفقیت به دیده بان اضافه شد')
   }
 
-  showAnimation (type: string) {
-    this.notificationQueue.push(type)
-  }
-
-  processQueue () {
-    if (this.isNotifying || this.notificationQueue.length === 0) return;
-
-    this.isNotifying = true;
-
-    this.currentNotification = this.notificationQueue.shift()!;
-    this.notificationState = 'visible';
-
-    this.successMsg?.nativeElement.classList.remove('translate-y-[-15rem]')
-    this.successMsg?.nativeElement.classList.add('enter-animation')
-    
-
-    setTimeout(() => {
-      this.successMsg?.nativeElement.classList.remove('enter-animation')
-      this.successMsg?.nativeElement.classList.add('leave-animation')
-
-      setTimeout(() => {
-        this.successMsg?.nativeElement.classList.remove('leave-animation')
-        this.successMsg?.nativeElement.classList.add('translate-x-0')
-        this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
-
-        if (this.notificationState === 'hidden') {
-          this.currentNotification = null;
-          this.isNotifying = false;
-          this.processQueue()
-        }
-      }, 1000);
-    }, 4000);
-
-    setTimeout(() => {
-        this.notificationState = 'hidden'
-    }, 5000);
-
-  }
-
-  removeNotification () {    
-    this.successMsg?.nativeElement.classList.remove('enter-animation')
-    this.successMsg?.nativeElement.classList.add('leave-animation')
-
-    setTimeout(() => {
-      this.successMsg?.nativeElement.classList.remove('leave-animation')
-      this.successMsg?.nativeElement.classList.add('translate-x-0')
-      this.successMsg?.nativeElement.classList.add('translate-y-[-15rem]')
-
-      if (this.notificationState === 'hidden') {
-        this.currentNotification = null;
-        this.isNotifying = false;
-        this.processQueue()
-      }
-    }, 1000);
-  }
+  
 
   onItemSelect = (id: string) => {
     
   }
   
   onFavRemoveItem = (id: string) =>  {
-      this.showAnimation('با موفقیت از دیده بان حذف شد')
-      this.processQueue()
+      this.notificationService.show('با موفقیت از دیده بان حذف شد')
 
       if (this.currentCategory() == favories_title) {
         this.currentList = this.currentList?.filter((item) => item.id !== id)

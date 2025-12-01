@@ -121,11 +121,10 @@
                     (itemSelected)="onItemSelect($event)"
                 />
             }
-            
         </div>
         <div
             *ngIf="currentCategory() !== 'دیده بان' && currenTemptList?.length === 0"
-            class="order-5 mx-0 sm:mx-[12.5%]"
+            class="order-5"
             >
             <empty-item />
             <empty-item />
@@ -134,8 +133,3 @@
         </div>
     </div>
 </main>
-
-<div animate.enter="enter-animation" animate.leave="leave-animation" #successMsg class="transform translate-y-[-15rem] translate-x-0 fixed w-[75%] sm:w-auto px-[1.3rem] top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
-    <i (click)="removeNotification()" class="bi bi-x-lg hover:cursor-pointer"></i>
-    {{ currentNotification }}
-</div>

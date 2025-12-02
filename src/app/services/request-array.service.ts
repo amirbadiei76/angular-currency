@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CurrenciesService } from './currencies.service';
 import { Currencies, CurrencyItem, Current } from '../interface/Currencies';
-import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, pound_unit, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../constants/Values';
+import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, pound_unit, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../constants/Values';
 
 @Injectable({
   providedIn: 'root'
@@ -52,25 +52,25 @@ export class RequestArrayService {
   }
 
   convertUnitChanges (item: CurrencyItem, current: Current) {
-    let dollarChanges = (current.price_dollar_rl.dt === 'low' ? -1 : 1) * (current.price_dollar_rl.dp);
-    let itemChanges = (item.lastPriceInfo.dt === 'low' ? -1 : 1) * (item.lastPriceInfo.dp)
+    let dollarChanges = (current.price_dollar_rl?.dt === 'low' ? -1 : 1) * (current.price_dollar_rl?.dp);
+    let itemChanges = (item.lastPriceInfo?.dt === 'low' ? -1 : 1) * (item.lastPriceInfo?.dp)
     if (item.unit === toman_unit) {
-        item.rialChangeState = item.lastPriceInfo.dt
-        item.rialChanges = item.lastPriceInfo.dp + '';
+        item.rialChangeState = item.lastPriceInfo?.dt
+        item.rialChanges = item.lastPriceInfo?.dp + '';
         let itemDollarChanges = (((1 + itemChanges) / (1 + dollarChanges)) - 1);
         item.dollarChangeState = itemDollarChanges >= 0 ? 'high' : 'low';
         itemDollarChanges = Math.floor(itemDollarChanges * 100) / 100
         item.dollarChanges = Math.abs(itemDollarChanges) + '';
     }
     else if (item.unit === dollar_unit) {
-        item.dollarChangeState = item.lastPriceInfo.dt
-        item.dollarChanges = item.lastPriceInfo.dp + '';
+        item.dollarChangeState = item.lastPriceInfo?.dt
+        item.dollarChanges = item.lastPriceInfo?.dp + '';
         let itemRialChanges = (((1 + itemChanges) * (1 + dollarChanges)) + 1);
         item.rialChangeState = itemRialChanges >= 0 ? 'high' : 'low';
         itemRialChanges = Math.floor(itemRialChanges * 100) / 100
         item.rialChanges = Math.abs(itemRialChanges) + '';
     } else if (item.unit === pound_unit) {
-        let poundChanges = (current.price_gbp.dt === 'low' ? -1 : 1) * (current.price_gbp.dp)
+        let poundChanges = (current.price_gbp?.dt === 'low' ? -1 : 1) * (current.price_gbp?.dp)
         let poundAskChanges = (current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (current['gbp-usd-ask'].dp)
         
         let itemDollarChanges = (((1 + itemChanges) / (1 + poundAskChanges)) - 1);
@@ -117,10 +117,10 @@ export class RequestArrayService {
     }
   }
   
-  calculateOtherCurrenccyPrices(list: CurrencyItem[], current: Current) {
+  calculateOtherCurrenccyPrices(list: CurrencyItem[], current: Current, faGroupName: string) {
 
     list.forEach(item => {
-        let priceValue = +(item.lastPriceInfo.p.replaceAll(',', ''))
+        let priceValue = +(item?.lastPriceInfo?.p.replaceAll(',', ''))
         // convert all to rial for real price
         if (item.unit === dollar_unit) {
             let dollarValue = +(current.price_dollar_rl.p.replaceAll(',', ''))
@@ -160,9 +160,10 @@ export class RequestArrayService {
         item.slugText = item.shortedName?.replace(/[\d()/\-\s]+/g, '_')
         .replace(/_+/g, '_')
         .replace(/^_+|_+$/g, '').toLocaleLowerCase();
+        item.faGroupName = faGroupName;
 
         // fix 24h changes problem
-        if (item.lastPriceInfo.dt === 'low' && item.lastPriceInfo.dp == 0) item.lastPriceInfo.dt = 'high'
+        if (item.lastPriceInfo?.dt === 'low' && item.lastPriceInfo?.dp == 0) item.lastPriceInfo.dt = 'high'
     })
   }
 
@@ -171,28 +172,28 @@ export class RequestArrayService {
       this.mainData = data;
       
       this.setupMainCurrenciesList(data.current)
-      this.calculateOtherCurrenccyPrices(this.mainCurrencyList, data.current)
+      this.calculateOtherCurrenccyPrices(this.mainCurrencyList, data.current, currency_title)
 
       this.setupCryptoList(data.current)
-      this.calculateOtherCurrenccyPrices(this.cryptoList, data.current)
+      this.calculateOtherCurrenccyPrices(this.cryptoList, data.current, crypto_title)
 
       this.setupWorldMarketList(data.current)
-      this.calculateOtherCurrenccyPrices(this.worldMarketList, data.current)
+      this.calculateOtherCurrenccyPrices(this.worldMarketList, data.current, world_title)
 
       this.setupCoinList(data.current)
-      this.calculateOtherCurrenccyPrices(this.coinList, data.current)
+      this.calculateOtherCurrenccyPrices(this.coinList, data.current, coin_title)
 
       this.setupGoldList(data.current)
-      this.calculateOtherCurrenccyPrices(this.goldList, data.current)
+      this.calculateOtherCurrenccyPrices(this.goldList, data.current, gold_title)
 
       this.setupPreciousMetals(data.current)
-      this.calculateOtherCurrenccyPrices(this.preciousMetalList, data.current)
+      this.calculateOtherCurrenccyPrices(this.preciousMetalList, data.current, precious_metal_title)
 
       this.setupBaseMetals(data.current)
-      this.calculateOtherCurrenccyPrices(this.baseMetalList, data.current)
+      this.calculateOtherCurrenccyPrices(this.baseMetalList, data.current, base_metal_title)
 
       this.setupCommodityMarket(data.current)
-      this.calculateOtherCurrenccyPrices(this.commodityList, data.current)
+      this.calculateOtherCurrenccyPrices(this.commodityList, data.current, commodity_title)
 
       this.setupAllItemsList()
       this.getFavorites()
@@ -2789,17 +2790,17 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
-        id: "1000231",
-        historyCallInfo: this.currencyService.getGoldGc1HistoryInfo(),
-        lastPriceInfo: current.gc1,
-        title: "صندوق طلای لوتوس",
-        shortedName: "Lotus Gold ETF",
-        filterName: filter_etf,
-        groupName: GOLD_PREFIX,
-        unit: toman_unit,
-        img: '/assets/images/coins/treasure-chest2.webp'
-    });
+    // this.goldList.push({
+    //     id: "1000231",
+    //     historyCallInfo: this.currencyService.getGoldGc1HistoryInfo(),
+    //     lastPriceInfo: current.gc1,
+    //     title: "صندوق طلای لوتوس",
+    //     shortedName: "Lotus Gold ETF",
+    //     filterName: filter_etf,
+    //     groupName: GOLD_PREFIX,
+    //     unit: toman_unit,
+    //     img: '/assets/images/coins/treasure-chest2.webp'
+    // });
     this.goldList.push({
         id: "1000232",
         historyCallInfo: this.currencyService.getGoldGc11HistoryInfo(),

@@ -7,7 +7,7 @@ import { NotificationService } from '../../../../services/notification.service';
 
 @Component({
   selector: 'app-item-info',
-  imports: [StarIconComponent, NgIf],
+  imports: [NgIf],
   templateUrl: './item-info.component.html',
   styleUrl: './item-info.component.css'
 })

@@ -6,14 +6,14 @@
     <div class="flex justify-start md:justify-center items-center gap-2 w-[15%]">
         <strong class="font-normal text-xs leading-4.5 {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</strong>
     </div>
-    <div class="flex flex-col items-end justify-center w-[25%] relative">
+    <div class="flex flex-col items-end justify-center w-[25%] mr-1 relative">
 
         <strong *ngIf="currencyItem?.groupName !== 'World_Market'" class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{showCurrencyId === 0 ? currencyItem?.tomanStringPrice : currencyItem?.dollarStringPrice }}</strong>
         <strong *ngIf="currencyItem?.groupName === 'World_Market'" class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{ currencyItem?.lastPriceInfo?.p }}</strong>
         <div class="flex justify-center items-start gap-2 relative ">
             
             <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-start relative"> 
-                <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-38 speech-bubble">
+                <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-45 speech-bubble">
                     <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} یورو</span>
                     <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
                 </div>
@@ -22,11 +22,11 @@
             <strong class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</strong>
         </div>
     </div>
-    <div class="flex justify-end items-start gap-1.5 flex-1 w-[35%]">
-        <div class="flex pl-0.5 overflow-hidden text-ellipsis mt-1">
+    <div class="flex justify-end items-start gap-1.5 flex-1">
+        <div class="flex flex-1 justify-end pl-0.5 mt-1">
             <div class="flex flex-col items-end justify-start">
                 <span class="text-dark-text2 dark:text-light-text2 order-2 sm:order-1 sm:text-dark sm:dark:text-light rtl w-full text-2xs leading-3 sm:text-sm sm:leading-5 font-bold">{{currencyItem?.title}}</span>
-                <span class="text-dark order-1 sm:order-2 mb-1 sm:mt-1 whitespace-nowrap ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal text-xs leading-4.5 md:text-sm md:leading-5">{{currencyItem?.shortedName}}</span>
+                <span class="text-dark order-1 sm:order-2 mb-1 sm:mt-1 ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal text-xs leading-4.5 md:text-sm md:leading-5">{{currencyItem?.shortedName}}</span>
             </div>
         </div>
         <div class="flex gap-0 md:gap-1.5 flex-row sm:flex-col md:flex-row">

@@ -49,4 +49,18 @@ export class ThemeService {
     }
     this.document.cookie = (name + "=" + ((value) || "") + expires + "; path=/; SameSite=Lax")
   }
+
+
+  
+  inputMouseLeave(event: Event) {
+    (event.target as HTMLInputElement).classList.remove('border-light-text2');
+    (event.target as HTMLInputElement).classList.remove('dark:border-dark-text2');
+    (event.target as HTMLInputElement).classList.add('border-green-btn');
+  }
+  
+  inputMouseEnter(event: Event) {
+    (event.target as HTMLInputElement).classList.remove('border-green-btn');
+    (event.target as HTMLInputElement).classList.add('border-light-text2');
+    (event.target as HTMLInputElement).classList.add('dark:border-dark-text2');
+  }
 }

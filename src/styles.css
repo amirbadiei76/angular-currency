@@ -62,7 +62,6 @@
     --popup-border-green-light: #ade2c0;
 
 
-
     --green-btn: #00d890;
     --yellow-star: #e7c400;
 
@@ -311,7 +310,7 @@
 /* md */
 @media (width >= 48rem /* 768px */) {
 	.speech-bubble {
-		left: -10.5rem;
+		left: -12rem;
 	}
 
 	.speech-bubble::after {

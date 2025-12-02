@@ -591,6 +591,7 @@ export interface CurrencyItem {
     unit?: string;
     shortedName?: string;
     groupName: string;
+    faGroupName?: string;
     img?: string;
     isFav?: boolean;
     realPrice?: number;

@@ -28,7 +28,7 @@ export class CurrencyItemDetailsComponent {
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
 
 
-  constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private themeService: ThemeService) {
+  constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService) {
     this.themeServiceInstance = themeService;
   }
 
@@ -51,6 +51,19 @@ export class CurrencyItemDetailsComponent {
     if (textToFilter !== null) {
       this.currentFilteredList = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
     }
+  }
+
+  sharePage () {
+    const url = window.location.href;
+
+    if (!navigator.share) {
+      navigator.clipboard.writeText(url);
+      this.notificationService.show('آدرس صفحه کلیپ بورد ذخیره شد')
+      return;
+    }
+
+    navigator.share({ url })
+      .catch(() => console.warn("Share dialog dismissed"));
   }
 
   initializeCurrentCategoryItems () {

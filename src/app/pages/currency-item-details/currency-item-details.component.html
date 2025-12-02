@@ -2,7 +2,7 @@
     <div class="w-full md:w-[69%] flex flex-col flex-nowrap justify-end items-end content-center">
         <app-breadcrumb [items]="breadCrumbItems" />
         <div class="w-full flex justify-between items-center gap-2">
-            <button class="flex justify-center items-center text-sm transition text-dark-text dark:text-light-text duration-300 ease-out gap-2 h-12 hover:cursor-pointer rounded-semi px-2 border-transparent bg-neutral-50 dark:bg-neutral-700 border hover:border-light-text2 hover:dark:border-dark-text2">
+            <button (click)="sharePage()" class="flex justify-center items-center text-sm transition text-dark-text dark:text-light-text duration-300 ease-out gap-2 h-12 hover:cursor-pointer rounded-semi px-2 border-transparent bg-neutral-50 dark:bg-neutral-700 border hover:border-light-text2 hover:dark:border-dark-text2">
                 <i class="bi bi-share-fill"></i>
                 اشتراک
             </button>

@@ -1,4 +1,11 @@
-<div animate.enter="enter-animation" [class]="notificationService.styleClasses()" animate.leave="leave-animation" #successMsg class="transform fixed w-[75%] sm:w-auto px-[1.3rem] top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light dark:bg-popup-green-dark text-sm text-dark-text dark:text-light-text">
+<div
+    animate.enter="enter-animation"
+    [class]="notificationService.styleClasses()"
+    animate.leave="leave-animation"
+    class="transform fixed w-[75%] sm:w-auto px-[1.3rem] top-5 right-5 h-12 flex justify-between gap-0 sm:gap-20 items-center z-20 border rounded-semi border-popup-border-green-light dark:border-popup-border-green-dark bg-popup-green-light dark:bg-popup-green-dark text-xs dark:text-emerald-200 text-emerald-950">
     <i (click)="remove()" class="bi bi-x-lg hover:cursor-pointer"></i>
-    {{ current?.message }}
+    <div class="flex flex-1 gap-2">
+        {{ current?.message }}
+        <i class="bi bi-check-circle-fill"></i>
+    </div>
 </div>

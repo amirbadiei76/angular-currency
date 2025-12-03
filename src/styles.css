@@ -25,6 +25,9 @@
     --light-theme: #fafefd;
     --dark-theme: #121212;
 
+    --light-theme2: #fcfcfd;
+    --dark-theme2: #111;
+
     --light-border: #a7a9a8;
     --dark-border: #292a2a;
 
@@ -85,6 +88,10 @@
     /* light/dark */
     --color-light: var(--light-theme);
     --color-dark: var(--dark-theme);
+
+    
+    --color-light2: var(--light-theme2);
+    --color-dark2: var(--dark-theme2);
 
     --color-theme-white: var(--theme-white);
     --color-theme-black: var(--theme-black);

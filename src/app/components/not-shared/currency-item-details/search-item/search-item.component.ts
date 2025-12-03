@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CurrencyItem } from '../../../../interface/Currencies';
 
 @Component({
   selector: 'app-search-item',
@@ -7,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrl: './search-item.component.css'
 })
 export class SearchItemComponent {
+  @Input() item?: CurrencyItem;
+  @Output() itemSelected = new EventEmitter<string>();
 
+  constructor () {
+
+  }
+
+  onSelectItem() {
+    this.itemSelected.emit(this.item!.slugText)
+  }
 }

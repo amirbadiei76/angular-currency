@@ -6,7 +6,7 @@
                 <i class="bi bi-share-fill"></i>
                 اشتراک
             </button>
-            <div class="relative w-full sm:w-[50%] ">
+            <div #inputContainer class="relative w-full sm:w-[60%] md:w-[75%] xl:w-[55%]">
                 <div class="relative text-xs sm:text-sm leading-5 h-12">
                     <svg
                         viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +15,7 @@
                     </svg>
                     <input
                         #searchInput type="text" id="searchInput" name="searchInput"
-                        (focus)="inputFocus($event)" (blur)="inputBlur($event)"
+                        (focus)="inputFocus()"
                         (input)="filterList($event)"
                         class="rtl transition duration-300 ease-out pl-[0.8rem] peer pr-[2.7rem] rounded-semi outline-none border-transparent bg-neutral-50 dark:bg-neutral-700 border focus:border-green-btn hover:not-focus:border-light-text2 hover:not-focus:dark:border-dark-text2 h-full text-dark-text dark:text-light-text w-full text-right select-none"
                         autocomplete="off"
@@ -25,10 +25,12 @@
                     <p class="absolute text-light-text2 dark:text-dark-text2 top-1/2 -translate-y-1/2 right-[2.7rem] pointer-events-none peer-[:not(:placeholder-shown)]:hidden">عنوان را در {{currencyItem?.faGroupName}} جستجو کنید</p>
                 </div>
                 
-                <div #itemList class="absolute scroll-hide overflow-scroll hidden w-full z-[2] max-h-70 flex-col top-12 rounded-semi bg-neutral-50 dark:bg-neutral-700">
-                    @for (item of currentFilteredList; track item.id) {
-                        <app-search-item />
-                    }
+                <div #itemList class="absolute overflow-hidden p-5 hidden w-full z-[2] max-h-86 flex-col top-12 rounded-semi bg-neutral-50 dark:bg-neutral-700">
+                    <div class="flex flex-col scroll-hide overflow-y-scroll gap-4">
+                        @for (currentItem of currentFilteredList; track currentItem.id) {
+                            <app-search-item (itemSelected)="onItemSelect($event)" [item]="currentItem" />
+                        }
+                    </div>
                 </div>
             </div>
         </div>

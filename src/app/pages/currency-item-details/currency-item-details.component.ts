@@ -1,7 +1,6 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../components/shared/breadcrumb/breadcrumb.component';
-import { CurrenciesService } from '../../services/currencies.service';
 import { CurrencyItem } from '../../interface/Currencies';
 import { RequestArrayService } from '../../services/request-array.service';
 import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
@@ -26,28 +25,47 @@ export class CurrencyItemDetailsComponent {
   breadCrumbItems: BreadcrumbItem[] = [];
 
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
+  @ViewChild('inputContainer') inputContainer?: ElementRef;
 
 
-  constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService) {
+  constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService, private router: Router) {
     this.themeServiceInstance = themeService;
   }
 
-  inputFocus (event: Event) {
+  inputFocus () {
     this.itemList?.nativeElement.classList.remove('hidden')
     this.itemList?.nativeElement.classList.add('flex')
   }
 
   
-  inputBlur (event: Event) {
+  inputBlur () {
     this.itemList?.nativeElement.classList.remove('flex')
     this.itemList?.nativeElement.classList.add('hidden')
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clicked = event.target as Node;
+    if (!this.inputContainer?.nativeElement.contains(clicked)) {
+      this.inputBlur()
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.inputBlur()
+  }
+
+  onItemSelect(slug: string) {
+    this.inputBlur()
+    this.router.navigate([`/${slug}`])
   }
 
   
   filterList(event: Event) {
     const listToFilter = [...this.currentCategoryItems!!]
     const textToFilter = (event.target as HTMLInputElement).value.toLowerCase();
-    console.log(textToFilter, listToFilter)
     if (textToFilter !== null) {
       this.currentFilteredList = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
     }
@@ -96,6 +114,7 @@ export class CurrencyItemDetailsComponent {
         this.currentCategoryItems = this.requestArray.mainCurrencyList;
         break;
     }
+    this.currentFilteredList = this.currentCategoryItems;
   }
 
 

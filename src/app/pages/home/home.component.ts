@@ -131,12 +131,6 @@ export class HomeComponent {
   lastCategory: WritableSignal<string> = signal(this.categories[0].title);
   categoryScrollValue: WritableSignal<number> = signal(0);
   subCategoryScrollValue: WritableSignal<number> = signal(0);
-  
-  // notificationQueue: string[] = [];
-  // isNotifying: boolean = false;
-  // currentNotification: string | null = null;
-  // notificationState: 'visible' | 'hidden' = 'hidden';
-  
 
   titleSorting: SortingType = SortingType.None;
   priceSorting: SortingType = SortingType.None;
@@ -147,7 +141,6 @@ export class HomeComponent {
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
   @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollViewCategory') scrollViewCategory?: ElementRef<HTMLDivElement>;
-  // @ViewChild('successMsg') successMsg?: ElementRef<HTMLDivElement>;
 
   showRightSubCategoryArrow: WritableSignal<Boolean> = signal(true);
   showLeftSubCategoryArrow: WritableSignal<Boolean> = signal(true);

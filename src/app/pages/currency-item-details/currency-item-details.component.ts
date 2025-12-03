@@ -22,7 +22,8 @@ export class CurrencyItemDetailsComponent {
   currentFilteredList?: CurrencyItem[];
   themeServiceInstance?: ThemeService;
   breadCrumbItems: BreadcrumbItem[] = [];
-  listDisplay = signal('hidden');
+  listDisplay: string = 'hidden';
+
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
 
@@ -35,21 +36,21 @@ export class CurrencyItemDetailsComponent {
   inputFocus () {
     // this.itemList?.nativeElement.classList.remove('hidden')
     // this.itemList?.nativeElement.classList.add('flex')
-    this.listDisplay.set('flex')
+    this.listDisplay = 'flex'
   }
 
   
   inputBlur () {
     // this.itemList?.nativeElement.classList.remove('flex')
     // this.itemList?.nativeElement.classList.add('hidden')
-    this.listDisplay.set('hidden')
+    this.listDisplay = 'none'
   }
 
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const clicked = event.target as Node;
-    if (!this.inputContainer?.nativeElement.contains(clicked) && !this.itemList?.nativeElement.contains(clicked)) {
+    if (!this.inputContainer?.nativeElement.contains(clicked)) {
       this.inputBlur()
     }
   }

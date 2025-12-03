@@ -50,7 +50,7 @@ export class CurrencyItemDetailsComponent {
   onDocumentClick(event: MouseEvent) {
     const clicked = event.target as Node;
     if (!this.inputContainer?.nativeElement.contains(clicked) && !this.itemList?.nativeElement.contains(clicked)) {
-      // this.inputBlur()
+      this.inputBlur()
     }
   }
 

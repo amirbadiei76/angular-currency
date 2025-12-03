@@ -52,7 +52,7 @@ export class CurrencyItemDetailsComponent {
     const clicked = event.target as Node;
     console.log(this.isPanelOpen)
     if (!this.inputContainer?.nativeElement.contains(clicked) && !this.itemList?.nativeElement.contains(clicked)) {
-      this.inputBlur()
+      // this.inputBlur()
     }
     console.log(this.isPanelOpen)
   }

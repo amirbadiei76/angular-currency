@@ -24,13 +24,13 @@
             </div>
             
             <div #rightCategoryArrow [class.hidden]="!showRightCategoryArrow()" id="rightCategoryArrow" class="absolute h-[110%] flex justify-end right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
-                <div (click)="categoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 -translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                <div (click)="categoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 -translate-x-4 bg-light-highlight dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                     <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
                 </div>
             </div>
     
             <div #leftCategoryArrow [class.hidden]="!showLeftCategoryArrow()" id="leftCategoryArrow" class="absolute h-[110%] flex justify-start left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">
-                <div (click)="categoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                <div (click)="categoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-5 sm:translate-y-3 sm:translate-x-0 translate-x-4 bg-light-highlight dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                     <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"></i>
                 </div>
             </div>
@@ -58,13 +58,13 @@
     
         <div  class="order-3 rtl relative text-right px-4 sm:px-0 justify-start py-[0.7rem] sm:py-[1.2rem] bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
             <div #rightSubCategoryArrow [class.hidden]="!showRightSubCategoryArrow()" id="rightSubCategoryArrow" class="absolute h-[99.9%] align-middle right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
-                <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 sm:translate-x-0 -translate-x-4 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-4 sm:translate-x-0 -translate-x-4 bg-light-highlight dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                     <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
                 </div>
             </div>
     
             <div #leftSubCategoryArrow [class.hidden]="!showLeftSubCategoryArrow()" id="leftSubCategoryArrow" class="absolute h-[99.9%] align-middle left-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
-                <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex self-end justify-center items-center translate-y-4 -translate-x-2 dark:bg-dark-highlight rounded-md hover:cursor-pointer">
+                <div (click)="subCategoryLeft()" class="h-4 w-4 sm:w-8 sm:h-8 flex self-end justify-center items-center translate-y-4 -translate-x-2 bg-light-highlight dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                     <i class="bi text-xs sm:text-base bi-caret-left-fill text-dark-text2 dark:text-light-text2"> </i>
                 </div>
             </div>

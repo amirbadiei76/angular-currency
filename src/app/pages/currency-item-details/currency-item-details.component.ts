@@ -76,7 +76,7 @@ export class CurrencyItemDetailsComponent {
 
     if (!navigator.share) {
       navigator.clipboard.writeText(url);
-      this.notificationService.show('آدرس صفحه کلیپ بورد ذخیره شد')
+      this.notificationService.show('آدرس صفحه در کلیپ بورد ذخیره شد')
       return;
     }
 

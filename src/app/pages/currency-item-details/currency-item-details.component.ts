@@ -57,7 +57,7 @@ export class CurrencyItemDetailsComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    this.inputBlur()
+    // this.inputBlur()
   }
 
   onItemSelect(slug: string) {

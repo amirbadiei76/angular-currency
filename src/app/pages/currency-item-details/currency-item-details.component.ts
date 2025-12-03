@@ -31,17 +31,18 @@ export class CurrencyItemDetailsComponent {
   constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService, private router: Router) {
     this.themeServiceInstance = themeService;
   }
+  
 
   inputFocus () {
-    // this.itemList?.nativeElement.classList.remove('hidden')
-    // this.itemList?.nativeElement.classList.add('flex')
+    this.itemList?.nativeElement.classList.remove('hidden')
+    this.itemList?.nativeElement.classList.add('flex')
     this.isPanelOpen = true;
   }
 
   
   inputBlur () {
-    // this.itemList?.nativeElement.classList.remove('flex')
-    // this.itemList?.nativeElement.classList.add('hidden')
+    this.itemList?.nativeElement.classList.remove('flex')
+    this.itemList?.nativeElement.classList.add('hidden')
     this.isPanelOpen = false;
   }
 
@@ -49,9 +50,11 @@ export class CurrencyItemDetailsComponent {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const clicked = event.target as Node;
+    console.log(this.isPanelOpen)
     if (!this.inputContainer?.nativeElement.contains(clicked)) {
       this.inputBlur()
     }
+    console.log(this.isPanelOpen)
   }
 
   @HostListener('window:resize', ['$event'])

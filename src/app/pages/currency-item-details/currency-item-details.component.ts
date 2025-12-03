@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../components/shared/breadcrumb/breadcrumb.component';
 import { CurrencyItem } from '../../interface/Currencies';
@@ -22,7 +22,7 @@ export class CurrencyItemDetailsComponent {
   currentFilteredList?: CurrencyItem[];
   themeServiceInstance?: ThemeService;
   breadCrumbItems: BreadcrumbItem[] = [];
-
+  listDisplay = signal('hidden');
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
 
@@ -33,14 +33,16 @@ export class CurrencyItemDetailsComponent {
   
 
   inputFocus () {
-    this.itemList?.nativeElement.classList.remove('hidden')
-    this.itemList?.nativeElement.classList.add('flex')
+    // this.itemList?.nativeElement.classList.remove('hidden')
+    // this.itemList?.nativeElement.classList.add('flex')
+    this.listDisplay.set('flex')
   }
 
   
   inputBlur () {
-    this.itemList?.nativeElement.classList.remove('flex')
-    this.itemList?.nativeElement.classList.add('hidden')
+    // this.itemList?.nativeElement.classList.remove('flex')
+    // this.itemList?.nativeElement.classList.add('hidden')
+    this.listDisplay.set('hidden')
   }
 
 

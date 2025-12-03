@@ -8,6 +8,7 @@ import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
+import { filter, from, fromEvent, throttleTime } from 'rxjs';
 
 @Component({
   selector: 'app-currency-item-details',
@@ -22,7 +23,6 @@ export class CurrencyItemDetailsComponent {
   currentFilteredList?: CurrencyItem[];
   themeServiceInstance?: ThemeService;
   breadCrumbItems: BreadcrumbItem[] = [];
-  listDisplay: string = 'hidden';
 
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
@@ -34,16 +34,14 @@ export class CurrencyItemDetailsComponent {
   
 
   inputFocus () {
-    // this.itemList?.nativeElement.classList.remove('hidden')
-    // this.itemList?.nativeElement.classList.add('flex')
-    this.listDisplay = 'flex'
+    this.itemList?.nativeElement.classList.remove('hidden')
+    this.itemList?.nativeElement.classList.add('flex')
   }
 
   
   inputBlur () {
-    // this.itemList?.nativeElement.classList.remove('flex')
-    // this.itemList?.nativeElement.classList.add('hidden')
-    this.listDisplay = 'none'
+    this.itemList?.nativeElement.classList.remove('flex')
+    this.itemList?.nativeElement.classList.add('hidden')
   }
 
 
@@ -53,11 +51,6 @@ export class CurrencyItemDetailsComponent {
     if (!this.inputContainer?.nativeElement.contains(clicked)) {
       this.inputBlur()
     }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
-    // this.inputBlur()
   }
 
   onItemSelect(slug: string) {
@@ -137,5 +130,12 @@ export class CurrencyItemDetailsComponent {
       ];
       this.initializeCurrentCategoryItems();
     })
+
+    fromEvent(window, 'resize')
+    .pipe(
+      throttleTime(100),
+      filter(() => window.innerWidth >= 640)
+    )
+    .subscribe(() => this.inputBlur())
   }
 }

@@ -7,7 +7,7 @@
                 اشتراک
             </button>
             <div #inputContainer class="relative w-full sm:w-[60%] md:w-[75%] xl:w-[55%]">
-                <div class="relative bg-green-600 text-xs sm:text-sm leading-5 h-12">
+                <div class="relative bg-red-600 text-xs sm:text-sm leading-5 h-12">
                     <svg
                         viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
                         <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
@@ -15,7 +15,7 @@
                     </svg>
                     <input
                         #searchInput type="text" id="searchInput" name="searchInput"
-                        (focus)="inputFocus()" (focusout)="inputBlur()"
+                        (focus)="inputFocus()"
                         (input)="filterList($event)"
                         class="rtl transition duration-300 ease-out pl-[2.5rem] peer pr-[2.7rem] rounded-semi outline-none border-transparent bg-neutral-50 dark:bg-neutral-700 border focus:border-green-btn hover:not-focus:border-light-text2 hover:not-focus:dark:border-dark-text2 h-full text-dark-text dark:text-light-text w-full text-right select-none"
                         autocomplete="off"

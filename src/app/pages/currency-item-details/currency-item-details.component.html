@@ -15,7 +15,7 @@
                     </svg>
                     <input
                         #searchInput type="text" id="searchInput" name="searchInput"
-                        (focus)="inputFocus()"
+                        (click)="inputFocus()"
                         (input)="filterList($event)"
                         class="rtl transition duration-300 ease-out pl-[2.5rem] peer pr-[2.7rem] rounded-semi outline-none border-transparent bg-neutral-50 dark:bg-neutral-700 border focus:border-green-btn hover:not-focus:border-light-text2 hover:not-focus:dark:border-dark-text2 h-full text-dark-text dark:text-light-text w-full text-right select-none"
                         autocomplete="off"

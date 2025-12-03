@@ -21,7 +21,7 @@ export class CurrencyItemDetailsComponent {
   currentCategoryItems?: CurrencyItem[];
   currentFilteredList?: CurrencyItem[];
   themeServiceInstance?: ThemeService;
-
+  isPanelOpen: boolean = false;
   breadCrumbItems: BreadcrumbItem[] = [];
 
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
@@ -35,12 +35,14 @@ export class CurrencyItemDetailsComponent {
   inputFocus () {
     this.itemList?.nativeElement.classList.remove('hidden')
     this.itemList?.nativeElement.classList.add('flex')
+    this.isPanelOpen = true;
   }
 
   
   inputBlur () {
     this.itemList?.nativeElement.classList.remove('flex')
     this.itemList?.nativeElement.classList.add('hidden')
+    this.isPanelOpen = false;
   }
 
 

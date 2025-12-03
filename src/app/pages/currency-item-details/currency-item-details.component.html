@@ -7,7 +7,7 @@
                 اشتراک
             </button>
             <div #inputContainer class="relative w-full sm:w-[60%] md:w-[75%] xl:w-[55%]">
-                <div class="relative text-xs sm:text-sm leading-5 h-12">
+                <div class="relative bg-amber-600 text-xs sm:text-sm leading-5 h-12">
                     <svg
                         viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
                         <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
@@ -26,7 +26,8 @@
                 </div>
                 
                 <div
-                [class.hidden]="!isPanelOpen" #itemList class="absolute overflow-hidden p-5 hidden w-full z-[2] max-h-86 flex-col top-12 rounded-semi bg-neutral-50 dark:bg-neutral-700">
+                    [class.hidden]="!isPanelOpen"
+                    #itemList class="absolute overflow-hidden p-5 hidden w-full z-[2] max-h-86 flex-col top-12 rounded-semi bg-neutral-50 dark:bg-neutral-700">
                     <div class="flex flex-col scroll-hide overflow-y-scroll gap-4">
                         @for (currentItem of currentFilteredList; track currentItem.id) {
                             <app-search-item (itemSelected)="onItemSelect($event)" [item]="currentItem" />

@@ -1,1 +1,16 @@
-<p>related-item works!</p>
+<!-- <p>{{item?.title}} {{item?.lastPriceInfo?.dp}}</p> -->
+
+<div class="md:pt-1 md:pb-2 md:pl-2 flex hover:cursor-pointer md:hover:bg-light-text3 rounded-lg md:hover:dark:bg-dark-text">
+    <div class="flex flex-1">
+        <div class="">
+            @if (item?.faGroupName === 'بازارهای ارزی') {
+                <p class="font-normal text-sm leading-[180%] {{(item?.lastPriceInfo?.dt === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
+            }
+            @else {
+                <p class="font-normal text-sm leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
+            }
+        </div>
+    </div>
+    <img class="w-11 h-11 rounded-full object-cover" src={{item?.img}} alt={{item?.title}}>
+    
+</div>

@@ -1,5 +1,5 @@
 <nav aria-label="breadcrumb" class="leading-[180%] mb-6" *ngIf="items?.length">
-    <ol class="flex flex-row-reverse list-none p-0 m-0 text-sm">
+    <ol class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
         <li
             *ngFor="let item of items; let last = last"
             [attr.aria-current]="last ? 'page' : null"
@@ -9,12 +9,12 @@
             <ng-container *ngIf="!last && item.link; else currentPage">
                 <a
                     [routerLink]="item.link"
-                    class="text-dark-text4 dark:text-light-text4 text-sm transition-colors duration-300"
+                    class="text-dark-text4 dark:text-light-text4 transition-colors duration-300"
                 >{{ item.title }}</a>
             </ng-container>
     
             <ng-template #currentPage>
-                <span class="text-sm text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
+                <span class="text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
             </ng-template>
     
         </li>

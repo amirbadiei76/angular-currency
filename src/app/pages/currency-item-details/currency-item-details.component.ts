@@ -134,7 +134,6 @@ export class CurrencyItemDetailsComponent {
     fromEvent(window, 'resize')
     .pipe(
       throttleTime(100),
-      filter(() => window.innerWidth >= 640)
     )
     .subscribe(() => this.inputBlur())
   }

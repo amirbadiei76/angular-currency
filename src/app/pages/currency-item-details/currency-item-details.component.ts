@@ -9,10 +9,11 @@ import { ThemeService } from '../../services/theme.service';
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
 import { filter, from, fromEvent, throttleTime } from 'rxjs';
+import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent],
+  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent, CurrencyOverviewComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -134,6 +135,7 @@ export class CurrencyItemDetailsComponent {
     fromEvent(window, 'resize')
     .pipe(
       throttleTime(100),
+      filter(() => window.innerWidth >= 640)
     )
     .subscribe(() => this.inputBlur())
   }

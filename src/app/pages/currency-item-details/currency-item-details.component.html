@@ -38,12 +38,7 @@
         <app-item-info class="w-full" [item]="currencyItem" />
     </div>
 
-    <!-- 
-    (input)="filterList($event)" (focusout)="inputMouseEnter($event)"
-                (mouseenter)="inputMouseEnter($event)" (mouseleave)="inputMouseLeave($event)" -->
     <div class="w-full md:w-[27%] flex flex-col flex-nowrap justify-start items-end content-center">
-        <div>
-            
-        </div>
+        <app-currency-overview class="w-full" [relatedItems]="currentCategoryItems" />
     </div>
 </main>

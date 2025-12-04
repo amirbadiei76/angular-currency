@@ -1,13 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyItem } from '../../../../interface/Currencies';
-import { StarIconComponent } from '../../../shared/star-icon/star-icon.component';
 import { RequestArrayService } from '../../../../services/request-array.service';
-import { NgIf } from '@angular/common';
 import { NotificationService } from '../../../../services/notification.service';
 
 @Component({
   selector: 'app-item-info',
-  imports: [NgIf],
+  imports: [],
   templateUrl: './item-info.component.html',
   styleUrl: './item-info.component.css'
 })

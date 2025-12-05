@@ -1,12 +1,24 @@
 <div class="px-5 py-4 rounded-2xl md:border md:border-light-border2 md:dark:border-dark-border2 md:mt-28">
-    <p class="leading-[180%] dark:text-white text-dark text-xl md:text-base text-right mb-6">وضعیت {{relatedItems?.at(0)?.faGroupName}} در یک نگاه</p>
-    <div class="flex justify-end items-center mb-8 gap-2">
-        <button (click)="changeCurrentType(1)" class="related-type-button {{ currentType() === 1 ? 'border text-sorting-green-light dark:text-sorting-green-dark border-green-btn bg-white dark:bg-dark-border2' : 'dark:text-white text-light-text2' }}">پر ضررها</button>
-        <button (click)="changeCurrentType(0)" class="related-type-button {{ currentType() === 0 ? 'border text-sorting-green-light dark:text-sorting-green-dark border-green-btn bg-white dark:bg-dark-border2' : 'dark:text-white text-light-text2' }}">پر سودها</button>
+    <p class="leading-[180%] dark:text-white text-dark text-xl md:text-base text-right mb-3">وضعیت {{relatedItems?.at(0)?.faGroupName}} در یک نگاه</p>
+    
+    <div class="flex flex-row justify-between md:flex-col mb-3 md:mb-6">
+        <div class="overflow-hidden flex flex-row-reverse mb-0 md:mb-3">
+            @for (currency of supportedCurrencies; track currency.id) {
+                <div
+                    (click)="currentSupportCurrencyId.set(currency.id)"
+                    class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId() ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId() ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} w-16 md:w-18 h-12 flex justify-center px-1 items-center cursor-pointer">
+                    <p class="rtl {{ currency.id === currentSupportCurrencyId() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} text-2xs sm:text-xs">{{currency.title}}</p>
+                </div>
+            }
+        </div>
+        <div class="flex justify-end items-center gap-2 flex-1 flex-nowrap" >
+            <button (click)="changeCurrentType(1)" class="related-type-button {{ currentType() === 1 ? 'border text-sorting-green-light dark:text-sorting-green-dark border-green-btn bg-white dark:bg-dark-border2' : 'dark:text-white text-light-text2' }}">پر ضررها</button>
+            <button (click)="changeCurrentType(0)" class="related-type-button {{ currentType() === 0 ? 'border text-sorting-green-light dark:text-sorting-green-dark border-green-btn bg-white dark:bg-dark-border2' : 'dark:text-white text-light-text2' }}">پر سودها</button>
+        </div>
     </div>
     <div class="flex flex-col gap-4 w-full">
         @for (item of currentList(); track item.id) {
-            <app-related-item class="w-full" [item]="item" [index]="$index" />
+            <app-related-item class="w-full" [item]="item" [index]="$index" [currentUnit]="currentSupportCurrencyId()" />
         }
     </div>
 </div>

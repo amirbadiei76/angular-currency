@@ -12,7 +12,19 @@ export class CurrencyOverviewComponent {
   @Input() relatedItems?: CurrencyItem[];
 
   currentType = signal(0);
+  currentSupportCurrencyId = signal(0)
   currentList = signal(this.relatedItems?.slice(0, 5));
+
+  supportedCurrencies = [
+    {
+      id: 0,
+      title: 'تومان IRT'
+    },
+    {
+      id: 1,
+      title: 'دلار USD'
+    }
+  ]
 
   constructor () {
     
@@ -27,14 +39,10 @@ export class CurrencyOverviewComponent {
     const ascList = this.getRelatedhListAscending();
     switch (value) {
       case 0:
-        // this.setChange24hListAscending();
         this.currentList.set(ascList.slice(0, 5))
         break;
       case 1:
         this.currentList.set(ascList.reverse().slice(0, 5))
-        // this.setChange24hListDescending();
-        // const descList = this.getRelatedListDescending();
-
         break;
     }
   }

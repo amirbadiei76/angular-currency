@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input, output } from '@angular/core';
 import { CurrencyItem } from '../../../../interface/Currencies';
 
 @Component({
@@ -10,4 +10,6 @@ import { CurrencyItem } from '../../../../interface/Currencies';
 export class RelatedItemComponent {
   @Input() item?: CurrencyItem;
   @Input() index?: number;
+  currentUnit = input(0)
+
 }

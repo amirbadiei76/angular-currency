@@ -66,7 +66,7 @@
             }
         </div>
 
-        <div class="flex flex-nowrap leading-[180%] items-center text-base font-medium {{item?.unit === 'پوند' ? 'mt-2 items-center' : 'mt-3'}} {{item?.faGroupName === 'بازارهای ارزی' ? 'opacity-0' : 'opacity-100'}}">
+        <div class="flex flex-nowrap leading-[180%] items-center text-base font-medium {{item?.unit === 'پوند' ? 'mt-2 items-center' : 'mt-3'}} {{item?.faGroupName === 'بازارهای ارزی' || item?.shortedName == 'USD' || item?.shortedName == 'USDT' ? 'opacity-0' : 'opacity-100'}}">
             <p class="dark:text-light-text4 text-dark-text4 leading-[180%] text-xs align-middle">دلار</p>
             <p class="dark:text-white text-dark mx-4 leading-[180%] text-xs align-middle">{{item?.dollarStringPrice}}</p>
             <p class="font-normal mx-4 leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>

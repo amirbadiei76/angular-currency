@@ -1,9 +1,10 @@
 import { Component, input, Input, output } from '@angular/core';
 import { CurrencyItem } from '../../../../interface/Currencies';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-related-item',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './related-item.component.html',
   styleUrl: './related-item.component.css'
 })

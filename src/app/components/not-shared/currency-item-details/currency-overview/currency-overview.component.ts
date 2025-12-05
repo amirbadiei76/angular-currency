@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, output, signal } from '@angular/core';
 import { CurrencyItem } from '../../../../interface/Currencies';
 import { RelatedItemComponent } from '../related-item/related-item.component';
 
@@ -15,6 +15,8 @@ export class CurrencyOverviewComponent {
   currentSupportCurrencyId = signal(0)
   currentList = signal(this.relatedItems?.slice(0, 5));
 
+  currentUnit = output<number>();
+
   supportedCurrencies = [
     {
       id: 0,
@@ -28,6 +30,11 @@ export class CurrencyOverviewComponent {
 
   constructor () {
     
+  }
+
+  changeUnit (value: number) {
+    this.currentSupportCurrencyId.set(value);
+    this.currentUnit.emit(value)
   }
 
   ngOnInit () {

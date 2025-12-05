@@ -39,6 +39,6 @@
     </div>
 
     <div class="w-full md:w-[27%] flex flex-col flex-nowrap justify-start items-end content-center">
-        <app-currency-overview class="w-full" [relatedItems]="currentCategoryItems" />
+        <app-currency-overview class="w-full" (currentUnit)="onCurrencyUnitChange($event)" [relatedItems]="currentCategoryItems" />
     </div>
 </main>

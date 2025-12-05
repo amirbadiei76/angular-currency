@@ -25,6 +25,9 @@ export class CurrencyItemDetailsComponent {
   themeServiceInstance?: ThemeService;
   breadCrumbItems: BreadcrumbItem[] = [];
 
+  
+  currentSupportCurrencyId = signal(0)
+
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
 
@@ -112,6 +115,10 @@ export class CurrencyItemDetailsComponent {
         break;
     }
     this.currentFilteredList = this.currentCategoryItems;
+  }
+
+  onCurrencyUnitChange (value: number) {
+    console.log(value)
   }
 
 

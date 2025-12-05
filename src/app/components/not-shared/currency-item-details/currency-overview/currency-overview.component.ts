@@ -24,17 +24,22 @@ export class CurrencyOverviewComponent {
 
   changeCurrentType (value: number) {
     this.currentType.set(value)
+    const ascList = this.getRelatedhListAscending();
     switch (value) {
       case 0:
-        this.setChange24hListAscending();
+        // this.setChange24hListAscending();
+        this.currentList.set(ascList.slice(0, 5))
         break;
       case 1:
-        this.setChange24hListDescending();
+        this.currentList.set(ascList.reverse().slice(0, 5))
+        // this.setChange24hListDescending();
+        // const descList = this.getRelatedListDescending();
+
         break;
     }
   }
 
-  setChange24hListDescending () {
+  getRelatedListDescending () {
     const descendingPriceList: CurrencyItem[] = [...this.relatedItems!!]
     const mainDescList = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
@@ -46,12 +51,11 @@ export class CurrencyOverviewComponent {
       if (realAValue > realBValue) return 1
       else return -1
     })
-    console.log(mainDescList.slice(0, 5))
-    this.currentList.set(mainDescList?.slice(0, 5))
+    return mainDescList;
   }
 
   
-  setChange24hListAscending () {
+  getRelatedhListAscending () {
     const ascendingPriceList: CurrencyItem[] = [...this.relatedItems!!]
     const mainAscList = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
@@ -63,8 +67,7 @@ export class CurrencyOverviewComponent {
       if (realAValue > realBValue) return -1
       else return 1
     })
-    console.log(mainAscList.slice(0, 5))
-    this.currentList.set(mainAscList?.slice(0, 5))
+    return mainAscList;
   }
 
 }

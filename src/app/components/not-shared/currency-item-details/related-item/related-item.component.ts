@@ -9,5 +9,5 @@ import { CurrencyItem } from '../../../../interface/Currencies';
 })
 export class RelatedItemComponent {
   @Input() item?: CurrencyItem;
-
+  @Input() index?: number;
 }

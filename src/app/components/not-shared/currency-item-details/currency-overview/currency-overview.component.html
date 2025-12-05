@@ -6,7 +6,7 @@
     </div>
     <div class="flex flex-col gap-4 w-full">
         @for (item of currentList(); track item.id) {
-            <app-related-item [item]="item" />
+            <app-related-item class="w-full" [item]="item" [index]="$index" />
         }
     </div>
 </div>

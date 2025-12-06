@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CurrenciesService } from './currencies.service';
 import { Currencies, CurrencyItem, Current } from '../interface/Currencies';
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, pound_unit, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../constants/Values';
+import { commafy } from '../utils/CurrencyConverter';
 
 @Injectable({
   providedIn: 'root'
@@ -127,7 +128,7 @@ export class RequestArrayService {
             item.realPrice = Math.round((priceValue * dollarValue) * 100) / 100;
 
             item.dollarPrice = priceValue;
-            item.dollarStringPrice = this.commafy(priceValue)
+            item.dollarStringPrice = commafy(priceValue)
         }
         else if (item.unit === pound_unit) {
             let poundValue = +(current.price_gbp.p.replaceAll(',', ''))
@@ -138,7 +139,7 @@ export class RequestArrayService {
             let priceDollarValue = priceValue * (+current['gbp-usd-ask'].p)
             let roundedDollarPrice = Math.round(priceDollarValue * 100) / 100;
             item.dollarPrice = roundedDollarPrice;
-            item.dollarStringPrice = this.commafy(roundedDollarPrice)
+            item.dollarStringPrice = commafy(roundedDollarPrice)
             
         }
         else {
@@ -146,13 +147,13 @@ export class RequestArrayService {
 
             let dollarMainValue = item.realPrice / (+(current.price_dollar_rl.p.replaceAll(',', '')));
             item.dollarPrice = Math.round(dollarMainValue * 100) / 100
-            item.dollarStringPrice = this.commafy(item.dollarPrice)
+            item.dollarStringPrice = commafy(item.dollarPrice)
         }
-        item.rialStringRealPrice = this.commafy(item.realPrice)
+        item.rialStringRealPrice = commafy(item.realPrice)
 
         // convert to toman
         item.tomanPrice = Math.round((item.realPrice / 10) * 100) / 100
-        item.tomanStringPrice = this.commafy(item.tomanPrice);
+        item.tomanStringPrice = commafy(item.tomanPrice);
 
         this.convertUnitChanges(item, current)
 
@@ -3431,16 +3432,7 @@ export class RequestArrayService {
   }
 
 
-  private commafy(num: number) {
-    var str = num.toString().split('.');
-    if (str[0].length >= 5) {
-        str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-    }
-    if (str[1] && str[1].length >= 5) {
-        str[1] = str[1].replace(/(\d{3})/g, '$1');
-    }
-    return str.join('.');
-  }
+  
 
 
 

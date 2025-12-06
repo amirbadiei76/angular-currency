@@ -7,7 +7,7 @@
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none" viewBox="0 0 24 24"
-                    class="w-6 h-6 cursor-pointer ml-1 {{ item?.isFav ? 'fill-yellow-star' : 'fill-dark-text4' }}"
+                    class="min-w-6 h-6 cursor-pointer ml-1 {{ item?.isFav ? 'fill-yellow-star' : 'fill-dark-text4' }}"
                     (click)="item?.isFav ? removeFromFav($event) : addToFav($event)"
                 >
                     <path
@@ -35,15 +35,15 @@
                 <p class="dark:text-white text-dark text-sm font-normal leading-[180%] ml-1">{{ item?.faGroupName !== 'بازارهای ارزی' ? item?.tomanStringPrice : item?.lastPriceInfo?.p}}</p>
             </div>
         </div>
-        @if (item?.faGroupName !== 'بازارهای ارزی') {
-            <div class="flex mt-2 justify-between w-full">
-                <p class="font-normal text-xs leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
-                <div class="flex items-center">
-                    <p class="dark:text-light-text4 text-dark-text4 text-xs font-normal leading-[180%]">دلار</p>
-                    <p class="dark:text-white text-dark leading-[180%] text-xs font-normal align-middle ml-1">{{item?.dollarStringPrice}}</p>
-                </div>
+        
+        <div class="{{item?.faGroupName !== 'بازارهای ارزی' ? 'flex' : 'hidden'}} mt-2 justify-between w-full">
+            <p class="font-normal text-xs leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
+            <div class="flex items-center">
+                <p class="dark:text-light-text4 text-dark-text4 text-xs font-normal leading-[180%]">دلار</p>
+                <p class="dark:text-white text-dark leading-[180%] text-xs font-normal align-middle ml-1">{{item?.dollarStringPrice}}</p>
             </div>
-        }
+        </div>
+        
         <div class="mt-2 justify-between w-full {{item?.unit === 'پوند' ? 'flex' : 'hidden'}}">
             <p class="font-normal text-xs leading-[180%] {{(item?.lastPriceInfo?.dt === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
             <div class="flex items-center">
@@ -86,7 +86,7 @@
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none" viewBox="0 0 24 24"
-                    class="w-6 h-6 cursor-pointer ml-1 {{ item?.isFav ? 'fill-yellow-star' : 'fill-dark-text4' }}"
+                    class="min-w-6 h-6 cursor-pointer ml-1 {{ item?.isFav ? 'fill-yellow-star' : 'fill-dark-text4' }}"
                     (click)="item?.isFav ? removeFromFav($event) : addToFav($event)"
                 >
                     <path

@@ -9,11 +9,12 @@ import { RelatedItemComponent } from '../related-item/related-item.component';
   styleUrl: './currency-overview.component.css'
 })
 export class CurrencyOverviewComponent {
-  @Input() relatedItems?: CurrencyItem[];
+  @Input() relatedItems?: CurrencyItem[] = [];
+  @Input() currentSelected?: CurrencyItem;
 
   currentType = signal(0);
   currentSupportCurrencyId = signal(0)
-  currentList = signal(this.relatedItems?.slice(0, 5));
+  currentList = signal(this.relatedItems);
 
   currentUnit = output<number>();
 
@@ -36,8 +37,11 @@ export class CurrencyOverviewComponent {
     this.currentSupportCurrencyId.set(value);
     this.currentUnit.emit(value)
   }
-
+  
   ngOnInit () {
+  }
+  
+  ngAfterViewInit () {
     this.changeCurrentType(0)
   }
 
@@ -51,12 +55,23 @@ export class CurrencyOverviewComponent {
       case 1:
         this.currentList.set(ascList.reverse().slice(0, 5))
         break;
-    }
+      }
   }
 
   getRelatedListDescending () {
-    const descendingPriceList: CurrencyItem[] = [...this.relatedItems!!]
+    const descendingPriceList: CurrencyItem[] = [...this.relatedItems!]
     const mainDescList = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+      if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
+        const aValue = (a.dollarChangeState === 'high' ? '+' : '-') + a.dollarChanges!;
+        const bValue = (b.dollarChangeState === 'high' ? '+' : '-') + b.dollarChanges!;
+  
+        const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
+        const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
+        
+        if (realAValue > realBValue) return 1
+        else return -1
+      }
+      
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
 
@@ -68,11 +83,22 @@ export class CurrencyOverviewComponent {
     })
     return mainDescList;
   }
-
+  
   
   getRelatedhListAscending () {
-    const ascendingPriceList: CurrencyItem[] = [...this.relatedItems!!]
+    const ascendingPriceList: CurrencyItem[] = [...this.relatedItems!]
     const mainAscList = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+      if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
+        const aValue = (a.dollarChangeState === 'high' ? '+' : '-') + a.dollarChanges!;
+        const bValue = (b.dollarChangeState === 'high' ? '+' : '-') + b.dollarChanges!;
+  
+        const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
+        const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
+        
+        if (realAValue > realBValue) return -1
+        else return 1
+      }
+
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
 

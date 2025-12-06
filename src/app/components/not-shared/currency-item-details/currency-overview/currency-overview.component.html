@@ -1,8 +1,8 @@
 <div class="px-5 py-4 rounded-2xl md:border md:border-light-border2 md:dark:border-dark-border2 md:mt-28">
-    <p class="leading-[180%] dark:text-white text-dark text-xl md:text-base text-right mb-3">وضعیت {{relatedItems?.at(0)?.faGroupName}} در یک نگاه</p>
+    <p class="leading-[180%] dark:text-white text-dark text-xl md:text-base text-right mb-3">وضعیت {{currentSelected?.faGroupName}} در یک نگاه</p>
     
     <div class="flex flex-row justify-between md:flex-col mb-3 md:mb-6">
-        <div class="overflow-hidden flex flex-row-reverse mb-0 md:mb-3">
+        <div class="overflow-hidden flex flex-row-reverse mb-0 md:mb-3 {{ currentSelected?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">
             @for (currency of supportedCurrencies; track currency.id) {
                 <div
                     (click)="changeUnit(currency.id)"

@@ -6,10 +6,11 @@ import { RequestArrayService } from '../../services/request-array.service';
 import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
-import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, WORLD_MARKET_PREFIX } from '../../constants/Values';
+import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
 import { filter, from, fromEvent, throttleTime } from 'rxjs';
 import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
+import { dollarToToman, dollarToTomanString, poundToDollar, poundToDollarString, poundToToman, poundToTomanString, rialToDollar, rialToDollarString, rialToToman, rialToTomanString } from '../../utils/CurrencyConverter';
 
 @Component({
   selector: 'app-currency-item-details',
@@ -24,9 +25,13 @@ export class CurrencyItemDetailsComponent {
   currentFilteredList?: CurrencyItem[];
   themeServiceInstance?: ThemeService;
   breadCrumbItems: BreadcrumbItem[] = [];
-
+  
+  currentMaxPrice = signal('');
+  currentMinPrice = signal('');
+  currentPercentMinMax = signal('0%')
   
   currentSupportCurrencyId = signal(0)
+  currentChartType = signal(0)
 
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
@@ -60,6 +65,10 @@ export class CurrencyItemDetailsComponent {
   onItemSelect(slug: string) {
     this.inputBlur()
     this.router.navigate([`/${slug}`])
+  }
+
+  onChartTypeChange (type: number) {
+    this.currentChartType.set(type)
   }
 
   
@@ -117,8 +126,78 @@ export class CurrencyItemDetailsComponent {
     this.currentFilteredList = this.currentCategoryItems;
   }
 
+  initializeCurrencyInfo (type: number) {
+    if (this.currencyItem?.faGroupName === 'بازارهای ارزی') {
+      this.currentMaxPrice.set(this.currencyItem.lastPriceInfo.h);
+      this.currentMinPrice.set(this.currencyItem.lastPriceInfo.l);
+     
+      const percent = +(this.currencyItem.lastPriceInfo.p) / +(this.currencyItem.lastPriceInfo.h);
+      this.currentPercentMinMax.set(`${(percent * 100).toFixed(2)}%`)
+    }
+    else {
+      if (type === 0) {
+        if (this.currencyItem?.unit === toman_unit) {
+          const tomanMaxValue = rialToTomanString(this.currencyItem?.lastPriceInfo?.h!);
+          const tomanMinValue = rialToTomanString(this.currencyItem?.lastPriceInfo?.l!);
+  
+          const tomanPercent = rialToToman(this.currencyItem?.lastPriceInfo?.p!) / rialToToman(this.currencyItem?.lastPriceInfo?.h!);
+          this.currentPercentMinMax.set(`${(tomanPercent * 100).toFixed(2)}%`)
+          this.currentMaxPrice.set(tomanMaxValue);
+          this.currentMinPrice.set(tomanMinValue);
+        }
+        else if (this.currencyItem?.unit === dollar_unit) {
+          const dollarMaxValue = dollarToTomanString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const dollarMinValue = dollarToTomanString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+  
+          const dollarPercent = dollarToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / dollarToToman(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          this.currentPercentMinMax.set(`${(dollarPercent * 100).toFixed(2)}%`)
+          this.currentMaxPrice.set(dollarMaxValue);
+          this.currentMinPrice.set(dollarMinValue);
+        }
+        else {
+          const poundMaxValue = poundToTomanString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const poundMinValue = poundToTomanString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+          
+          const poundPercent = poundToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / poundToToman(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          this.currentPercentMinMax.set(`${(poundPercent * 100).toFixed(2)}%`)
+          this.currentMaxPrice.set(poundMaxValue)
+          this.currentMinPrice.set(poundMinValue);
+        }
+      }
+      else {
+        if (this.currencyItem?.unit === toman_unit) {
+          const tommanDollarMaxValue = rialToDollarString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!)
+          const tommanDollarMinValue = rialToDollarString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!)
+          
+          const tommanDollarPercent = rialToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / rialToDollar(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          this.currentPercentMinMax.set(`${(tommanDollarPercent * 100).toFixed(2)}%`)
+          this.currentMaxPrice.set(tommanDollarMaxValue)
+          this.currentMinPrice.set(tommanDollarMinValue);
+        }
+        else if (this.currencyItem?.unit === dollar_unit) {
+          this.currentMaxPrice.set(this.currencyItem.lastPriceInfo.h);
+          this.currentMinPrice.set(this.currencyItem.lastPriceInfo.l);
+        
+          const percent = +(this.currencyItem.lastPriceInfo.p) / +(this.currencyItem.lastPriceInfo.h);
+          this.currentPercentMinMax.set(`${(percent * 100).toFixed(2)}%`)
+        }
+        else {
+          const poundDollarMaxValue = poundToDollarString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!)
+          const poundDollarMinValue = poundToDollarString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!)
+          
+          console.log(this.currencyItem?.lastPriceInfo.p, this.currencyItem?.lastPriceInfo.h, this.currencyItem?.lastPriceInfo.l)
+          const poundDollarPercent = poundToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / poundToDollar(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          this.currentPercentMinMax.set(`${(poundDollarPercent * 100).toFixed(2)}%`)
+          this.currentMaxPrice.set(poundDollarMaxValue)
+          this.currentMinPrice.set(poundDollarMinValue);
+        }
+      }
+    }
+  }
+
   onCurrencyUnitChange (value: number) {
-    console.log(value)
+    this.currentSupportCurrencyId.set(value);
+    this.initializeCurrencyInfo(value)
   }
 
 
@@ -137,13 +216,16 @@ export class CurrencyItemDetailsComponent {
         }
       ];
       this.initializeCurrentCategoryItems();
+      this.initializeCurrencyInfo(0);
     })
 
-    fromEvent(window, 'resize')
-    .pipe(
-      throttleTime(100),
-      filter(() => window.innerWidth >= 640)
-    )
-    .subscribe(() => this.inputBlur())
+    if (typeof window !== 'undefined') {
+      fromEvent(window, 'resize')
+      .pipe(
+        throttleTime(100),
+        filter(() => window.innerWidth >= 640)
+      )
+      .subscribe(() => this.inputBlur())
+    }
   }
 }

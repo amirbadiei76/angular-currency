@@ -36,9 +36,70 @@
             </div>
         </div>
         <app-item-info class="w-full" [item]="currencyItem" />
+        <div class="w-full flex justify-between items-center mb-7">
+            <div class="flex items-end">
+                <div class="flex flex-col">
+                    <p class="text-right text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%]">کمترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
+                    <div class="flex items-center gap-1.25">
+                        <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
+                        <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
+                    </div>
+                </div>
+                <div class="w-50 h-2 mx-2 rounded-2xl bg-light-border2 dark:bg-dark-border2 mb-2">
+                    <div [style.width]="currentPercentMinMax()" class="h-full flex justify-start bg-light-text2 dark:bg-dark-text2 rounded-2xl">
+                        
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%]">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
+                    <div class="flex items-center gap-1.25">
+                        <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
+                        <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMaxPrice() }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex p-2 rounded-lg gap-4 border border-light-text4 dark:border-dark-text4">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    (click)="onChartTypeChange(1)"
+                    class="w-6 h-6 cursor-pointer fill-none duration-300 ease-in-out {{ currentChartType() === 1 ? 'text-green-btn' : 'text-dark-text4' }}"
+                >
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7">
+                    </path>
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="m7.33 14.49 2.38-3.09c.34-.44.97-.52 1.41-.18l1.83 1.44c.44.34 1.07.26 1.41-.17l2.31-2.98">
+                    </path>
+                </svg>
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    (click)="onChartTypeChange(0)"
+                    class="w-6 h-6 cursor-pointer fill-none duration-300 ease-in-out {{ currentChartType() === 0 ? 'text-green-btn' : 'text-dark-text4' }}"
+                >
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M7 10.74v3.2M12 9v6.68M17 10.74v3.2M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7">
+                    </path>
+                </svg>
+            </div>
+        </div>
     </div>
 
     <div class="w-full md:w-[27%] flex flex-col flex-nowrap justify-start items-end content-center">
-        <app-currency-overview class="w-full" (currentUnit)="onCurrencyUnitChange($event)" [relatedItems]="currentCategoryItems" />
+        <app-currency-overview class="w-full" [currentSelected]="currencyItem" (currentUnit)="onCurrencyUnitChange($event)" [relatedItems]="currentCategoryItems" />
     </div>
 </main>

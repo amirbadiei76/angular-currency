@@ -441,6 +441,17 @@ export class HomeComponent {
   setChange24hListDescending () {
     let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList2 = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+      if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
+        const aValue = (a.dollarChangeState === 'high' ? '+' : '-') + a.dollarChanges!;
+        const bValue = (b.dollarChangeState === 'high' ? '+' : '-') + b.dollarChanges!;
+  
+        const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
+        const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
+        
+        if (realAValue > realBValue) return -1
+        else return 1
+      }
+      
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
 
@@ -456,6 +467,17 @@ export class HomeComponent {
   setChange24hListAscending () {
     let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
     this.currenTemptList2 = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+      if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
+        const aValue = (a.dollarChangeState === 'high' ? '+' : '-') + a.dollarChanges!;
+        const bValue = (b.dollarChangeState === 'high' ? '+' : '-') + b.dollarChanges!;
+  
+        const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
+        const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
+        
+        if (realAValue > realBValue) return -1
+        else return 1
+      }
+
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
       const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
 

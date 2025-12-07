@@ -36,14 +36,14 @@
             </div>
         </div>
         <app-item-info class="w-full" [item]="currencyItem" />
-        <div class="w-full flex justify-end flex-col xs:flex-row xs:justify-between items-center mb-7 flex-wrap">
-            <div class="flex flex-col xs:flex-row items-end w-full xs:w-auto">
+        <div class="w-full flex justify-end flex-col xs:flex-row xs:justify-between items-center xs:mb-7 flex-wrap">
+            <div class="flex flex-col xs:flex-row items-end w-full xs:w-auto mb-2 xs:mb-0">
                 <div class="flex xs:flex-col flex-row justify-between xs:justify-start w-full xs:w-auto mb-2 xs:mb-0">
                     <p class="text-right text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%]">کمترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
                     <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] block xs:hidden">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
                     <div class="items-center gap-1.25 hidden xs:flex">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
-                        <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
+                        <p class="dark:text-white text-dark text-sm md:text-xs lg:text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
                     </div>
                 </div>
                 <div class="w-full xs:w-50 h-2 xs:mx-2 rounded-2xl bg-light-border2 dark:bg-dark-border2 mb-2">
@@ -55,51 +55,55 @@
                     <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] hidden xs:block">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
                     <div class="items-center gap-1.25 flex xs:hidden">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
-                        <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
+                        <p class="dark:text-white text-dark text-sm md:text-xs lg:text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
                     </div>
                     <div class="flex items-center gap-1.25">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
-                        <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMaxPrice() }}</p>
+                        <p class="dark:text-white text-dark text-sm md:text-xs lg:text-sm font-normal leading-[180%]">{{ currentMaxPrice() }}</p>
                     </div>
                 </div>
             </div>
-            <div class="flex p-2 rounded-lg gap-4 border border-light-text4 dark:border-dark-text4 my-2 ">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    (click)="onChartTypeChange(1)"
-                    class="w-6 h-6 cursor-pointer fill-none duration-300 ease-in-out {{ currentChartType() === 1 ? 'text-green-btn' : 'text-dark-text4' }}"
-                >
-                    <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7">
-                    </path>
-                    <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        d="m7.33 14.49 2.38-3.09c.34-.44.97-.52 1.41-.18l1.83 1.44c.44.34 1.07.26 1.41-.17l2.31-2.98">
-                    </path>
-                </svg>
+            <div class="flex p-0 justify-between xs:justify-start mb-4 xs:mb-0 xs:p-2 xs:rounded-lg gap-0 xs:gap-4 xs:border xs:border-light-text4 xs:dark:border-dark-text4 my-2 w-full xs:w-auto">
+                <div (click)="onChartTypeChange(1)" class="flex hover:cursor-pointer justify-center items-center py-2.5 xs:py-0 flex-1/2 gap-2 xs:gap-0 xs:flex-auto xs:border-b-0 border-b {{ currentChartType() === 1 ? 'border-b-green-btn border-b-2 text-green-btn' : 'border-b-dark-text4 border-b text-dark-text4' }} ">
+                    <p class="block xs:hidden text-sm font-normal duration-300 ease-in-out leading-[180%]">نمودار کندلی</p>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        class="w-6 h-6 fill-none duration-300 ease-in-out {{ currentChartType() === 1 ? 'text-green-btn' : 'text-dark-text4' }}"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7">
+                        </path>
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="m7.33 14.49 2.38-3.09c.34-.44.97-.52 1.41-.18l1.83 1.44c.44.34 1.07.26 1.41-.17l2.31-2.98">
+                        </path>
+                    </svg>
+                </div>
 
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    (click)="onChartTypeChange(0)"
-                    class="w-6 h-6 cursor-pointer fill-none duration-300 ease-in-out {{ currentChartType() === 0 ? 'text-green-btn' : 'text-dark-text4' }}"
-                >
-                    <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
-                        d="M7 10.74v3.2M12 9v6.68M17 10.74v3.2M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7">
-                    </path>
-                </svg>
+                <div (click)="onChartTypeChange(0)" class="flex hover:cursor-pointer justify-center items-center py-2.5 xs:py-0 flex-1/2 gap-2 xs:gap-0 xs:flex-auto xs:border-b-0 {{ currentChartType() === 0 ? 'border-b-green-btn border-b-2 text-green-btn' : 'border-b-dark-text4 border-b text-dark-text4' }}">
+                    <p class="block xs:hidden text-sm duration-300 ease-in-out leading-[180%]">نمودار کندلی</p>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        class="w-6 h-6 fill-none duration-300 ease-in-out {{ currentChartType() === 0 ? 'text-green-btn' : 'text-dark-text4' }}"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M7 10.74v3.2M12 9v6.68M17 10.74v3.2M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7">
+                        </path>
+                    </svg>
+                </div>
             </div>
         </div>
     </div>

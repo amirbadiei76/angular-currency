@@ -145,6 +145,7 @@
 
     --title-width: calc(100% - 30px);
     --text-2xs: 0.625rem;
+    --breakpoint-xs: 480px;
 
 
     --font-byekanp: 'YekanP';

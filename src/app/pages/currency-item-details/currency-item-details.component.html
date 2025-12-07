@@ -36,29 +36,34 @@
             </div>
         </div>
         <app-item-info class="w-full" [item]="currencyItem" />
-        <div class="w-full flex justify-between items-center mb-7">
-            <div class="flex items-end">
-                <div class="flex flex-col">
+        <div class="w-full flex justify-end flex-col xs:flex-row xs:justify-between items-center mb-7 flex-wrap">
+            <div class="flex flex-col xs:flex-row items-end w-full xs:w-auto">
+                <div class="flex xs:flex-col flex-row justify-between xs:justify-start w-full xs:w-auto mb-2 xs:mb-0">
                     <p class="text-right text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%]">کمترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
-                    <div class="flex items-center gap-1.25">
+                    <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] block xs:hidden">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
+                    <div class="items-center gap-1.25 hidden xs:flex">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
                         <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
                     </div>
                 </div>
-                <div class="w-50 h-2 mx-2 rounded-2xl bg-light-border2 dark:bg-dark-border2 mb-2">
+                <div class="w-full xs:w-50 h-2 xs:mx-2 rounded-2xl bg-light-border2 dark:bg-dark-border2 mb-2">
                     <div [style.width]="currentPercentMinMax()" class="h-full flex justify-start bg-light-text2 dark:bg-dark-text2 rounded-2xl">
                         
                     </div>
                 </div>
-                <div>
-                    <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%]">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
+                <div class="flex xs:flex-col flex-row justify-between xs:justify-start w-full xs:w-auto mb-2 xs:mb-0">
+                    <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] hidden xs:block">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
+                    <div class="items-center gap-1.25 flex xs:hidden">
+                        <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
+                        <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
+                    </div>
                     <div class="flex items-center gap-1.25">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
                         <p class="dark:text-white text-dark text-sm font-normal leading-[180%]">{{ currentMaxPrice() }}</p>
                     </div>
                 </div>
             </div>
-            <div class="flex p-2 rounded-lg gap-4 border border-light-text4 dark:border-dark-text4">
+            <div class="flex p-2 rounded-lg gap-4 border border-light-text4 dark:border-dark-text4 my-2 ">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

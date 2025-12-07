@@ -53,7 +53,6 @@ export class NotificationService {
 
   hide() {
     this.visible.set(false);
-    console.log(this.styleClasses().toString())
     this.queue.update(q => {
       const [, ...rest] = q;
       return rest;

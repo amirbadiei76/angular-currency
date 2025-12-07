@@ -9,7 +9,7 @@ import { RelatedItemComponent } from '../related-item/related-item.component';
   styleUrl: './currency-overview.component.css'
 })
 export class CurrencyOverviewComponent {
-  @Input() relatedItems?: CurrencyItem[] = [];
+  @Input() relatedItems?: CurrencyItem[];
   @Input() currentSelected?: CurrencyItem;
 
   currentType = signal(0);

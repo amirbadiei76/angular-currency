@@ -17,7 +17,7 @@
         <div class="flex w-full items-center justify-between flex-1">
 
             <div class="flex gap-1 text-xs">
-                <p class="text-dark dark:text-white text-xs font-normal leading-[180%]">{{currentUnit() === 0 ? 'تومان' : 'دلار'}}</p>
+                <p class="text-dark dark:text-white text-xs font-normal leading-[180%] {{ item?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'block' }}">{{currentUnit() === 0 ? 'تومان' : 'دلار'}}</p>
                 <p class="text-dark dark:text-white text-xs font-normal leading-[180%]">{{currentUnit() === 0 ? item?.tomanStringPrice : item?.dollarStringPrice}}</p>
             </div>
             <p class="line-clamp-1 text-ellipsis text-dark-text2 dark:text-light-text2 text-right text-xs font-normal leading-[180%]">{{item?.shortedName}}</p>

@@ -10,7 +10,7 @@ import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dolla
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
 import { filter, from, fromEvent, throttleTime } from 'rxjs';
 import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
-import { dollarToToman, dollarToTomanString, poundToDollar, poundToDollarString, poundToToman, poundToTomanString, rialToDollar, rialToDollarString, rialToToman, rialToTomanString } from '../../utils/CurrencyConverter';
+import { commafy, dollarToToman, dollarToTomanString, poundToDollar, poundToDollarString, poundToToman, poundToTomanString, rialToDollar, rialToDollarString, rialToToman, rialToTomanString } from '../../utils/CurrencyConverter';
 
 @Component({
   selector: 'app-currency-item-details',
@@ -128,68 +128,79 @@ export class CurrencyItemDetailsComponent {
 
   initializeCurrencyInfo (type: number) {
     if (this.currencyItem?.faGroupName === 'بازارهای ارزی') {
-      this.currentMaxPrice.set(this.currencyItem.lastPriceInfo.h);
-      this.currentMinPrice.set(this.currencyItem.lastPriceInfo.l);
-     
-      const percent = +(this.currencyItem.lastPriceInfo.p) / +(this.currencyItem.lastPriceInfo.h);
+      const maxValue = +(this.currencyItem.lastPriceInfo.h);
+      const minValue = +(this.currencyItem.lastPriceInfo.l);
+      const currentValue = +(this.currencyItem.lastPriceInfo.p);
+      const percent = (maxValue === minValue) ? 1 : ((currentValue - minValue) / (maxValue - minValue));
+
+      this.currentMaxPrice.set(maxValue.toString());
+      this.currentMinPrice.set(minValue.toString());
+      
       this.currentPercentMinMax.set(`${(percent * 100).toFixed(2)}%`)
     }
     else {
       if (type === 0) {
         if (this.currencyItem?.unit === toman_unit) {
-          const tomanMaxValue = rialToTomanString(this.currencyItem?.lastPriceInfo?.h!);
-          const tomanMinValue = rialToTomanString(this.currencyItem?.lastPriceInfo?.l!);
+          const tomanMaxValue = rialToToman(this.currencyItem?.lastPriceInfo?.h!);
+          const tomanMinValue = rialToToman(this.currencyItem?.lastPriceInfo?.l!);
+          const currentValue = rialToToman(this.currencyItem?.lastPriceInfo?.p!);
   
-          const tomanPercent = rialToToman(this.currencyItem?.lastPriceInfo?.p!) / rialToToman(this.currencyItem?.lastPriceInfo?.h!);
+          const tomanPercent = (tomanMaxValue === tomanMinValue) ? 1 : ((currentValue - tomanMinValue) / (tomanMaxValue - tomanMinValue));
           this.currentPercentMinMax.set(`${(tomanPercent * 100).toFixed(2)}%`)
-          this.currentMaxPrice.set(tomanMaxValue);
-          this.currentMinPrice.set(tomanMinValue);
+          this.currentMaxPrice.set(commafy(tomanMaxValue));
+          this.currentMinPrice.set(commafy(tomanMinValue));
         }
         else if (this.currencyItem?.unit === dollar_unit) {
-          const dollarMaxValue = dollarToTomanString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
-          const dollarMinValue = dollarToTomanString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
-  
-          const dollarPercent = dollarToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / dollarToToman(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const dollarMaxValue = dollarToToman(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const dollarMinValue = dollarToToman(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+          const currentValue = dollarToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!)
+
+          const dollarPercent = (dollarMaxValue === dollarMinValue) ? 1 : ((currentValue - dollarMinValue) / (dollarMaxValue - dollarMinValue));
           this.currentPercentMinMax.set(`${(dollarPercent * 100).toFixed(2)}%`)
-          this.currentMaxPrice.set(dollarMaxValue);
-          this.currentMinPrice.set(dollarMinValue);
+          this.currentMaxPrice.set(commafy(dollarMaxValue));
+          this.currentMinPrice.set(commafy(dollarMinValue));
         }
         else {
-          const poundMaxValue = poundToTomanString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
-          const poundMinValue = poundToTomanString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+          const poundMaxValue = poundToToman(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const poundMinValue = poundToToman(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+          const currentValue = poundToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!);
           
-          const poundPercent = poundToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / poundToToman(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const poundPercent = (poundMaxValue === poundMinValue) ? 1 : ((currentValue - poundMinValue) / (poundMaxValue - poundMinValue));
           this.currentPercentMinMax.set(`${(poundPercent * 100).toFixed(2)}%`)
-          this.currentMaxPrice.set(poundMaxValue)
-          this.currentMinPrice.set(poundMinValue);
+          this.currentMaxPrice.set(commafy(poundMaxValue))
+          this.currentMinPrice.set(commafy(poundMinValue));
         }
       }
       else {
         if (this.currencyItem?.unit === toman_unit) {
-          const tommanDollarMaxValue = rialToDollarString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!)
-          const tommanDollarMinValue = rialToDollarString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!)
+          const tommanDollarMaxValue = rialToDollar(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const tommanDollarMinValue = rialToDollar(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+          const currentValue = rialToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!);
           
-          const tommanDollarPercent = rialToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / rialToDollar(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const tommanDollarPercent = (tommanDollarMaxValue === tommanDollarMinValue) ? 1 : ((currentValue - tommanDollarMinValue) / (tommanDollarMaxValue - tommanDollarMinValue));
           this.currentPercentMinMax.set(`${(tommanDollarPercent * 100).toFixed(2)}%`)
-          this.currentMaxPrice.set(tommanDollarMaxValue)
-          this.currentMinPrice.set(tommanDollarMinValue);
+          this.currentMaxPrice.set(commafy(tommanDollarMaxValue))
+          this.currentMinPrice.set(commafy(tommanDollarMinValue));
         }
         else if (this.currencyItem?.unit === dollar_unit) {
-          this.currentMaxPrice.set(this.currencyItem.lastPriceInfo.h);
-          this.currentMinPrice.set(this.currencyItem.lastPriceInfo.l);
-        
-          const percent = +(this.currencyItem.lastPriceInfo.p) / +(this.currencyItem.lastPriceInfo.h);
+          const dollarMaxValue = +(this.currencyItem.lastPriceInfo.h);
+          const dollarMinValue = +(this.currencyItem.lastPriceInfo.l);
+          const currentValue = +(this.currencyItem.lastPriceInfo.p);
+          
+          const percent = (dollarMaxValue === dollarMinValue) ? 1 : ((currentValue - dollarMinValue) / (dollarMaxValue - dollarMinValue));
           this.currentPercentMinMax.set(`${(percent * 100).toFixed(2)}%`)
+          this.currentMaxPrice.set(commafy(dollarMaxValue));
+          this.currentMinPrice.set(commafy(dollarMinValue));
         }
         else {
-          const poundDollarMaxValue = poundToDollarString(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!)
-          const poundDollarMinValue = poundToDollarString(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!)
-          
-          console.log(this.currencyItem?.lastPriceInfo.p, this.currencyItem?.lastPriceInfo.h, this.currencyItem?.lastPriceInfo.l)
-          const poundDollarPercent = poundToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!) / poundToDollar(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const poundDollarMaxValue = poundToDollar(this.currencyItem?.lastPriceInfo?.h!, this.requestArray.mainData?.current!);
+          const poundDollarMinValue = poundToDollar(this.currencyItem?.lastPriceInfo?.l!, this.requestArray.mainData?.current!);
+          const currentValue = poundToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!);
+
+          const poundDollarPercent = (poundDollarMaxValue === poundDollarMinValue) ? 1 : ((currentValue - poundDollarMinValue) / (poundDollarMaxValue - poundDollarMinValue));
           this.currentPercentMinMax.set(`${(poundDollarPercent * 100).toFixed(2)}%`)
-          this.currentMaxPrice.set(poundDollarMaxValue)
-          this.currentMinPrice.set(poundDollarMinValue);
+          this.currentMaxPrice.set(commafy(poundDollarMaxValue))
+          this.currentMinPrice.set(commafy(poundDollarMinValue));
         }
       }
     }

@@ -68,6 +68,7 @@ export class CurrencyItemDetailsComponent {
   onItemSelect(slug: string) {
     this.inputBlur()
     this.router.navigate([`/${slug}`])
+    window.scrollTo(0, 0)  
   }
 
   onChartTypeChange (type: number) {

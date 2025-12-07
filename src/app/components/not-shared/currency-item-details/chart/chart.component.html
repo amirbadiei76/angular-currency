@@ -1,0 +1,53 @@
+<div class="relative w-full h-full bg-chart-bg rounded-lg overflow-hidden shadow-2xl font-sans border border-[#2a2e39]">
+
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+      <span class="text-[80px] font-bold text-white opacity-[0.03] select-none tracking-tighter">
+        Bitpin
+      </span>
+    </div>
+  
+    <div class="relative z-20 flex flex-wrap items-center justify-between px-4 py-3 border-b border-[#2a2e39]">
+     
+      <div class="flex items-center gap-4">
+        <h2 class="text-lg font-bold text-text-primary tracking-wide">
+          THE/USDT
+        </h2>
+       
+        <span class="px-1.5 py-0.5 text-[11px] font-medium text-text-secondary bg-chart-panel rounded border border-[#2a2e39]">
+          {{ activeTimeframe() }}
+        </span>
+  
+        <div class="flex items-center gap-2">
+          <span
+            class="text-lg font-mono font-medium"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ currentPrice() }}
+          </span>
+         
+          <span
+            class="text-sm font-medium"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ priceChange() }}
+          </span>
+        </div>
+      </div>
+  
+      <div class="flex items-center gap-1">
+        @for (tf of timeframes; track tf) {
+          <button
+            (click)="changeTimeframe(tf)"
+            class="px-3 py-1 text-xs font-medium rounded transition-all duration-200 ease-in-out"
+            [ngClass]="activeTimeframe() === tf
+              ? 'bg-trade-blue text-white shadow-lg shadow-blue-900/20'
+              : 'text-text-secondary hover:text-text-primary hover:bg-[#2a2e39]'">
+            {{ tf }}
+          </button>  
+        }
+      </div>
+    </div>
+  
+    @if (historyData) {
+        <div #chartContainer class="relative z-10 w-full h-[400px]"></div>
+    }
+   
+</div>

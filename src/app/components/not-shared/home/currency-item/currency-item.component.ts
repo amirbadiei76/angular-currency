@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { CurrencyItem } from '../../../../interface/Currencies';
+import { CurrencyItem } from '../../../../interfaces/data.types';
 import { CommonModule, NgIf } from '@angular/common';
 import { StarIconComponent } from '../../../shared/star-icon/star-icon.component';
 import { RequestArrayService } from '../../../../services/request-array.service';

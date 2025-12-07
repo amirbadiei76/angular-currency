@@ -1,4 +1,4 @@
-import { CurrencyItem, Current } from "../interface/Currencies";
+import { CurrencyItem, Current } from "../interfaces/data.types";
 
 
 export function commafy (num: number) {
@@ -17,10 +17,6 @@ export function rialToToman (value: string) {
     return Math.round((priceValue / 10) * 100) / 100
 }
 
-export function rialToTomanString (value: string) {
-    return commafy(rialToToman(value))
-}
-
 export function dollarToToman (value: string, current: Current) {
     const priceValue = +(value.replaceAll(',', ''))
     const dollarValue = +(current.price_dollar_rl.p.replaceAll(',', ''))
@@ -28,19 +24,10 @@ export function dollarToToman (value: string, current: Current) {
 }
 
 
-export function dollarToTomanString (value: string, current: Current) {
-    return commafy(dollarToToman(value, current))
-}
-
 export function poundToToman (value: string, current: Current) {
     const priceValue = +(value.replaceAll(',', ''))
     const poundValue = +(current.price_gbp.p.replaceAll(',', ''))
     return Math.round((priceValue * poundValue) * 100) / 1000;
-}
-
-
-export function poundToTomanString (value: string, current: Current) {
-    return commafy(poundToToman(value, current))
 }
 
 
@@ -52,18 +39,9 @@ export function rialToDollar (value: string, current: Current) {
     return Math.round(dollarMainValue * 100) / 100
 }
 
-export function rialToDollarString (value: string, current: Current) {
-    return commafy(rialToDollar(value, current))
-}
-
-
 export function poundToDollar (value: string, current: Current) {
     const priceValue = +(value.replaceAll(',', ''))
 
     const priceDollarValue = priceValue * (+current['gbp-usd-ask'].p)
     return Math.round(priceDollarValue * 100) / 100;
-}
-
-export function poundToDollarString (value: string, current: Current) {
-    return commafy(poundToDollar(value, current))
 }

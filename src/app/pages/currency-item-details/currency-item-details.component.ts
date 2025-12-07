@@ -1,20 +1,22 @@
 import { Component, ElementRef, HostListener, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../components/shared/breadcrumb/breadcrumb.component';
-import { CurrencyItem } from '../../interface/Currencies';
+import { CurrencyItem, Price } from '../../interfaces/data.types';
 import { RequestArrayService } from '../../services/request-array.service';
 import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
-import { filter, from, fromEvent, throttleTime } from 'rxjs';
+import { filter, from, fromEvent, map, throttleTime } from 'rxjs';
 import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
-import { commafy, dollarToToman, dollarToTomanString, poundToDollar, poundToDollarString, poundToToman, poundToTomanString, rialToDollar, rialToDollarString, rialToToman, rialToTomanString } from '../../utils/CurrencyConverter';
+import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../utils/CurrencyConverter';
+import { RawData } from '../../interfaces/chart.types';
+import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent, CurrencyOverviewComponent],
+  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -25,6 +27,7 @@ export class CurrencyItemDetailsComponent {
   currentFilteredList?: CurrencyItem[];
   themeServiceInstance?: ThemeService;
   breadCrumbItems: BreadcrumbItem[] = [];
+  historyData?: RawData[];
   
   currentMaxPrice = signal('');
   currentMinPrice = signal('');
@@ -126,6 +129,12 @@ export class CurrencyItemDetailsComponent {
     this.currentFilteredList = this.currentCategoryItems;
   }
 
+  initializeChartHistory () {
+    this.currencyItem?.historyCallInfo.subscribe((data: RawData[]) => {
+      this.historyData = data;
+    }) 
+  }
+
   initializeCurrencyInfo (type: number) {
     if (this.currencyItem?.faGroupName === 'بازارهای ارزی') {
       const maxValue = +(this.currencyItem.lastPriceInfo.h);
@@ -223,11 +232,12 @@ export class CurrencyItemDetailsComponent {
           title: 'صفحه اصلی', link: '/'
         },
         {
-          title: this.currencyItem.title,
+          title: this.currencyItem!.title,
         }
       ];
       this.initializeCurrentCategoryItems();
       this.initializeCurrencyInfo(0);
+      this.initializeChartHistory();
     })
 
     if (typeof window !== 'undefined') {

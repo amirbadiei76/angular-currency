@@ -1,5 +1,5 @@
 import { Component, Input, output, signal } from '@angular/core';
-import { CurrencyItem } from '../../../../interface/Currencies';
+import { CurrencyItem } from '../../../../interfaces/data.types';
 import { RelatedItemComponent } from '../related-item/related-item.component';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CurrencyItem } from '../../../../interface/Currencies';
+import { CurrencyItem } from '../../../../interfaces/data.types';
 import { RequestArrayService } from '../../../../services/request-array.service';
 import { NotificationService } from '../../../../services/notification.service';
 

@@ -1,12 +1,12 @@
-<div class="px-5 py-4 rounded-2xl md:border md:border-light-border2 md:dark:border-dark-border2 md:mt-28">
-    <p class="leading-[180%] dark:text-white text-dark text-xl md:text-base text-right mb-3">وضعیت {{currentSelected?.faGroupName}} در یک نگاه</p>
+<div class="px-5 py-4 rounded-2xl lg:border lg:border-light-border2 lg:dark:border-dark-border2 lg:mt-28">
+    <p class="leading-[180%] dark:text-white text-dark text-xl lg:text-base text-right mb-3">وضعیت {{currentSelected?.faGroupName}} در یک نگاه</p>
     
-    <div class="flex flex-row justify-between md:flex-col mb-3 md:mb-6">
-        <div class="overflow-hidden flex flex-row-reverse mb-0 md:mb-3 {{ currentSelected?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">
+    <div class="flex flex-row justify-between lg:flex-col mb-3 lg:mb-6">
+        <div class="overflow-hidden flex flex-row-reverse mb-0 lg:mb-3 {{ currentSelected?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">
             @for (currency of supportedCurrencies; track currency.id) {
                 <div
                     (click)="changeUnit(currency.id)"
-                    class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId() ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId() ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} w-16 md:w-18 h-12 flex justify-center px-1 items-center cursor-pointer">
+                    class="border {{ currency.id === 0 ? (currency.id === currentSupportCurrencyId() ? 'border-green-btn rounded-r-semi' : 'border-l-0 rounded-r-semi border-dark-text2 dark:border-light-text2') : (currency.id === currentSupportCurrencyId() ? 'border-green-btn rounded-l-semi' : 'border-r-0 rounded-l-semi border-dark-text2 dark:border-light-text2') }} w-15 md:w-20 lg:w-1/2 h-12 flex justify-center px-1 items-center cursor-pointer">
                     <p class="rtl {{ currency.id === currentSupportCurrencyId() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2' }} text-2xs sm:text-xs">{{currency.title}}</p>
                 </div>
             }

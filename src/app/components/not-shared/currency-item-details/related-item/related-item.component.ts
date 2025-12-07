@@ -1,5 +1,5 @@
 import { Component, input, Input, output } from '@angular/core';
-import { CurrencyItem } from '../../../../interface/Currencies';
+import { CurrencyItem } from '../../../../interfaces/data.types';
 import { RouterLink } from '@angular/router';
 
 @Component({

@@ -59,10 +59,10 @@
             <p class="dark:text-white text-dark leading-[180%] {{ item?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'block' }}">تومان</p>
             <p class="dark:text-white text-dark mx-4 leading-[180%]">{{item?.faGroupName === 'بازارهای ارزی' ? item?.lastPriceInfo?.p : item?.tomanStringPrice}}</p>
             @if (item?.faGroupName === 'بازارهای ارزی') {
-                <p class="font-normal mx-4 leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
+                <p class="font-normal mx-4 leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
             }
             @else { 
-                <p class="font-normal mx-4 leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
+                <p class="font-normal mx-4 leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
             }
         </div>
 

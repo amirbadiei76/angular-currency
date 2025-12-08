@@ -108,6 +108,7 @@
         </div>
 
         <app-chart class="w-full" [historyData]="historyData" />
+        <app-changes-table class="w-full" [historyData]="historyData" [item]="currencyItem" [currentUnit]="currentSupportCurrencyId()" />
     </div>
 
     <div class="w-full lg:w-[27%] flex flex-col flex-nowrap justify-start items-end content-center">

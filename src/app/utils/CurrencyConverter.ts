@@ -1,4 +1,4 @@
-import { CurrencyItem, Current } from "../interfaces/data.types";
+import { Current } from "../interfaces/data.types";
 
 
 export function commafy (num: number) {

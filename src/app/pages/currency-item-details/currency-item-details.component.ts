@@ -13,10 +13,11 @@ import { CurrencyOverviewComponent } from '../../components/not-shared/currency-
 import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../utils/CurrencyConverter';
 import { RawData } from '../../interfaces/chart.types';
 import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
+import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent, CurrencyOverviewComponent, ChartComponent],
+  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -42,6 +43,9 @@ export class CurrencyItemDetailsComponent {
 
   constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService, private router: Router) {
     this.themeServiceInstance = themeService;
+    if (!requestArray.mainData) {
+      requestArray.setupMainData();
+    }
   }
   
 
@@ -68,7 +72,7 @@ export class CurrencyItemDetailsComponent {
   onItemSelect(slug: string) {
     this.inputBlur()
     this.router.navigate([`/${slug}`])
-    window.scrollTo(0, 0)  
+    window.scrollTo(0, 0)
   }
 
   onChartTypeChange (type: number) {
@@ -95,6 +99,28 @@ export class CurrencyItemDetailsComponent {
 
     navigator.share({ url })
       .catch(() => console.warn("Share dialog dismissed"));
+  }
+
+  ngOnChanges () {
+    if (this.requestArray.mainData) {
+      this.route.params.subscribe((params) => {
+        this.title = params['title'];
+  
+        this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
+  
+        this.breadCrumbItems = [
+          {
+            title: 'صفحه اصلی', link: '/'
+          },
+          {
+            title: this.currencyItem!.title,
+          }
+        ];
+        this.initializeCurrentCategoryItems();
+        this.initializeCurrencyInfo(0);
+        this.initializeChartHistory();
+      })
+    }
   }
 
   initializeCurrentCategoryItems () {

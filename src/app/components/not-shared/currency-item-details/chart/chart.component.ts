@@ -31,9 +31,8 @@ export class ChartComponent {
 
   constructor(private dataService: ChartService) {}
 
-  ngAfterView(): void {
+  ngOnChanges(): void {
     if (this.historyData) {
-      console.log(this.historyData)
       const processedData = this.dataService.parseData(this.historyData as RawData[]);
       this.initChart(processedData);
     }
@@ -42,11 +41,10 @@ export class ChartComponent {
   initChart(data: { candles: any[], volumes: any[] }) {
     if (!this.chartContainer) return;
 
-    // ایجاد چارت با رنگ‌های هماهنگ با Tailwind Config
     this.chart = createChart(this.chartContainer.nativeElement, {
       layout: {
-        background: { type: ColorType.Solid, color: '#131722' }, // bg-chart-bg
-        textColor: '#d1d4dc', // text-primary
+        background: { type: ColorType.Solid, color: '#131722' },
+        textColor: '#d1d4dc',
       },
       grid: {
         vertLines: { color: 'rgba(42, 46, 57, 0.5)' },
@@ -64,6 +62,41 @@ export class ChartComponent {
       },
       width: this.chartContainer.nativeElement.clientWidth,
       height: 400,
+      localization: {
+        locale: 'fa'
+      }
+    });
+
+    const timeScale = this.chart.timeScale();
+    timeScale.subscribeVisibleLogicalRangeChange((range) => {
+      if (!range) return;
+  
+      const first = 0;            // اولین کندل
+      const last = this.historyData?.length! - 1;  // آخرین کندل
+  
+      const allowedMin = first - 0.5;
+      const allowedMax = last + 0.5;
+  
+      let { from, to } = range;
+  
+      let changed = false;
+      let newFrom = Number(from), newTo = Number(to);
+
+      if (from < allowedMin) {
+          const diff = allowedMin - from;
+          newFrom += diff;
+          newTo += diff;
+          changed = true;
+      }
+  
+      if (to > allowedMax) {
+          const diff = to - allowedMax;
+          newFrom -= diff;
+          newTo -= diff;
+          changed = true;
+      }
+  
+      timeScale.setVisibleLogicalRange({ from: newFrom, to: newTo });
     });
 
     // تنظیمات کندل‌ها

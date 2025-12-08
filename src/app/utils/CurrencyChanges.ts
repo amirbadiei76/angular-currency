@@ -30,7 +30,7 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
                     last,
                     change,
                     percent,
-                    avg: commafy(+avg.toFixed(2)),
+                    avg: commafy(Math.round(avg)),
                     direction: change >= 0 ? 'high' : 'low',
                 };
             }
@@ -50,7 +50,7 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
                     last,
                     change,
                     percent,
-                    avg: commafy(+avg.toFixed(2)),
+                    avg: commafy(Math.round(avg)),
                     direction: change >= 0 ? 'high' : 'low',
                 };
             }
@@ -70,7 +70,7 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
                     last,
                     change,
                     percent,
-                    avg: commafy(+avg.toFixed(2)),
+                    avg: commafy(Math.round(avg)),
                     direction: change >= 0 ? 'high' : 'low',
                 };
             }

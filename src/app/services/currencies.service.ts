@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Currencies, Price } from '../interfaces/data.types';
+import { distinctUntilChanged, exhaustMap, interval, shareReplay, switchMap, timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

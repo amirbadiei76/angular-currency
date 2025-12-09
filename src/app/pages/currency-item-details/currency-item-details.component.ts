@@ -8,7 +8,7 @@ import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
-import { filter, from, fromEvent, map, throttleTime } from 'rxjs';
+import { filter, fromEvent, throttleTime } from 'rxjs';
 import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
 import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../utils/CurrencyConverter';
 import { RawData } from '../../interfaces/chart.types';

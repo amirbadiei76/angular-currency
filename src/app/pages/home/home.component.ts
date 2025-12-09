@@ -448,8 +448,8 @@ export class HomeComponent {
         const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
         const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
         
-        if (realAValue > realBValue) return -1
-        else return 1
+        if (realAValue > realBValue) return 1
+        else return -1
       }
       
       const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;

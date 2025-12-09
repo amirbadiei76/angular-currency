@@ -63,7 +63,6 @@ export class ChangesTableComponent {
         ...analysis,
       };
     });
-    console.log(results)
     this.ranges.set(results);
   }
 }

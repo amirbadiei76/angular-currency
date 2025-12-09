@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, signal, ViewChild } from '@angular/core';
-import { createChart, IChartApi, ISeriesApi, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries } from 'lightweight-charts'
+import { AfterViewInit, Component, ElementRef, input, Input, OnDestroy, signal, ViewChild } from '@angular/core';
+import { createChart, IChartApi, ISeriesApi, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries, LineStyle } from 'lightweight-charts'
 import { ChartService } from '../../../../services/chart.service';
 import { CommonModule } from '@angular/common';
 import { RawData } from '../../../../interfaces/chart.types';
@@ -13,12 +13,14 @@ import { RawData } from '../../../../interfaces/chart.types';
 })
 export class ChartComponent {
   @Input() historyData?: RawData[];
+  chartType = input(0)
 
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
   private chart: IChartApi | null = null;
   private candlestickSeries: ISeriesApi<"Candlestick"> | null = null;
   private volumeSeries: ISeriesApi<"Histogram"> | null = null;
+  private lineSeries: ISeriesApi<'Line'> | null = null;
 
   
   currentPrice = signal<string>('---');
@@ -29,13 +31,19 @@ export class ChartComponent {
   timeframes = ['1h', '4h', '1D', '1W'];
   activeTimeframe = signal<string>('1D');
 
-  constructor(private dataService: ChartService) {}
+  constructor(private dataService: ChartService) {
+    
+  }
 
   ngOnChanges(): void {
+    console.log(this.chartType())
     if (this.historyData) {
-      const processedData = this.dataService.parseData(this.historyData as RawData[]);
+      const processedData = this.dataService.parseData(this.historyData as RawData[], this.chartType());
       this.initChart(processedData);
     }
+    // this.lineSeries?.applyOptions({ visible: this.chartType() === 0 })
+    // this.candlestickSeries?.applyOptions({ visible: this.chartType() !== 0 })
+    // this.volumeSeries?.applyOptions({ visible: this.chartType() !== 0 })
   }
 
   initChart(data: { candles: any[], volumes: any[] }) {
@@ -51,7 +59,7 @@ export class ChartComponent {
         horzLines: { color: 'rgba(42, 46, 57, 0.5)' },
       },
       rightPriceScale: {
-        borderColor: 'rgba(197, 203, 206, 0.2)',
+        borderColor: 'rgba(197, 203, 206, 1)',
       },
       timeScale: {
         borderColor: 'rgba(197, 203, 206, 0.2)',
@@ -76,6 +84,15 @@ export class ChartComponent {
     });
     this.candlestickSeries!.setData(data.candles);
 
+
+    this.lineSeries = this.chart.addSeries(LineSeries, {
+      lineStyle: LineStyle.Solid,
+      baseLineColor: '#00d890',
+      priceLineColor: '#00d890',
+      lineWidth: 1
+    });
+    this.lineSeries.setData(data.volumes);
+
     // تنظیمات حجم
     this.volumeSeries = this.chart.addSeries(HistogramSeries, {
       priceFormat: { type: 'volume' },
@@ -90,7 +107,6 @@ export class ChartComponent {
     });
     this.volumeSeries!.setData(data.volumes);
 
-    // ریسپانسیو بودن
     const resizeObserver = new ResizeObserver(entries => {
       if (entries.length === 0 || entries[0].target !== this.chartContainer.nativeElement) { return; }
       const newRect = entries[0].contentRect;
@@ -98,7 +114,6 @@ export class ChartComponent {
     });
     resizeObserver.observe(this.chartContainer.nativeElement);
 
-    // آپدیت هدر هنگام حرکت موس
     this.chart.subscribeCrosshairMove(param => {
       if (param.time) {
         const price = param.seriesData.get(this.candlestickSeries!) as any;
@@ -109,7 +124,6 @@ export class ChartComponent {
           this.isPositive.set(change >= 0);
         }
       } else {
-        // بازگشت به آخرین قیمت وقتی موس خارج می‌شود
         if (data.candles.length > 0) {
            const last = data.candles[data.candles.length - 1];
            this.updateHeader(last);

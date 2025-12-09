@@ -8,7 +8,7 @@ export class ChartService {
 
   constructor() { }
 
-  parseData(rawData: RawData[]): { candles: CandleData[], volumes: VolumeData[] } {
+  parseData(rawData: RawData[], type: number): { candles: CandleData[], volumes: VolumeData[] } {
     const sortedData = rawData?.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
    
     const uniqueMap = new Map();
@@ -36,12 +36,12 @@ export class ChartService {
       candles.push({ time, open, high, low, close });
 
       const isUp = close >= open;
-      const volumeValue = Math.floor(Math.random() * 1000000) + 500000;
+      const volumeValue = Number(current.p.replaceAll(',', ''));
      
       volumes.push({
         time,
         value: volumeValue,
-        color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+        color: (type === 0) ? (isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)') : '#00d890',
       });
     }
 

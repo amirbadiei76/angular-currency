@@ -77,6 +77,7 @@ export class CurrencyItemDetailsComponent {
 
   onChartTypeChange (type: number) {
     this.currentChartType.set(type)
+    // this.initializeChartHistory();
   }
 
   
@@ -253,6 +254,14 @@ export class CurrencyItemDetailsComponent {
       this.title = params['title'];
 
       this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
+
+      if (this.currencyItem.faGroupName === 'بازارهای ارزی') {
+        document.title = 'نسبت ' + this.currencyItem.title;
+      }
+      else {
+        document.title = 'قیمت ' + this.currencyItem.title;
+      }
+      
 
       this.breadCrumbItems = [
         {

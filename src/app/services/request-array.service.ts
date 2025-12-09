@@ -54,8 +54,8 @@ export class RequestArrayService {
   }
 
   convertUnitChanges (item: CurrencyItem, current: Current) {
-    let dollarChanges = (current.price_dollar_rl?.dt === 'low' ? -1 : 1) * (current.price_dollar_rl?.dp);
-    let itemChanges = (item.lastPriceInfo?.dt === 'low' ? -1 : 1) * (item.lastPriceInfo?.dp)
+    const dollarChanges = (current.price_dollar_rl?.dt === 'low' ? -1 : 1) * (current.price_dollar_rl?.dp);
+    const itemChanges = (item.lastPriceInfo?.dt === 'low' ? -1 : 1) * (item.lastPriceInfo?.dp)
     if (item.unit === toman_unit) {
         item.rialChangeState = item.lastPriceInfo?.dt
         item.rialChanges = item.lastPriceInfo?.dp + '';
@@ -72,8 +72,8 @@ export class RequestArrayService {
         itemRialChanges = Math.floor(itemRialChanges * 100) / 100
         item.rialChanges = Math.abs(itemRialChanges) + '';
     } else if (item.unit === pound_unit) {
-        let poundChanges = (current.price_gbp?.dt === 'low' ? -1 : 1) * (current.price_gbp?.dp)
-        let poundAskChanges = (current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (current['gbp-usd-ask'].dp)
+        const poundChanges = (current.price_gbp?.dt === 'low' ? -1 : 1) * (current.price_gbp?.dp)
+        const poundAskChanges = (current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (current['gbp-usd-ask'].dp)
         
         let itemDollarChanges = (((1 + itemChanges) / (1 + poundAskChanges)) - 1);
         let itemRialChanges = (((1 + itemChanges) * (1 + poundChanges)) + 1);

@@ -43,8 +43,8 @@ export class ChartComponent {
 
     this.chart = createChart(this.chartContainer.nativeElement, {
       layout: {
-        background: { type: ColorType.Solid, color: '#131722' },
-        textColor: '#d1d4dc',
+        background: { type: ColorType.Solid, color: 'transparent' },
+        textColor: '#888',
       },
       grid: {
         vertLines: { color: 'rgba(42, 46, 57, 0.5)' },
@@ -55,49 +55,15 @@ export class ChartComponent {
       },
       timeScale: {
         borderColor: 'rgba(197, 203, 206, 0.2)',
-        timeVisible: true,
+        timeVisible: true
       },
       crosshair: {
         mode: CrosshairMode.Normal,
       },
-      width: this.chartContainer.nativeElement.clientWidth,
-      height: 400,
-      localization: {
-        locale: 'fa'
-      }
+      width: this.chartContainer.nativeElement.clientWidth
     });
 
     const timeScale = this.chart.timeScale();
-    timeScale.subscribeVisibleLogicalRangeChange((range) => {
-      if (!range) return;
-  
-      const first = 0;            // اولین کندل
-      const last = this.historyData?.length! - 1;  // آخرین کندل
-  
-      const allowedMin = first - 0.5;
-      const allowedMax = last + 0.5;
-  
-      let { from, to } = range;
-  
-      let changed = false;
-      let newFrom = Number(from), newTo = Number(to);
-
-      if (from < allowedMin) {
-          const diff = allowedMin - from;
-          newFrom += diff;
-          newTo += diff;
-          changed = true;
-      }
-  
-      if (to > allowedMax) {
-          const diff = to - allowedMax;
-          newFrom -= diff;
-          newTo -= diff;
-          changed = true;
-      }
-  
-      timeScale.setVisibleLogicalRange({ from: newFrom, to: newTo });
-    });
 
     // تنظیمات کندل‌ها
     this.candlestickSeries = this.chart.addSeries(CandlestickSeries, {

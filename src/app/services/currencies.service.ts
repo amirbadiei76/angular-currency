@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Currencies, Price } from '../interfaces/data.types';
-import { distinctUntilChanged, exhaustMap, interval, shareReplay, switchMap, timer } from 'rxjs';
+import { distinctUntilChanged, exhaustMap, interval, retry, shareReplay, switchMap, timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class CurrenciesService {
 
   getAllCurrencies () {
     const url = "https://call1.tgju.org/ajax.json";
-    return this.http.get<Currencies>(url)
+    return this.http.get<Currencies>(url).pipe(retry({ count: Infinity }))
   }
 
   //#region Currencies

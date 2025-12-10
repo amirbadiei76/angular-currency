@@ -71,13 +71,8 @@
     --green-btn: #00d890;
     --yellow-star: #e7c400;
 
-    --chart-bg: #131722;
-    --chart-panel: #1e222d;
-    --trade-green: #00c853;
-    --trade-red: #ff5252;
-    --trade-blue: #2962ff;
-    --text-secondary: #787b86;
-    --text-primary: #d1d4dc;
+    --trade-green: #30a46c;
+    --trade-red: #ff4245;
 
     --margin: 2rem;
 
@@ -87,6 +82,9 @@
 
 }
 
+#chartContainer * {
+    font-family: 'IranYekan';
+}
 #chartContainer svg {
     display: none;
 }
@@ -154,14 +152,8 @@
     --color-popup-border-green-light: var(--popup-border-green-light);
     --color-popup-border-green-dark: var(--popup-border-green-dark);
 
-
-    --color-chart-bg: var(--chart-bg);
-    --color-chart-panel: var(--chart-panel);
     --color-trade-green: var(--trade-green);
     --color-trade-red: var(--trade-red);
-    --color-trade-blue: var(--trade-blue);
-    --color-text-secondary: var(--text-secondary);
-    --color-text-primary: var(--text-primary);
     
 
     --title-width: calc(100% - 30px);

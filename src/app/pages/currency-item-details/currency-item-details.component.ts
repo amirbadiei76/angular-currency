@@ -8,9 +8,9 @@ import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/not-shared/currency-item-details/search-item/search-item.component';
-import { filter, fromEvent, throttleTime } from 'rxjs';
+import { filter, fromEvent, retry, throttleTime } from 'rxjs';
 import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
-import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../utils/CurrencyConverter';
+import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from '../../utils/CurrencyConverter';
 import { RawData } from '../../interfaces/chart.types';
 import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
 import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
@@ -158,22 +158,26 @@ export class CurrencyItemDetailsComponent {
   }
 
   initializeChartHistory () {
-    this.currencyItem?.historyCallInfo.subscribe((data: RawData[]) => {
+    this.currencyItem?.historyCallInfo
+    .pipe(
+      retry({count: Infinity})
+    )
+    .subscribe((data: RawData[]) => {
       this.historyData = data;
-    }) 
+    })
   }
 
   initializeCurrencyInfo (type: number) {
     if (this.currencyItem?.faGroupName === 'بازارهای ارزی') {
-      const maxValue = +(this.currencyItem.lastPriceInfo.h);
-      const minValue = +(this.currencyItem.lastPriceInfo.l);
-      const currentValue = +(this.currencyItem.lastPriceInfo.p);
+      const maxValue = +(this.currencyItem.lastPriceInfo.h.replaceAll(',', ''));
+      const minValue = +(this.currencyItem.lastPriceInfo.l.replaceAll(',', ''));
+      const currentValue = +(this.currencyItem.lastPriceInfo.p.replaceAll(',', ''));
       const percent = (maxValue === minValue) ? 1 : ((currentValue - minValue) / (maxValue - minValue));
 
       this.currentMaxPrice.set(maxValue.toString());
       this.currentMinPrice.set(minValue.toString());
       
-      this.currentPercentMinMax.set(`${(percent * 100).toFixed(2)}%`)
+      this.currentPercentMinMax.set(`${trimDecimal(percent * 100)}%`)
     }
     else {
       if (type === 0) {
@@ -183,7 +187,7 @@ export class CurrencyItemDetailsComponent {
           const currentValue = rialToToman(this.currencyItem?.lastPriceInfo?.p!);
   
           const tomanPercent = (tomanMaxValue === tomanMinValue) ? 1 : ((currentValue - tomanMinValue) / (tomanMaxValue - tomanMinValue));
-          this.currentPercentMinMax.set(`${(tomanPercent * 100).toFixed(2)}%`)
+          this.currentPercentMinMax.set(`${trimDecimal(tomanPercent * 100)}%`)
           this.currentMaxPrice.set(commafy(tomanMaxValue));
           this.currentMinPrice.set(commafy(tomanMinValue));
         }
@@ -193,7 +197,7 @@ export class CurrencyItemDetailsComponent {
           const currentValue = dollarToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!)
 
           const dollarPercent = (dollarMaxValue === dollarMinValue) ? 1 : ((currentValue - dollarMinValue) / (dollarMaxValue - dollarMinValue));
-          this.currentPercentMinMax.set(`${(dollarPercent * 100).toFixed(2)}%`)
+          this.currentPercentMinMax.set(`${trimDecimal(dollarPercent * 100)}%`)
           this.currentMaxPrice.set(commafy(dollarMaxValue));
           this.currentMinPrice.set(commafy(dollarMinValue));
         }
@@ -203,7 +207,7 @@ export class CurrencyItemDetailsComponent {
           const currentValue = poundToToman(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!);
           
           const poundPercent = (poundMaxValue === poundMinValue) ? 1 : ((currentValue - poundMinValue) / (poundMaxValue - poundMinValue));
-          this.currentPercentMinMax.set(`${(poundPercent * 100).toFixed(2)}%`)
+          this.currentPercentMinMax.set(`${trimDecimal(poundPercent * 100)}%`)
           this.currentMaxPrice.set(commafy(poundMaxValue))
           this.currentMinPrice.set(commafy(poundMinValue));
         }
@@ -215,17 +219,17 @@ export class CurrencyItemDetailsComponent {
           const currentValue = rialToDollar(this.currencyItem?.lastPriceInfo?.p!, this.requestArray.mainData?.current!);
           
           const tommanDollarPercent = (tommanDollarMaxValue === tommanDollarMinValue) ? 1 : ((currentValue - tommanDollarMinValue) / (tommanDollarMaxValue - tommanDollarMinValue));
-          this.currentPercentMinMax.set(`${(tommanDollarPercent * 100).toFixed(2)}%`)
+          this.currentPercentMinMax.set(`${trimDecimal(tommanDollarPercent * 100)}%`)
           this.currentMaxPrice.set(commafy(tommanDollarMaxValue))
           this.currentMinPrice.set(commafy(tommanDollarMinValue));
         }
         else if (this.currencyItem?.unit === dollar_unit) {
-          const dollarMaxValue = +(this.currencyItem.lastPriceInfo.h);
-          const dollarMinValue = +(this.currencyItem.lastPriceInfo.l);
-          const currentValue = +(this.currencyItem.lastPriceInfo.p);
+          const dollarMaxValue = +(this.currencyItem.lastPriceInfo.h.replaceAll(',', ''));
+          const dollarMinValue = +(this.currencyItem.lastPriceInfo.l.replaceAll(',', ''));
+          const currentValue = +(this.currencyItem.lastPriceInfo.p.replaceAll(',', ''));
           
           const percent = (dollarMaxValue === dollarMinValue) ? 1 : ((currentValue - dollarMinValue) / (dollarMaxValue - dollarMinValue));
-          this.currentPercentMinMax.set(`${(percent * 100).toFixed(2)}%`)
+          this.currentPercentMinMax.set(`${trimDecimal(percent * 100)}%`)
           this.currentMaxPrice.set(commafy(dollarMaxValue));
           this.currentMinPrice.set(commafy(dollarMinValue));
         }

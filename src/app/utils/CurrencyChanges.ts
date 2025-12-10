@@ -9,6 +9,13 @@ export function filterByDays(data: PriceItem[], days: number) {
     return data.filter((i) => i.date.getTime() >= limit);
 }
 
+
+export function fiterByHour (data: PriceItem[], hours: number) {
+    const now = new Date().getTime();
+    const limit = now - hours * 60 * 60 * 1000;
+    return data.filter((i) => i.date.getTime() >= limit);
+}
+
 export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Current, unit: number) {
     if (data.length < 2) return null;
 

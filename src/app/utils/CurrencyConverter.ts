@@ -43,7 +43,7 @@ export function poundToDollar (value: string, current: Current) {
     const priceValue = +(value.replaceAll(',', ''))
 
     const priceDollarValue = priceValue * (+current['gbp-usd-ask'].p)
-    return trimDecimal(priceDollarValue / 10);
+    return trimDecimal(priceDollarValue);
 }
 
 export function trimDecimal(input: number, decimals: number = 2): number {

@@ -1,10 +1,10 @@
 <div class="relative flex flex-col w-full h-full bg-light2 dark:bg-theme-black rounded-lg overflow-hidden font-sans mb-6 lg:mb-10">
   
-    <div class="{{ chartType() === 0 ? 'opacity-100' : 'opacity-0' }} flex relative items-center justify-between px-4 py-3 border-b border-[#2a2e39]">
+    <div class="{{ chartType() === 0 ? 'opacity-100' : 'opacity-0' }}  {{ historyData ? 'flex' : 'hidden' }} relative items-center justify-between px-4 py-3 border-b border-[#2a2e39]">
      
       <div class="w-fit flex items-center gap-4">
        
-        <span class="px-1.5 py-0.5 text-xs font-medium text-text-secondary bg-chart-panel rounded border border-[#2a2e39]">
+        <span class="px-1.5 py-0.5 text-xs font-medium text-dark-text4 dark:text-white rounded border border-[#2a2e39]">
           {{ activeTimeframe() }}
         </span>
       </div>
@@ -13,18 +13,20 @@
         @for (tf of timeframes; track tf) {
           <button
             (click)="changeTimeframe(tf)"
-            class="px-3 py-1 text-xs font-medium rounded transition-all duration-200 ease-in-out"
+            class="px-3 py-1 text-xs font-medium cursor-pointer rounded transition-all text-dark-text4 dark:text-white duration-200 ease-in-out"
             [ngClass]="activeTimeframe() === tf
-              ? 'bg-trade-blue text-white shadow-lg shadow-blue-900/20'
-              : 'text-text-secondary hover:text-text-primary hover:bg-[#2a2e39]'">
+              ? ''
+              : ''">
             {{ tf }}
           </button>  
         }
       </div>
     </div>
   
-    <div #chartContainer id="chartContainer" class="relative w-full z-0 h-63 md:h-82 font-iranyekan bg-light2 dark:bg-theme-black text-light-text4 dark:text-dark-text4">
-      <div class="absolute left-0 top-0 flex items-center gap-2 z-[2] bg-[#f3f3f380] dark:bg-[#19191980]">
+    <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} rounded-lg mb-6 lg:mb-10 z-0 h-75 md:h-94 text-transparent animate-pulse bg-light-border dark:bg-dark-border"></div>
+
+    <div #chartContainer id="chartContainer" class="relative {{ historyData ? 'flex' : 'hidden' }} w-full z-0 h-63 md:h-82 font-iranyekan bg-light2 dark:bg-theme-black text-light-text4 dark:text-dark-text4">
+      <div class="absolute {{ chartType() === 0 ? 'opacity-100' : 'opacity-0' }}  left-0 top-0 flex items-center gap-2 p-2 z-[2]">
         <span
           class="text-xs font-mono font-medium"
           [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">

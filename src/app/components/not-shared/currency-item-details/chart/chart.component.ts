@@ -38,8 +38,26 @@ export class ChartComponent {
   isPositive = signal<boolean>(true);
  
   
-  timeframes = ['1h', '4h', '1D', '1W'];
+  timeframes = ['1D', '1W', '1M', '3M', '6M', '1Y'];
   activeTimeframe = signal<string>('1D');
+
+  private persianMonths = [
+    "ژانویه",
+    "فوریه",
+    "مارس",
+    "آوریل",
+    "مه",
+    "ژوئن",
+    "ژوئیه",
+    "اوت",
+    "سپتامبر",
+    "اکتبر",
+    "نوامبر",
+    "دسامبر"
+  ];
+  
+  private upColor = 'rgba(48, 164, 108, 0.3)';
+  private downColor = 'rgba(255, 66, 69, 0.3)';
 
   constructor(private requestService: RequestArrayService) {
     
@@ -66,7 +84,6 @@ export class ChartComponent {
       this.candlestickSeries?.applyOptions({ visible: this.chartType() === 0 })
       this.volumeSeries?.applyOptions({ visible: this.chartType() === 0 })
       this.lineSeries?.applyOptions({ visible: this.chartType() === 1 })
-      
     }
   }
 
@@ -106,7 +123,7 @@ export class ChartComponent {
             volumes.push({
               time,
               value: close,
-              color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+              color: isUp ? this.upColor : this.downColor,
             });
           }
           else if (this.item?.unit === dollar_unit) {
@@ -125,7 +142,7 @@ export class ChartComponent {
             volumes.push({
               time,
               value: close,
-              color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+              color: isUp ? this.upColor : this.downColor,
             });
           }
           else {
@@ -144,7 +161,7 @@ export class ChartComponent {
             volumes.push({
               time,
               value: close,
-              color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+              color: isUp ? this.upColor : this.downColor,
             });
           }
         }
@@ -165,7 +182,7 @@ export class ChartComponent {
             volumes.push({
               time,
               value: close,
-              color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+              color: isUp ? this.upColor : this.downColor,
             });
           }
           else if (this.item?.unit === dollar_unit) {
@@ -183,7 +200,7 @@ export class ChartComponent {
             volumes.push({
               time,
               value: close,
-              color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+              color: isUp ? this.upColor : this.downColor,
             });
           }
           else {
@@ -202,7 +219,7 @@ export class ChartComponent {
             volumes.push({
               time,
               value: close,
-              color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+              color: isUp ? this.upColor : this.downColor,
             });
           }
         }
@@ -222,7 +239,7 @@ export class ChartComponent {
         volumes.push({
           time,
           value: close,
-          color: isUp ? 'rgba(0, 150, 136, 0.5)' : 'rgba(255, 82, 82, 0.5)',
+          color: isUp ? this.upColor : this.downColor,
         });
       }
     }
@@ -243,28 +260,38 @@ export class ChartComponent {
         horzLines: { color: 'rgba(42, 46, 57, 0.3)' },
       },
       rightPriceScale: {
-        borderColor: 'rgba(197, 203, 206, 1)',
+        borderColor: '#3d3d3d',
       },
       timeScale: {
         borderColor: 'rgba(197, 203, 206, 0.2)',
-        timeVisible: true
+        timeVisible: true,
+        tickMarkFormatter: (time: number) => {
+          const date = new Date(time * 1000);
+
+          const year = date.getFullYear();
+          const month = this.persianMonths[date.getMonth()];
+          const day = date.getDate();
+          if (date.getMonth() === 0 && day === 1) return `${year}`;
+          if (day === 1) return `${month}`
+          return `${day}`;
+        },
       },
       crosshair: {
         mode: CrosshairMode.Normal,
       },
-      width: this.chartContainer.nativeElement.clientWidth
+      width: this.chartContainer.nativeElement.clientWidth,
     });
 
     const timeScale = this.chart.timeScale();
 
     // تنظیمات کندل‌ها
     this.candlestickSeries = this.chart.addSeries(CandlestickSeries, {
-      upColor: '#00c853',
-      downColor: '#ff5252',
-      borderUpColor: '#00c853',
-      borderDownColor: '#ff5252',
-      wickUpColor: '#00c853',
-      wickDownColor: '#ff5252',
+      upColor: '#30a46c',
+      downColor: '#ff4245',
+      borderUpColor: '#30a46c',
+      borderDownColor: '#ff4245',
+      wickUpColor: '#30a46c',
+      wickDownColor: '#ff4245',
     });
     this.candlestickSeries!.setData(data.candles);
 
@@ -313,11 +340,6 @@ export class ChartComponent {
           this.open.set(commafy(price.open))
           this.close.set(commafy(price.close))
           this.isPositive.set(change >= 0);
-        }
-      } else {
-        if (data.candles.length > 0) {
-           const last = data.candles[data.candles.length - 1];
-           this.updateHeader(last);
         }
       }
     });

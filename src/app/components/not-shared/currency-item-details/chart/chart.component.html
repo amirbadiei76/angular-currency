@@ -1,46 +1,12 @@
-<div class="relative w-full h-full bg-light2 dark:bg-theme-black rounded-lg overflow-hidden font-sans mb-6 lg:mb-10">
+<div class="relative flex flex-col w-full h-full bg-light2 dark:bg-theme-black rounded-lg overflow-hidden font-sans mb-6 lg:mb-10">
   
     <div class="{{ chartType() === 0 ? 'opacity-100' : 'opacity-0' }} flex relative items-center justify-between px-4 py-3 border-b border-[#2a2e39]">
      
       <div class="w-fit flex items-center gap-4">
        
-        <span class="px-1.5 py-0.5 text-[11px] font-medium text-text-secondary bg-chart-panel rounded border border-[#2a2e39]">
+        <span class="px-1.5 py-0.5 text-xs font-medium text-text-secondary bg-chart-panel rounded border border-[#2a2e39]">
           {{ activeTimeframe() }}
         </span>
-  
-        <div class="flex items-center gap-2">
-          <span
-            class="text-lg font-mono font-medium"
-            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-            {{ currentPrice() }}
-          </span>
-         
-          <span
-            class="text-sm font-medium flex"
-            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-            {{ priceChange() }}
-          </span>
-          <span
-            class="text-sm font-medium flex"
-            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-            {{ close() }}<p class="text-dark-text4 dark:text-light-text4 text-sm">C</p>
-          </span>
-          <span
-            class="text-sm font-medium flex"
-            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-            {{ low() }}<p class="text-dark-text4 dark:text-light-text4 text-sm">L</p>
-          </span>
-          <span
-            class="text-sm font-medium flex"
-            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-            {{ high() }}<p class="text-dark-text4 dark:text-light-text4 text-sm">H</p>
-          </span>
-          <span
-            class="text-sm font-medium flex"
-            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-            {{ open() }}<p class="text-dark-text4 dark:text-light-text4 text-sm">O</p>
-          </span>
-        </div>
       </div>
   
       <div class="w-fit flex items-center gap-1">
@@ -57,6 +23,40 @@
       </div>
     </div>
   
-    <div #chartContainer id="chartContainer" class="relative w-full z-0 h-63 md:h-82 font-iranyekan bg-light2 dark:bg-theme-black text-light-text4 dark:text-dark-text4"></div>
+    <div #chartContainer id="chartContainer" class="relative w-full z-0 h-63 md:h-82 font-iranyekan bg-light2 dark:bg-theme-black text-light-text4 dark:text-dark-text4">
+      <div class="absolute left-0 top-0 flex items-center gap-2 z-[2] bg-[#f3f3f380] dark:bg-[#19191980]">
+        <span
+          class="text-xs font-mono font-medium"
+          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+          {{ currentPrice() }}
+        </span>
+       
+        <span
+          class="text-xs font-medium flex"
+          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+          {{ priceChange() }}
+        </span>
+        <span
+          class="text-xs font-medium flex"
+          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+          {{ close() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">C</p>
+        </span>
+        <span
+          class="text-xs font-medium flex"
+          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+          {{ low() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">L</p>
+        </span>
+        <span
+          class="text-xs font-medium flex"
+          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+          {{ high() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">H</p>
+        </span>
+        <span
+          class="text-xs font-medium flex"
+          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+          {{ open() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">O</p>
+        </span>
+      </div>
+    </div>
    
 </div>

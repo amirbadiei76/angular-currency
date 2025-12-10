@@ -260,7 +260,7 @@ export class ChartComponent {
         horzLines: { color: 'rgba(42, 46, 57, 0.3)' },
       },
       rightPriceScale: {
-        borderColor: '#3d3d3d',
+        borderColor: '#888',
       },
       timeScale: {
         borderColor: 'rgba(197, 203, 206, 0.2)',

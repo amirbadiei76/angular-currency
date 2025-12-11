@@ -41,7 +41,8 @@
                 <div class="flex md:flex-col flex-row justify-between md:justify-start w-full md:w-auto mb-2 md:mb-0">
                     <p class="text-right text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%]">کمترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
                     <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] block md:hidden">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
-                    <div class="items-center gap-1.25 hidden md:flex">
+                    <span class="text-sm md:text-xs lg:text-sm font-normal leading-[180%] {{ currencyItem ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Some data</span>
+                    <div class="items-center gap-1.25 hidden {{ currencyItem ? ' md:flex ' : 'hidden'}}">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
                         <p class="dark:text-white text-dark text-sm md:text-xs lg:text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
                     </div>
@@ -53,11 +54,13 @@
                 </div>
                 <div class="flex md:flex-col flex-row justify-between md:justify-start w-full md:w-auto mb-2 md:mb-0">
                     <p class="text-xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] hidden md:block">بیشترین {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'نسبت' : 'قیمت' }}</p>
-                    <div class="items-center gap-1.25 flex md:hidden">
+                    <span class="text-sm md:text-xs lg:text-sm font-normal leading-[180%] {{ currencyItem ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }} md:hidden">Some data</span>
+                    <span class="text-sm md:text-xs lg:text-sm font-normal leading-[180%] {{ currencyItem ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Some data</span>
+                    <div class="items-center gap-1.25 {{ currencyItem ? 'flex' : 'hidden' }} md:hidden">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
                         <p class="dark:text-white text-dark text-sm md:text-xs lg:text-sm font-normal leading-[180%]">{{ currentMinPrice() }}</p>
                     </div>
-                    <div class="flex items-center gap-1.25">
+                    <div class="{{ currencyItem ? 'flex' : 'hidden' }} items-center gap-1.25">
                         <p class="text-2xs font-normal text-dark-text4 dark:text-light-text4 leading-[180%] {{ currencyItem?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'flex' }}">{{ currentSupportCurrencyId() === 0 ? 'تومان' : 'دلار' }}</p>
                         <p class="dark:text-white text-dark text-sm md:text-xs lg:text-sm font-normal leading-[180%]">{{ currentMaxPrice() }}</p>
                     </div>

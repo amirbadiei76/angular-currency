@@ -90,11 +90,13 @@ export class RequestArrayService {
 
   getFavorites() {
     if (typeof window !== 'undefined') {
-        let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
-        let favItems: CurrencyItem[] | undefined = []
-        for (const item of this.allItemsList) {
-            for (const favId of items) {
-                if (item.id === favId) favItems.push(item)
+        const items: string[] | undefined = JSON.parse(localStorage.getItem('fav') as string)
+        const favItems: CurrencyItem[] = []
+        if (items) {
+            for (const item of this.allItemsList) {
+                for (const favId of items!) {
+                    if (item.id === favId) favItems.push(item)
+                }
             }
         }
         this.favList = favItems;

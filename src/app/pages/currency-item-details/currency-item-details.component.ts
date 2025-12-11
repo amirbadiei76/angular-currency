@@ -108,7 +108,7 @@ export class CurrencyItemDetailsComponent {
         this.title = params['title'];
   
         this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
-  
+        
         this.breadCrumbItems = [
           {
             title: 'صفحه اصلی', link: '/'

@@ -254,6 +254,7 @@ export class ChartComponent {
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
         textColor: '#888',
+        fontFamily: 'IranYekan'
       },
       grid: {
         vertLines: { color: 'rgba(42, 46, 57, 0.3)' },

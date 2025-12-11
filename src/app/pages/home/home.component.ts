@@ -39,7 +39,7 @@ export class HomeComponent {
         filter_overview,
         filter_main_currencies,
         filter_other_currencies
-      ]
+      ] 
     },
     {
       title: gold_title,
@@ -161,7 +161,7 @@ export class HomeComponent {
 
   constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService, private notificationService: NotificationService) {
     this.reqestClass = requestArray;
-    this.setCurrentCategory(this.lastHomeState.currentCategory, lastHomeState.currentSubCategory);
+    this.setCurrentCategory(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory);
 
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
@@ -219,7 +219,7 @@ export class HomeComponent {
     (event.target as HTMLInputElement).classList.add('dark:border-dark-text2');
   }
 
-  setCurrentCategory (title: string = currency_title, subCategory: string = filter_overview) {
+  setCurrentCategory (title: string, subCategory: string = filter_overview) {
     this.currentCategory.set(title)
     this.lastHomeState.setCategory(title)
 
@@ -332,7 +332,6 @@ export class HomeComponent {
 
   filterByCategory (name: string) {
     this.currentSubCategory.set(name);
-    console.log(name)
     this.lastHomeState.setSubCategory(name);
 
     if (this.currentSubCategory() === filter_overview) {
@@ -341,8 +340,8 @@ export class HomeComponent {
     }
     else {
       let filteredList: CurrencyItem[] = [...this.currentList!!]
-      this.currenTemptList = filteredList.filter((item: CurrencyItem) => item.filterName === name)
-      this.currenTemptList2 = filteredList.filter((item: CurrencyItem) => item.filterName === name)
+      this.currenTemptList = filteredList.filter((item: CurrencyItem) => item.filterName == name)
+      this.currenTemptList2 = filteredList.filter((item: CurrencyItem) => item.filterName == name)
     }
     this.autoSortList()
   }
@@ -516,9 +515,6 @@ export class HomeComponent {
   }
 
   ngOnInit () {
-
-    console.log(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory)
-    
     if (typeof window !== 'undefined') {
       
       // window.scrollTo({ top: 0, behavior: 'instant' })
@@ -573,6 +569,7 @@ export class HomeComponent {
     }
     this.checkSubCategoryScrollPosition()
     this.checkCategoryScrollPosition()
+    this.filterByCategory(this.currentSubCategory())
   }
 
   onScrollEventHandler () {

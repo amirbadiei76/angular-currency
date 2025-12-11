@@ -162,6 +162,7 @@ export class HomeComponent {
   constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService, private notificationService: NotificationService) {
     this.reqestClass = requestArray;
     this.setCurrentCategory(this.lastHomeState.currentCategory);
+    this.currentSubCategory.set(this.lastHomeState.currentSubCategory)
     this.resetStoredValues();
 
     if (typeof window !== 'undefined') {      
@@ -181,10 +182,6 @@ export class HomeComponent {
   resetStoredValues () {
     this.currentCategory.set(this.lastHomeState.currentCategory)
     this.currentSubCategory.set(this.lastHomeState.currentSubCategory);
-
-    this.categoryScrollValue.set(this.lastHomeState.categoryScrollValue);
-    this.subCategoryScrollValue.set(this.lastHomeState.subCategoryScrollValue);
-    
   }
 
   categoryLeft () {

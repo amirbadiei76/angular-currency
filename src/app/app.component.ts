@@ -10,16 +10,10 @@ import { NotificationComponent } from './components/shared/notification/notifica
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'angular-currency';
-
-  showHeader = signal(false)
+  title = 'قیمت ارز و طلا';
 
   constructor (private router: Router, private route: ActivatedRoute) {
     
-  }
-
-  ngInInit () {
-    // if (typeof window !== 'undefined') console.log(window.location.href)
   }
   
 

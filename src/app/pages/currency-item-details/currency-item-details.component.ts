@@ -259,11 +259,6 @@ export class CurrencyItemDetailsComponent {
 
       this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
 
-      if (!this.currencyItem) {
-        this.router.navigate(['/not-found'])
-        return;
-      }
-
       if (this.currencyItem.faGroupName === 'بازارهای ارزی') {
         document.title = 'نسبت ' + this.currencyItem.title;
       }

@@ -1,5 +1,5 @@
-<nav aria-label="breadcrumb" class="leading-[180%] mb-6" *ngIf="items?.length">
-    <ol class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
+<nav aria-label="breadcrumb" class="leading-[180%] mb-6">
+    <ol class="{{ items?.length ? 'flex' : 'hidden' }} flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
         <li
             *ngFor="let item of items; let last = last"
             [attr.aria-current]="last ? 'page' : null"
@@ -16,6 +16,16 @@
             <ng-template #currentPage>
                 <span class="text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
             </ng-template>
-    
         </li>
-</ol>
+    </ol>
+    
+    <ol *ngIf="!items?.length" class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
+        <li
+            class="flex items-center"
+        >
+            <span class="animate-pulse bg-light-border dark:bg-dark-border h-fit text-transparent rounded-lg leading-5">item title title</span>
+            <span class="mx-2 text-dark-text4 dark:text-light-text4">&lt;</span>
+            <span class="text-dark-text4 dark:text-light-text4 transition-colors duration-300">صفحه اصلی</span>
+        </li>
+    </ol>
+</nav>

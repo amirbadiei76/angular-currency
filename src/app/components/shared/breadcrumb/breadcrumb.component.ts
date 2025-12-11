@@ -16,9 +16,9 @@ export interface BreadcrumbItem {
   styleUrl: './breadcrumb.component.css'
 })
 export class BreadcrumbComponent {
-  @Input() items: BreadcrumbItem[] = []
+  @Input() items: BreadcrumbItem[] = [];
   
   constructor() {
-    console.log(this.items)
+    
   }
 }

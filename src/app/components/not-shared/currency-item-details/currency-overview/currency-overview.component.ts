@@ -43,7 +43,9 @@ export class CurrencyOverviewComponent {
   }
   
   ngAfterViewInit () {
-    this.changeCurrentType(0)
+    if (this.relatedItems) {
+      this.changeCurrentType(0)
+    }
   }
 
   changeCurrentType (value: number) {

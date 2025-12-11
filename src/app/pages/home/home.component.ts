@@ -161,9 +161,7 @@ export class HomeComponent {
 
   constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService, private notificationService: NotificationService) {
     this.reqestClass = requestArray;
-    this.setCurrentCategory(this.lastHomeState.currentCategory);
-    this.currentSubCategory.set(this.lastHomeState.currentSubCategory)
-    this.resetStoredValues();
+    this.setCurrentCategory(this.lastHomeState.currentCategory, lastHomeState.currentSubCategory);
 
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
@@ -177,11 +175,6 @@ export class HomeComponent {
         this.change24hText.set('تغییر 24 ساعت')
       }
     }
-  }
-
-  resetStoredValues () {
-    this.currentCategory.set(this.lastHomeState.currentCategory)
-    this.currentSubCategory.set(this.lastHomeState.currentSubCategory);
   }
 
   categoryLeft () {
@@ -226,7 +219,7 @@ export class HomeComponent {
     (event.target as HTMLInputElement).classList.add('dark:border-dark-text2');
   }
 
-  setCurrentCategory (title: string) {
+  setCurrentCategory (title: string = currency_title, subCategory: string = filter_overview) {
     this.currentCategory.set(title)
     this.lastHomeState.setCategory(title)
 
@@ -294,8 +287,8 @@ export class HomeComponent {
         this.currentSubCategoryList = this.categories[8].subtitles
         break;
     }
-    this.currentSubCategory.set(filter_overview)
-    this.lastHomeState.setSubCategory(filter_overview);
+    this.currentSubCategory.set(subCategory)
+    this.lastHomeState.setSubCategory(subCategory);
     this.currenTemptList = this.currentList;
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
@@ -339,6 +332,7 @@ export class HomeComponent {
 
   filterByCategory (name: string) {
     this.currentSubCategory.set(name);
+    console.log(name)
     this.lastHomeState.setSubCategory(name);
 
     if (this.currentSubCategory() === filter_overview) {
@@ -522,6 +516,8 @@ export class HomeComponent {
   }
 
   ngOnInit () {
+
+    console.log(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory)
     
     if (typeof window !== 'undefined') {
       

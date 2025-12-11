@@ -1,10 +1,11 @@
 import { Component, Input, output, signal } from '@angular/core';
 import { CurrencyItem } from '../../../../interfaces/data.types';
 import { RelatedItemComponent } from '../related-item/related-item.component';
+import { RelatedEmptyItemComponent } from '../related-empty-item/related-empty-item.component';
 
 @Component({
   selector: 'app-currency-overview',
-  imports: [RelatedItemComponent],
+  imports: [RelatedItemComponent, RelatedEmptyItemComponent],
   templateUrl: './currency-overview.component.html',
   styleUrl: './currency-overview.component.css'
 })

@@ -109,17 +109,19 @@ export class CurrencyItemDetailsComponent {
   
         this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
         
-        this.breadCrumbItems = [
-          {
-            title: 'صفحه اصلی', link: '/'
-          },
-          {
-            title: this.currencyItem!.title,
-          }
-        ];
-        this.initializeCurrentCategoryItems();
-        this.initializeCurrencyInfo(0);
-        this.initializeChartHistory();
+        if (this.currencyItem) {
+          this.breadCrumbItems = [
+            {
+              title: 'صفحه اصلی', link: '/'
+            },
+            {
+              title: this.currencyItem!.title,
+            }
+          ];
+          this.initializeCurrentCategoryItems();
+          this.initializeCurrencyInfo(0);
+          this.initializeChartHistory();
+        }
       })
     }
   }

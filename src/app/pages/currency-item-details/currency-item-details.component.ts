@@ -98,7 +98,7 @@ export class CurrencyItemDetailsComponent {
       return;
     }
 
-    navigator.share({ title: document.title, text: document.title + '\n' + url })
+    navigator.share({ text: document.title, url: url })
       .catch(() => console.warn("Share dialog dismissed"));
   }
 

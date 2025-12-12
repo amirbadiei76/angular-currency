@@ -63,6 +63,7 @@ export class ChartComponent {
     
     effect(() => {
       const processedData = this.parseData(this.historyData as RawData[]);
+
       this.currentUnit()
       this.candlestickSeries?.setData(processedData.candles as any[])
       this.volumeSeries?.setData(processedData.volumes as any[])
@@ -87,9 +88,25 @@ export class ChartComponent {
     }
   }
 
+  // filterByDays (data: RawData[]) {
+  //   const now = new Date().getTime();
+  //   let days = 1;
+  //   if (this.activeTimeframe() === '1D') return data;
+  //   else if (this.activeTimeframe() === '1W') days = 7;
+  //   else if (this.activeTimeframe() === '1M') days = 30;
+  //   else if (this.activeTimeframe() === '3M') days = 90;
+  //   else if (this.activeTimeframe() === '6M') days = 180;
+  //   else if (this.activeTimeframe() === '1Y') days = 365;
+    
+  //   const limit = now - days * 24 * 60 * 60 * 1000;
+  //   return data.filter((i) => new Date(i.ts).getTime() >= limit);
+  // }
+
   parseData(rawData: RawData[]): { candles: CandleData[], volumes: VolumeData[] } {
     const sortedData = rawData?.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
-   
+    // const filteredData = this.filterByDays(sortedData);
+
+
     const uniqueMap = new Map();
     sortedData?.forEach(item => {
       const dateKey = item.ts.split(' ')[0];
@@ -364,7 +381,9 @@ export class ChartComponent {
 
   changeTimeframe(tf: string) {
     this.activeTimeframe.set(tf);
-    // منطق تغییر دیتا از سرور در اینجا قرار می‌گیرد
+    if (this.activeTimeframe() === '1D') {
+      
+    }
     console.log(`Switched to ${tf}`);
   }
 

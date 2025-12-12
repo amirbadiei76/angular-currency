@@ -93,12 +93,12 @@ export class CurrencyItemDetailsComponent {
     const url = window.location.href;
 
     if (!navigator.share) {
-      navigator.clipboard.writeText(url);
+      navigator.clipboard.writeText(document.title + '\n' + url);
       this.notificationService.show('آدرس صفحه در کلیپ بورد ذخیره شد')
       return;
     }
 
-    navigator.share({ url })
+    navigator.share({ title: document.title, text: document.title + '\n' + url, url: url })
       .catch(() => console.warn("Share dialog dismissed"));
   }
 

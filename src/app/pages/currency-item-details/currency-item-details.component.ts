@@ -259,25 +259,27 @@ export class CurrencyItemDetailsComponent {
 
       this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
 
-      if (this.currencyItem.faGroupName === 'بازارهای ارزی') {
-        document.title = 'نسبت ' + this.currencyItem.title;
-      }
-      else {
-        document.title = 'قیمت ' + this.currencyItem.title;
-      }
-      
-
-      this.breadCrumbItems = [
-        {
-          title: 'صفحه اصلی', link: '/'
-        },
-        {
-          title: this.currencyItem!.title,
+      if (this.currencyItem) {
+        if (this.currencyItem.faGroupName === 'بازارهای ارزی') {
+          document.title = 'نسبت ' + this.currencyItem.title;
         }
-      ];
-      this.initializeCurrentCategoryItems();
-      this.initializeCurrencyInfo(0);
-      this.initializeChartHistory();
+        else {
+          document.title = 'قیمت ' + this.currencyItem.title;
+        }
+        
+  
+        this.breadCrumbItems = [
+          {
+            title: 'صفحه اصلی', link: '/'
+          },
+          {
+            title: this.currencyItem!.title,
+          }
+        ];
+        this.initializeCurrentCategoryItems();
+        this.initializeCurrencyInfo(0);
+        this.initializeChartHistory();
+      }
     })
 
     if (typeof window !== 'undefined') {

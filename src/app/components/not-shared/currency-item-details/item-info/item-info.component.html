@@ -40,7 +40,9 @@
             </div>
         </div>
         
-        <div class="{{item?.faGroupName !== 'بازارهای ارزی' ? 'flex' : 'hidden'}} mt-2 justify-between w-full">
+        <div
+            class="{{item?.faGroupName === 'بازارهای ارزی' || item?.shortedName == 'USD' || item?.shortedName == 'USDT' ? 'hidden' : 'flex'}} mt-2 justify-between w-full"
+            >
             <p class="font-normal text-xs leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}} {{ item ? 'block' : 'hidden' }}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
             <p class="font-normal text-xs leading-[180%] {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Changes</p>
             <div class="flex items-center">

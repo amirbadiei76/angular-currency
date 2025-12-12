@@ -204,21 +204,6 @@ export class HomeComponent {
   }
 
 
-
-
-
-  inputMouseLeave(event: Event) {
-    (event.target as HTMLInputElement).classList.remove('border-light-text2');
-    (event.target as HTMLInputElement).classList.remove('dark:border-dark-text2');
-    (event.target as HTMLInputElement).classList.add('border-green-btn');
-  }
-  
-  inputMouseEnter(event: Event) {
-    (event.target as HTMLInputElement).classList.remove('border-green-btn');
-    (event.target as HTMLInputElement).classList.add('border-light-text2');
-    (event.target as HTMLInputElement).classList.add('dark:border-dark-text2');
-  }
-
   setCurrentCategory (title: string, subCategory: string = filter_overview) {
     this.currentCategory.set(title)
     this.lastHomeState.setCategory(title)

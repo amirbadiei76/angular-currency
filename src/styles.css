@@ -75,6 +75,7 @@
     --trade-red: #ff4245;
 
     --margin: 2rem;
+    --screen-height: calc(100vh - 64px);
 
     &:where(html.dark, html.dark *) {
         --bg-speech: #292a2a;

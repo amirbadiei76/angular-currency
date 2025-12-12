@@ -2,10 +2,11 @@ import { Component, ElementRef, Inject, signal, ViewChild } from '@angular/core'
 import { ActivatedRoute, Route, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../app/components/shared/header/header.component';
 import { NotificationComponent } from './components/shared/notification/notification.component';
+import { FooterComponent } from './components/shared/footer/footer.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, NotificationComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, NotificationComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

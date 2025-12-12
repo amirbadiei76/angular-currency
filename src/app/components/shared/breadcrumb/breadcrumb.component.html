@@ -1,5 +1,5 @@
 <nav aria-label="breadcrumb" class="leading-[180%] mb-6">
-    <ol *ngIf="items.length" class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
+    <ol class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
         <li
             *ngFor="let item of items; let last = last"
             [attr.aria-current]="last ? 'page' : null"

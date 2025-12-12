@@ -14,10 +14,11 @@ import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rial
 import { RawData } from '../../interfaces/chart.types';
 import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
 import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, ItemInfoComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
+  imports: [BreadcrumbComponent, FormsModule, ItemInfoComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -36,6 +37,8 @@ export class CurrencyItemDetailsComponent {
   
   currentSupportCurrencyId = signal(0)
   currentChartType = signal(0)
+
+  inputValue = '';
 
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
@@ -100,6 +103,12 @@ export class CurrencyItemDetailsComponent {
 
     navigator.share({ title: document.title, url: url })
       .catch(() => console.warn("Share dialog dismissed"));
+  }
+
+  removeInput () {
+    this.inputValue = '';
+    this.inputBlur()
+    this.initializeCurrentCategoryItems();
   }
 
   ngOnChanges () {

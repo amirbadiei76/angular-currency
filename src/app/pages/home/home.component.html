@@ -1,4 +1,4 @@
-<main class="w-full min-h-screen bg-light dark:bg-dark flex flex-col flex-1 pt-16 ">
+<main class="w-full min-h-[var(--screen-height)] bg-light dark:bg-dark flex flex-col flex-1 pt-16 pb-6">
     
     <div class="mx-0 sm:mx-auto sm:max-w-256 sm:w-full px-0 sm:px-28 md:px-36">
         <div class="order-2 relative sm:order-1 px-4 sm:px-0 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">        
@@ -52,7 +52,7 @@
                     <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                     <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                 </svg>
-                <input #searchInput type="text" id="searchInput" name="searchInput" class="rtl focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
+                <input #searchInput type="text" id="searchInput" (input)="filterList($event)" name="searchInput" class="rtl focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 h-full dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="عنوان را در {{currentCategory()}} جستجو کنید">
             </div>
         </div>
     

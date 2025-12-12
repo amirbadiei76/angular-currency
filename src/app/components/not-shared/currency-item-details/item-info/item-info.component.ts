@@ -16,11 +16,11 @@ export class ItemInfoComponent {
 
     constructor (private requestService: RequestArrayService, private notificationService: NotificationService) {
       this.requestArray = requestService;
-      this.currentItem = this.item;
     }
 
     ngOnInit () {
-      
+      this.currentItem = this.item;
+      console.log(this.currentItem, this.item)
     }
 
     addToFav(event: MouseEvent) {

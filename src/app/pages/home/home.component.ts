@@ -156,8 +156,6 @@ export class HomeComponent {
   change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
   priceSortingText: WritableSignal<string> = signal("قیمت")
 
-  static mainData: Currencies;
-
 
   constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService, private notificationService: NotificationService) {
     this.reqestClass = requestArray;
@@ -204,7 +202,7 @@ export class HomeComponent {
   }
 
 
-  setCurrentCategory (title: string, subCategory: string = filter_overview) {
+  setCurrentCategory (title: string = currency_title, subCategory: string = filter_overview) {
     this.currentCategory.set(title)
     this.lastHomeState.setCategory(title)
 
@@ -502,8 +500,6 @@ export class HomeComponent {
   ngOnInit () {
     if (typeof window !== 'undefined') {
       
-      // window.scrollTo({ top: 0, behavior: 'instant' })
-      
       fromEvent(window, 'resize')
       .pipe(
         map(() => document.body.clientWidth),
@@ -552,8 +548,8 @@ export class HomeComponent {
       })
       
     }
-    this.checkSubCategoryScrollPosition()
-    this.checkCategoryScrollPosition()
+    this.checkSubCategoryScrollPosition();
+    this.checkCategoryScrollPosition();
     this.filterByCategory(this.currentSubCategory())
   }
 

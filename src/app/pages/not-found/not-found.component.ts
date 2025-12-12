@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { RequestArrayService } from '../../services/request-array.service';
 
 @Component({
   selector: 'app-not-found',
@@ -9,7 +10,7 @@ import { RouterLink } from '@angular/router';
 })
 export class NotFoundComponent {
   
-  constructor() {
-    
+  constructor(private requestClass: RequestArrayService) {
+      requestClass.setupMainData();
   }
 }

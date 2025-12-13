@@ -16,10 +16,12 @@ import { ChartComponent } from '../../components/not-shared/currency-item-detail
 import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
 import { FormsModule } from '@angular/forms';
 import { ItemInfoSkeletonComponent } from '../../components/not-shared/currency-item-details/item-info-skeleton/item-info-skeleton.component';
+import { PercentProgressComponent } from '../../components/not-shared/currency-item-details/percent-progress/percent-progress.component';
+import { PercentProgressSkeletonComponent } from '../../components/not-shared/currency-item-details/percent-progress-skeleton/percent-progress-skeleton.component';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, FormsModule, ItemInfoComponent, ItemInfoSkeletonComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
+  imports: [BreadcrumbComponent, FormsModule, ItemInfoComponent, ItemInfoSkeletonComponent, PercentProgressComponent, PercentProgressSkeletonComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })

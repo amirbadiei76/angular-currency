@@ -11,16 +11,15 @@ import { NotificationService } from '../../../../services/notification.service';
 })
 export class ItemInfoComponent {
     @Input() item?: CurrencyItem;
-    currentItem?: CurrencyItem;
     requestArray?: RequestArrayService;
 
     constructor (private requestService: RequestArrayService, private notificationService: NotificationService) {
       this.requestArray = requestService;
+      
     }
 
     ngOnInit () {
-      this.currentItem = this.item;
-      console.log(this.currentItem, this.item)
+      
     }
 
     addToFav(event: MouseEvent) {

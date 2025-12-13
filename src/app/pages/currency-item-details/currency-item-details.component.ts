@@ -15,10 +15,11 @@ import { RawData } from '../../interfaces/chart.types';
 import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
 import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
 import { FormsModule } from '@angular/forms';
+import { ItemInfoSkeletonComponent } from '../../components/not-shared/currency-item-details/item-info-skeleton/item-info-skeleton.component';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, FormsModule, ItemInfoComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
+  imports: [BreadcrumbComponent, FormsModule, ItemInfoComponent, ItemInfoSkeletonComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -111,29 +112,30 @@ export class CurrencyItemDetailsComponent {
     this.initializeCurrentCategoryItems();
   }
 
-  ngOnChanges () {
-    if (this.requestArray.mainData) {
-      this.route.params.subscribe((params) => {
-        this.title = params['title'];
+  // ngOnChanges () {
+  //   if (this.requestArray.mainData) {
+  //     console.log(this.requestArray.mainData)
+  //     this.route.params.subscribe((params) => {
+  //       this.title = params['title'];
   
-        this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
+  //       this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
         
-        if (this.currencyItem) {
-          this.breadCrumbItems = [
-            {
-              title: 'صفحه اصلی', link: '/'
-            },
-            {
-              title: this.currencyItem!.title,
-            }
-          ];
-          this.initializeCurrentCategoryItems();
-          this.initializeCurrencyInfo(0);
-          this.initializeChartHistory();
-        }
-      })
-    }
-  }
+  //       if (this.currencyItem) {
+  //         this.breadCrumbItems = [
+  //           {
+  //             title: 'صفحه اصلی', link: '/'
+  //           },
+  //           {
+  //             title: this.currencyItem!.title,
+  //           }
+  //         ];
+  //         this.initializeCurrentCategoryItems();
+  //         this.initializeCurrencyInfo(0);
+  //         this.initializeChartHistory();
+  //       }
+  //     })
+  //   }
+  // }
 
   initializeCurrentCategoryItems () {
     switch (this.currencyItem?.groupName) {

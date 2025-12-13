@@ -1,5 +1,8 @@
+import { RawData, VolumeData } from "../interfaces/chart.types";
 import { Current } from "../interfaces/data.types";
 
+const MAX_SAFE_VOLUME = 9_007_199_254_740_99;
+const SCALE = 1_000_000;
 
 export function commafy (num: number) {
     var str = num.toString().split('.');
@@ -61,5 +64,20 @@ export function trimDecimal(input: number, decimals: number = 2): number {
     const trimmed = decPart.slice(0, Math.min(end, decPart.length));
   
     return Number(`${intPart}.${trimmed}`);
-  }
+}
+
+export function normalizeValue (high: number, low: number, open: number, close: number): number {
+    const range = Math.abs(high - low);
+    const delta = Math.abs(close - open);
+  
+    const raw = range * delta;
+  
+    if (raw <= 0 || !Number.isFinite(raw)) {
+      return 0;
+    }
+  
+    const normalized = Math.log10(raw + 1) * SCALE;
+  
+    return Math.min(normalized, MAX_SAFE_VOLUME);
+}
   

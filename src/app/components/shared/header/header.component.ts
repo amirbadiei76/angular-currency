@@ -1,11 +1,11 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { CurrenciesService } from '../../../services/currencies.service';
 import { ThemeService } from '../../../services/theme.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [NgIf],
+  imports: [NgIf, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

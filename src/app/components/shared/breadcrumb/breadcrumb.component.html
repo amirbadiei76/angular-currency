@@ -1,25 +1,27 @@
 <nav aria-label="breadcrumb" class="leading-[180%] mb-6">
-    <ol class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
-        <li
-            *ngFor="let item of items; let last = last"
-            [attr.aria-current]="last ? 'page' : null"
-            class="flex items-center"
-        >
-            <span *ngIf="!last" class="mx-2 text-dark-text4 dark:text-light-text4">&lt;</span>
-            <ng-container *ngIf="!last && item.link; else currentPage">
-                <a
-                    [routerLink]="item.link"
-                    class="text-dark-text4 dark:text-light-text4 transition-colors duration-300"
-                >{{ item.title }}</a>
-            </ng-container>
+    @if (items.length > 0) {
+        <ol class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
+            <li
+                *ngFor="let item of items; let last = last"
+                [attr.aria-current]="last ? 'page' : null"
+                class="flex items-center"
+            >
+                <span *ngIf="!last" class="mx-2 text-dark-text4 dark:text-light-text4">&lt;</span>
+                <ng-container *ngIf="!last && item.link; else currentPage">
+                    <a
+                        [routerLink]="item.link"
+                        class="text-dark-text4 dark:text-light-text4 transition-colors duration-300"
+                    >{{ item.title }}</a>
+                </ng-container>
+        
+                <ng-template #currentPage>
+                    <span class="text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
+                </ng-template>
+            </li>
+        </ol>
+    }
     
-            <ng-template #currentPage>
-                <span class="text-dark-text dark:text-white transition-colors duration-300">{{ item.title }}</span>
-            </ng-template>
-        </li>
-    </ol>
-    
-    <ol *ngIf="!items.length" class="flex flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
+    <ol class="{{ items.length == 0 ? 'flex' : 'hidden' }} flex-row-reverse list-none p-0 m-0 text-2xs md:text-sm">
         <li
             class="flex items-center"
         >

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CandleData, RawData, VolumeData } from '../../../../interfaces/chart.types';
 import { CurrencyItem } from '../../../../interfaces/data.types';
 import { dollar_unit, toman_unit } from '../../../../constants/Values';
-import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../../../utils/CurrencyConverter';
+import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../../../utils/CurrencyConverter';
 import { RequestArrayService } from '../../../../services/request-array.service';
 
 
@@ -77,8 +77,8 @@ export class ChartComponent {
   ngOnChanges(): void {
     if (this.historyData && this.chart === null) {
       const processedData = this.parseData(this.historyData as RawData[]);
-      this.initChart(processedData);
       console.log(this.chartType(), this.currentUnit())
+      this.initChart(processedData);
       this.lineSeries?.applyOptions({ visible: false })
     }
     else {
@@ -102,7 +102,7 @@ export class ChartComponent {
   //   return data.filter((i) => new Date(i.ts).getTime() >= limit);
   // }
 
-  parseData(rawData: RawData[]): { candles: CandleData[], volumes: VolumeData[] } {
+  parseData(rawData: RawData[]): { candles: CandleData[], volumes: VolumeData[], lineVolumes: VolumeData[] } {
     const sortedData = rawData?.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
     // const filteredData = this.filterByDays(sortedData);
 
@@ -116,6 +116,7 @@ export class ChartComponent {
 
     const candles: CandleData[] = [];
     const volumes: VolumeData[] = [];
+    const lineVolumes: VolumeData[] = [];
 
     for (let i = 0; i < uniqueData.length; i++) {
       const current = uniqueData[i];
@@ -136,11 +137,19 @@ export class ChartComponent {
             candles.push({ time, open, high, low, close });
       
             const isUp = close >= open;
-           
+
+            const volume = normalizeValue(high, low, open, close)
+
             volumes.push({
               time,
-              value: close,
+              value: volume,
               color: isUp ? this.upColor : this.downColor,
+            });
+            
+            lineVolumes.push({
+              time,
+              value: close,
+              color: '#00d890',
             });
           }
           else if (this.item?.unit === dollar_unit) {
@@ -155,11 +164,17 @@ export class ChartComponent {
             candles.push({ time, open, high, low, close });
       
             const isUp = close >= open;
+            const volume = normalizeValue(high, low, open, close)
            
             volumes.push({
               time,
-              value: close,
+              value: volume,
               color: isUp ? this.upColor : this.downColor,
+            });
+            lineVolumes.push({
+              time,
+              value: close,
+              color: '#00d890',
             });
           }
           else {
@@ -174,11 +189,17 @@ export class ChartComponent {
             candles.push({ time, open, high, low, close });
       
             const isUp = close >= open;
+            const volume = normalizeValue(high, low, open, close)
            
             volumes.push({
               time,
-              value: close,
+              value: volume,
               color: isUp ? this.upColor : this.downColor,
+            });
+            lineVolumes.push({
+              time,
+              value: close,
+              color: '#00d890',
             });
           }
         }
@@ -195,11 +216,17 @@ export class ChartComponent {
             candles.push({ time, open, high, low, close });
       
             const isUp = close >= open;
+            const volume = normalizeValue(high, low, open, close)
            
             volumes.push({
               time,
-              value: close,
+              value: volume,
               color: isUp ? this.upColor : this.downColor,
+            });
+            lineVolumes.push({
+              time,
+              value: close,
+              color: '#00d890',
             });
           }
           else if (this.item?.unit === dollar_unit) {
@@ -213,11 +240,17 @@ export class ChartComponent {
       
             candles.push({ time, open, high, low, close });
             const isUp = close >= open;
+            const volume = normalizeValue(high, low, open, close)
            
             volumes.push({
               time,
-              value: close,
+              value: volume,
               color: isUp ? this.upColor : this.downColor,
+            });
+            lineVolumes.push({
+              time,
+              value: close,
+              color: '#00d890',
             });
           }
           else {
@@ -232,11 +265,17 @@ export class ChartComponent {
             candles.push({ time, open, high, low, close });
       
             const isUp = close >= open;
+            const volume = normalizeValue(high, low, open, close)
            
             volumes.push({
               time,
-              value: close,
+              value: volume,
               color: isUp ? this.upColor : this.downColor,
+            });
+            lineVolumes.push({
+              time,
+              value: close,
+              color: '#00d890',
             });
           }
         }
@@ -252,21 +291,28 @@ export class ChartComponent {
   
         candles.push({ time, open, high, low, close });
         const isUp = close >= open;
+        const volume = normalizeValue(high, low, open, close)
        
         volumes.push({
           time,
-          value: close,
+          value: volume,
           color: isUp ? this.upColor : this.downColor,
+        });
+        
+        lineVolumes.push({
+          time,
+          value: close,
+          color: '#00d890',
         });
       }
     }
 
-    return { candles, volumes };
+    return { candles, volumes, lineVolumes };
   }
 
-  initChart(data: { candles: any[], volumes: any[] }) {
+  initChart(data: { candles: any[], volumes: any[], lineVolumes: any[] }) {
     if (!this.chartContainer) return;
-
+    
     this.chart = createChart(this.chartContainer.nativeElement, {
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
@@ -335,9 +381,7 @@ export class ChartComponent {
       priceLineColor: '#00d890',
       lineWidth: 2,
     });
-    const data2 = data.volumes.slice();
-    data2.forEach((volume) => volume.color = '#00d890')
-    this.lineSeries.setData(data2);
+    this.lineSeries.setData(data.lineVolumes);
 
     const resizeObserver = new ResizeObserver(entries => {
       if (entries.length === 0 || entries[0].target !== this.chartContainer.nativeElement) { return; }

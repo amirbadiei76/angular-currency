@@ -1,4 +1,4 @@
-<div class="my-6 leading-[180%] flex-1 justify-center md:justify-between flex w-full px-4 py-3 bg-light-hover dark:bg-dark-text rounded-lg">
+<div class="my-6 leading-[180%] flex-1 justify-center md:justify-between flex w-full px-4 py-3 bg-light-hover dark:bg-dark-text rounded-lg {{ item ? 'block' : 'hidden' }}">
     
     <!-- Mobile -->
     <div class="flex md:hidden flex-col w-full">
@@ -17,38 +17,32 @@
             </div>
             <div class="flex">
                 <div class="flex flex-wrap-reverse items-center justify-end">
-                    <p class="text-xs font-normal align-middle leading-4 dark:text-light-text4 text-dark-text4 {{ item?.filterName === 'سکه در بورس' ? 'hidden' : '' }} {{ item ? 'block' : 'hidden' }}">({{item?.shortedName}})</p>
-                    <h1 class="text-base font-medium dark:text-white text-right text-dark-text leading-[180%] ml-1 {{ item ? 'block' : 'hidden' }}">{{item?.title}}</h1>
-                    <span class="text-base font-medium text-right leading-[180%] ml-1 {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Some Title Details</span>
+                    <p class="text-xs font-normal align-middle leading-4 dark:text-light-text4 text-dark-text4 {{ item?.filterName === 'سکه در بورس' ? 'hidden' : '' }}">({{item?.shortedName}})</p>
+                    <h2 class="text-base font-medium dark:text-white text-right text-dark-text leading-[180%] ml-1">{{item?.title}}</h2>
                 </div>
-                <img class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover ml-2 {{ item ? 'block' : 'hidden' }}" src={{item?.img}} alt={{item?.title}}>
-                <span class="w-8 h-8 md:w-23 md:h-23 rounded-full ml-2 animate-pulse bg-light-border dark:bg-dark-border {{ item ? 'hidden' : 'block' }}"></span>
+                <img class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover ml-2" src={{item?.img}} alt={{item?.title}}>
             </div>
         </div>
         <div class="flex mt-2 justify-between w-full">
-            <span class="font-normal text-sm leading-[180%] {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Changes</span>
             @if (item?.faGroupName === 'بازارهای ارزی') {
-                <p class="font-normal text-sm leading-[180%] {{(item?.lastPriceInfo?.dt === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}} {{ item ? 'block' : 'hidden' }}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
+                <p class="font-normal text-sm leading-[180%] {{(item?.lastPriceInfo?.dt === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
             }
             @else {
-                <p class="font-normal text-sm leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}} {{ item ? 'block' : 'hidden' }}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
+                <p class="font-normal text-sm leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
             }
             <div class="flex items-center">
                 <p class="dark:text-light-text4 text-dark-text4 text-2xs leading-[180%] {{ item?.faGroupName === 'بازارهای ارزی' ? 'hidden' : '' }}">تومان</p>
-                <p class="dark:text-white text-dark text-sm font-normal leading-[180%] ml-1 {{ item ? 'block' : 'hidden' }}">{{ item?.faGroupName !== 'بازارهای ارزی' ? item?.tomanStringPrice : item?.lastPriceInfo?.p}}</p>
-                <span class="text-sm font-normal leading-[180%] ml-1 {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Some Data</span>
+                <p class="dark:text-white text-dark text-sm font-normal leading-[180%] ml-1">{{ item?.faGroupName !== 'بازارهای ارزی' ? item?.tomanStringPrice : item?.lastPriceInfo?.p}}</p>
             </div>
         </div>
         
         <div
             class="{{item?.faGroupName === 'بازارهای ارزی' || item?.shortedName == 'USD' || item?.shortedName == 'USDT' ? 'hidden' : 'flex'}} mt-2 justify-between w-full"
             >
-            <p class="font-normal text-xs leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}} {{ item ? 'block' : 'hidden' }}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
-            <p class="font-normal text-xs leading-[180%] {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Changes</p>
+            <p class="font-normal text-xs leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
             <div class="flex items-center">
                 <p class="dark:text-light-text4 text-dark-text4 text-xs font-normal leading-[180%]">دلار</p>
-                <p class="dark:text-white text-dark leading-[180%] text-xs font-normal align-middle ml-1 {{ item ? 'block' : 'hidden' }}">{{item?.dollarStringPrice}}</p>
-                <span class="leading-[180%] text-xs font-normal align-middle ml-1 {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Some Data</span>
+                <p class="dark:text-white text-dark leading-[180%] text-xs font-normal align-middle ml-1">{{item?.dollarStringPrice}}</p>
             </div>
         </div>
         
@@ -65,21 +59,19 @@
     <div class="hidden md:flex flex-col justify-center">
         <div class="flex flex-nowrap leading-[180%] text-base font-medium">
             <p class="dark:text-white text-dark leading-[180%] {{ item?.faGroupName === 'بازارهای ارزی' ? 'hidden' : 'block' }}">تومان</p>
-            <span class="mx-4 leading-[180%] {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">toman changes Price</span>
-            <p class="dark:text-white text-dark mx-4 leading-[180%] {{ item ? 'block' : 'hidden' }}">{{item?.faGroupName === 'بازارهای ارزی' ? item?.lastPriceInfo?.p : item?.tomanStringPrice}}</p>
+            <p class="dark:text-white text-dark mx-4 leading-[180%]">{{item?.faGroupName === 'بازارهای ارزی' ? item?.lastPriceInfo?.p : item?.tomanStringPrice}}</p>
             @if (item?.faGroupName === 'بازارهای ارزی') {
-                <p class="font-normal mx-4 leading-[180%] {{ item ? 'block' : 'hidden' }} {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
+                <p class="font-normal mx-4 leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.lastPriceInfo?.dt === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</p>
             }
             @else { 
-                <p class="font-normal mx-4 leading-[180%] {{ item ? 'block' : 'hidden' }} {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
+                <p class="font-normal mx-4 leading-[180%] {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</p>
             }
         </div>
 
         <div class="flex flex-nowrap leading-[180%] items-center text-base font-medium {{item?.unit === 'پوند' ? 'mt-2 items-center' : 'mt-3'}} {{item?.faGroupName === 'بازارهای ارزی' || item?.shortedName == 'USD' || item?.shortedName == 'USDT' ? 'opacity-0' : 'opacity-100'}}">
             <p class="dark:text-light-text4 text-dark-text4 leading-[180%] text-xs align-middle">دلار</p>
-            <span class="mx-4 leading-[180%] text-xs align-middle {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Dollar Price changes</span>
-            <p class="dark:text-white text-dark mx-4 leading-[180%] text-xs align-middle {{ item ? 'block' : 'hidden' }}">{{item?.dollarStringPrice}}</p>
-            <p class="font-normal mx-4 leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}} {{ item ? 'block' : 'hidden' }}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
+            <p class="dark:text-white text-dark mx-4 leading-[180%] text-xs align-middle">{{item?.dollarStringPrice}}</p>
+            <p class="font-normal mx-4 leading-[180%] {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</p>
         </div>
         <div class="flex-nowrap leading-[180%] text-base items-center font-medium {{item?.unit === 'پوند' ? 'flex mt-1 items-center' : 'hidden'}}">
             <p class="dark:text-light-text4 text-dark-text4 leading-[180%] text-xs align-middle">پوند</p>
@@ -90,11 +82,9 @@
 
     <div class="hidden md:flex justify-end items-center">
         <div class="flex flex-col justify-center">
-            <h1 class="text-xl dark:text-white text-right rtl text-dark-text mr-1 text-ellipsis line-clamp-2 font-medium leading-[180%] {{ item ? 'block' : 'hidden' }}">{{item?.title}}</h1>
-            <span class="text-xl text-right rtl mr-1 text-ellipsis line-clamp-2 font-medium leading-[180%] {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">Some Title</span>
+            <h1 class="text-xl dark:text-white text-right rtl text-dark-text mr-1 text-ellipsis line-clamp-2 font-medium leading-[180%]">{{item?.title}}</h1>
             <div class="flex justify-end mt-2 leading-[180%]">
-                <p class="text-xl dark:text-light-text4 text-dark-text4 text-ellipsis line-clamp-1 {{ item?.filterName === 'سکه در بورس' ? 'text-right rtl' : '' }} {{ item ? 'block' : 'hidden' }}">{{item?.shortedName}}</p>
-                <span class="text-xl text-ellipsis line-clamp-1 {{ item ? 'hidden' : 'block text-transparent animate-pulse bg-light-border dark:bg-dark-border rounded-lg' }}">shorted title</span>
+                <p class="text-xl dark:text-light-text4 text-dark-text4 text-ellipsis line-clamp-1 {{ item?.filterName === 'سکه در بورس' ? 'text-right rtl' : '' }}">{{item?.shortedName}}</p>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none" viewBox="0 0 24 24"
@@ -107,8 +97,7 @@
                 </svg>
             </div>
         </div>
-        <img class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover ml-2 {{ item ? 'block' : 'hidden' }}" src={{item?.img}} alt={{item?.title}}>
-        <span class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover ml-2 {{ item ? 'hidden' : 'block animate-pulse bg-light-border dark:bg-dark-border' }}"></span>
+        <img class="w-8 h-8 md:w-23 md:h-23 rounded-full object-cover ml-2" src={{item?.img}} alt={{item?.title}}>
     </div>
     
 </div>

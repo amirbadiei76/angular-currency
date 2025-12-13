@@ -25,39 +25,48 @@
   
     <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} rounded-lg mb-6 lg:mb-10 z-0 h-75 md:h-94 text-transparent animate-pulse bg-light-border dark:bg-dark-border"></div>
 
-    <div #chartContainer id="chartContainer" class="relative {{ historyData ? 'flex' : 'hidden' }} w-full z-0 h-63 md:h-82 font-iranyekan bg-light2 dark:bg-theme-black text-light-text4 dark:text-dark-text4">
-      <div class="absolute {{ chartType() === 0 ? 'opacity-0 md:opacity-100' : 'opacity-0' }} left-0 top-0 hidden lg:flex items-center gap-2 p-2 z-[2]">
-        <span
-          class="text-xs font-mono font-medium"
-          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-          {{ currentPrice() }}
-        </span>
-       
-        <span
-          class="text-xs font-medium flex"
-          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-          {{ priceChange() }}
-        </span>
-        <span
-          class="text-xs font-medium flex"
-          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-          {{ close() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">C</p>
-        </span>
-        <span
-          class="text-xs font-medium flex"
-          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-          {{ low() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">L</p>
-        </span>
-        <span
-          class="text-xs font-medium flex"
-          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-          {{ high() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">H</p>
-        </span>
-        <span
-          class="text-xs font-medium flex"
-          [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
-          {{ open() }}<p class="text-dark-text4 dark:text-light-text4 text-xs">O</p>
-        </span>
+    <div #chartContainer id="chartContainer" class="relative {{ historyData ? 'flex' : 'hidden' }} w-full z-0 h-63 md:h-82 font-iranyekan text-light-text4 dark:text-dark-text4">
+      <div class="absolute {{ chartType() === 0 ? 'opacity-0 md:opacity-100' : 'opacity-0' }} left-0 top-0 hidden md:flex flex-col items-start gap-0.5 p-1 z-[2]">
+        <div class="flex items-center gap-2 bg-[#f4f4f4ac] dark:bg-[#1b1b1bac] px-2">
+          <span
+            class="text-xs font-mono font-medium"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ currentPrice() }}
+          </span>
+        
+          <span
+            class="text-xs font-medium flex"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ priceChange() }}
+          </span>
+          <span
+            class="text-xs font-medium flex"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ close() }}<p class="text-dark dark:text-light text-xs">C</p>
+          </span>
+          <span
+            class="text-xs font-medium flex"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ low() }}<p class="text-dark dark:text-light text-xs">L</p>
+          </span>
+          <span
+            class="text-xs font-medium flex"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ high() }}<p class="text-dark dark:text-light text-xs">H</p>
+          </span>
+          <span
+            class="text-xs font-medium flex"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            {{ open() }}<p class="text-dark dark:text-light text-xs">O</p>
+          </span>
+        </div>
+        <div>
+          <span
+            class="text-xs font-medium flex bg-[#f4f4f4ac] dark:bg-[#1b1b1bac] px-2"
+            [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
+            <p class="text-dark dark:text-light text-xs">حجم تقریبی:&nbsp;</p>{{ volume() }}
+          </span>
+        </div>
       </div>
     </div>
    

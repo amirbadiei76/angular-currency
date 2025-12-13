@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CandleData, RawData, VolumeData } from '../../../../interfaces/chart.types';
 import { CurrencyItem } from '../../../../interfaces/data.types';
 import { dollar_unit, toman_unit } from '../../../../constants/Values';
-import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman } from '../../../../utils/CurrencyConverter';
+import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from '../../../../utils/CurrencyConverter';
 import { RequestArrayService } from '../../../../services/request-array.service';
 
 
@@ -35,6 +35,7 @@ export class ChartComponent {
   low = signal<string>('');
   high = signal<string>('');
   open = signal<string>('');
+  volume = signal<string>('');
   isPositive = signal<boolean>(true);
  
   
@@ -67,10 +68,7 @@ export class ChartComponent {
       this.currentUnit()
       this.candlestickSeries?.setData(processedData.candles as any[])
       this.volumeSeries?.setData(processedData.volumes as any[])
-
-      const data2 = processedData.volumes.slice();
-      data2.forEach((volume) => volume.color = '#00d890')
-      this.lineSeries?.setData(data2 as any[]);
+      this.lineSeries?.setData(processedData.lineVolumes as any[]);
     })
   }
 
@@ -393,6 +391,7 @@ export class ChartComponent {
     this.chart.subscribeCrosshairMove(param => {
       if (param.time) {
         const price = param.seriesData.get(this.candlestickSeries!) as any;
+        const currentVolume = param.seriesData.get(this.volumeSeries!) as any;
         if(price) {
           this.currentPrice.set(this.formatPrice(price.close));
           const change = ((price.close - price.open) / price.open) * 100;
@@ -401,6 +400,7 @@ export class ChartComponent {
           this.low.set(commafy(price.low))
           this.open.set(commafy(price.open))
           this.close.set(commafy(price.close))
+          this.volume.set(commafy(trimDecimal(currentVolume.value)))
           this.isPositive.set(change >= 0);
         }
       }
@@ -408,11 +408,11 @@ export class ChartComponent {
 
     // ست کردن مقدار اولیه
     if (data.candles.length > 0) {
-        this.updateHeader(data.candles[data.candles.length - 1]);
+        this.updateHeader(data.candles[data.candles.length - 1], data.volumes[data.volumes.length - 1]);
     }
   }
 
-  updateHeader(priceData: any) {
+  updateHeader(priceData: CandleData, volumeData: VolumeData) {
       this.currentPrice.set(this.formatPrice(priceData.close));
       const change = ((priceData.close - priceData.open) / priceData.open) * 100;
       this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
@@ -420,6 +420,7 @@ export class ChartComponent {
       this.low.set(commafy(priceData.low))
       this.open.set(commafy(priceData.open))
       this.close.set(commafy(priceData.close))
+      this.volume.set(commafy(volumeData.value))
       this.isPositive.set(change >= 0);
   }
 

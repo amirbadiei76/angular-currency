@@ -1,5 +1,6 @@
 import { PriceItem } from "../components/not-shared/currency-item-details/changes-table/changes-table.component";
 import { dollar_unit, toman_unit } from "../constants/Values";
+import { CandleData, VolumeData } from "../interfaces/chart.types";
 import { CurrencyItem, Current } from "../interfaces/data.types";
 import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from "./CurrencyConverter";
 
@@ -8,6 +9,65 @@ export function filterByDays(data: PriceItem[], days: number) {
     const limit = now - days * 24 * 60 * 60 * 1000;
     return data.filter((i) => i.date.getTime() >= limit);
 }
+
+function aggregateNDays(
+    data: CandleData[],
+    window: number
+  ) {
+    const result = []
+  
+    for (let i = 0; i < data.length; i += window) {
+      const slice = data.slice(i, i + window)
+      if (slice.length === 0) continue
+  
+      const open = slice[0].close
+      const close = slice[slice.length - 1].close
+  
+      let high = -Infinity
+      let low = Infinity
+  
+      for (const d of slice) {
+        if (d.high > high) high = d.high
+        if (d.low < low) low = d.low
+      }
+  
+      result.push({
+        time: slice[slice.length - 1].time,
+        open,
+        high,
+        low,
+        close,
+      })
+    }
+  
+    return result
+}
+
+function aggregateLineNDays(
+    data: { time: number; close: number }[],
+    window: number
+  ): VolumeData[] {
+  
+    const result: VolumeData[] = []
+  
+    for (let i = 0; i < data.length; i += window) {
+      const slice = data.slice(i, i + window)
+      if (!slice.length) continue
+  
+      const first = slice[0].close
+      const last = slice[slice.length - 1].close
+  
+      result.push({
+        time: slice[slice.length - 1].time,
+        value: last,
+        color: '#00d890'
+      })
+    }
+  
+    return result
+}
+  
+  
 
 export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Current, unit: number) {
     if (data.length < 2) return null;

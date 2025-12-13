@@ -32,9 +32,10 @@
             <path fill-rule="evenodd" clip-rule="evenodd" d="M6.57337 6.57337C6.30091 6.84583 5.85917 6.84583 5.58671 6.57337L4.92893 5.91559C4.65647 5.64313 4.65647 5.20139 4.92893 4.92893C5.20139 4.65647 5.64313 4.65647 5.91559 4.92893L6.57337 5.58671C6.84583 5.85916 6.84583 6.30091 6.57337 6.57337Z"/>
         </svg>
     </div>
-    <div class="h-full flex items-center gap-6">
-        <nav class="flex">
-            <ol class="flex flex-row-reverse gap-4">
+    <div class="h-full flex items-center gap-10">
+        <i class="block md:hidden bi bi-list text-dark-text dark:text-light-text text-2xl hover:cursor-pointer hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out"></i>
+        <nav class="md:flex hidden">
+            <ol class="flex flex-row-reverse gap-6">
                 <li>
                     <a class="text-sm text-dark-text dark:text-light-text hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out" routerLink="/">صفحه اصلی</a>
                 </li>
@@ -43,7 +44,7 @@
                 </li>
             </ol>
         </nav>
-        <div class="flex items-center h-full gap-2">
+        <div class="hidden md:flex items-center h-full gap-2">
             <h1 class="text-green-btn text-lg tracking-wide">ارزیاب</h1>
             <div class="h-full w-auto py-4.5 ">
                 <img class="h-full object-cover w-full" src="assets/images/arzyab_main.png" alt="logo">

@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ThemeService } from '../../../services/theme.service';
 import { RouterLink } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 export class HeaderComponent {
 
   isDark: boolean = false;
-
+  @Output() menuClick = new EventEmitter<void>();
   themeService: ThemeService;
 
   constructor (private theme: ThemeService) {
@@ -32,6 +32,10 @@ export class HeaderComponent {
 
   ngOnInit() {
     this.themeService.getStringTheme();
+  }
+
+  openMenu() {
+    this.menuClick.emit();
   }
 
   changeTheme() {    

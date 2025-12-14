@@ -1,1 +1,44 @@
-<p>mobile-hamberger-menu works!</p>
+<div
+  class="fixed inset-0 bg-black/40 transition-opacity duration-300 z-[10]"
+  [class.opacity-100]="open"
+  [class.opacity-0]="!open"
+  [class.pointer-events-auto]="open"
+  [class.pointer-events-none]="!open"
+  (click)="closeMenu()">
+</div>
+
+<nav
+  class="fixed text-end py-3.5 px-5 top-0 right-0 h-screen max-w-64 w-full bg-light-text dark:bg-dark-text transform transition-transform duration-300 z-[11]"
+  [class.translate-x-0]="open"
+  [class.translate-x-full]="!open">
+
+  <div class="flex justify-between items-start mb-8">
+    <img class="w-1/5 h-auto object-cover" src="assets/images/arzyab_main.png" alt="logo">
+    
+    <button
+        class="text-2xl focus:outline-none menu-buttons-base"
+        (click)="closeMenu()">
+        <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <ul class="space-y-5">
+    <li>
+      <a
+        routerLink="/"
+        class="menu-item-base block"
+        (click)="closeMenu()">
+        صفحه اصلی
+      </a>
+    </li>
+
+    <li>
+      <a
+        routerLink="/converter"
+        class="menu-item-base block"
+        (click)="closeMenu()">
+        مبدل ارز
+      </a>
+    </li>
+  </ul>
+</nav>

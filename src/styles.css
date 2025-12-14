@@ -182,6 +182,14 @@
     @apply font-normal w-1/3 text-xs text-center leading-[180%]
 }
 
+@utility menu-item-base {
+    @apply text-sm text-dark-text dark:text-light-text hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out
+}
+
+@utility menu-buttons-base {
+    @apply text-dark-text dark:text-light-text text-2xl hover:cursor-pointer hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out
+}
+
 
 .scroll-snap-x {
     scroll-snap-type: x mandatory;

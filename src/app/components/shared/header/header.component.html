@@ -33,14 +33,17 @@
         </svg>
     </div>
     <div class="h-full flex items-center gap-10">
-        <i class="block md:hidden bi bi-list text-dark-text dark:text-light-text text-2xl hover:cursor-pointer hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out"></i>
+        
+        <button (click)="openMenu()" class="menu-buttons-base block md:hidden">
+            <i class="bi bi-list"></i>
+        </button>
         <nav class="md:flex hidden">
             <ol class="flex flex-row-reverse gap-6">
                 <li>
-                    <a class="text-sm text-dark-text dark:text-light-text hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out" routerLink="/">صفحه اصلی</a>
+                    <a class="menu-item-base" routerLink="/">صفحه اصلی</a>
                 </li>
                 <li>
-                    <a class="text-sm text-dark-text dark:text-light-text hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out" routerLink="/converter">مبدل ارز</a>
+                    <a class="menu-item-base" routerLink="/converter">مبدل ارز</a>
                 </li>
             </ol>
         </nav>

@@ -1,8 +1,12 @@
 <div class="relative flex flex-col w-full h-full bg-light2 dark:bg-theme-black rounded-lg overflow-hidden font-sans mb-6 lg:mb-10">
   
-    <div class="{{ chartType() === 0 ? 'opacity-100' : 'opacity-0' }}  {{ historyData ? 'flex' : 'hidden' }} relative items-center justify-between px-4 py-3 border-b border-light-text3 dark:border-dark-text3">
+    <div class="{{ historyData ? 'flex flex-row-reverse' : 'hidden' }} relative px-4 py-3 border-b border-light-text3 dark:border-dark-text3">
      
-      <div class="w-fit flex items-center gap-4">
+      <button title="تغییر بازه" (click)="toggleTimeFrame()" class="hover:cursor-pointer text-dark dark:text-light text-sm flex items-center justify-center gap-2">
+        {{ activeTimeframe() }}
+        <i class="bi bi-calendar4 text-xl"></i>
+      </button>
+      <!-- <div class="w-fit flex items-center gap-4">
        
         <span class="px-1.5 py-0.5 text-xs font-medium text-dark-text4 dark:text-white rounded border border-light-text3 dark:border-dark-text3">
           {{ activeTimeframe() }}
@@ -20,7 +24,7 @@
             {{ tf }}
           </button>  
         }
-      </div>
+      </div> -->
     </div>
   
     <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} rounded-lg z-0 h-75 md:h-94 text-transparent animate-pulse bg-light-border dark:bg-dark-border"></div>
@@ -66,6 +70,20 @@
             [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
             <p class="text-dark dark:text-light text-xs">حجم تقریبی:&nbsp;</p>{{ volume() }}
           </span>
+        </div>
+      </div>
+      <div class="absolute right-0 top-0 {{ timeFramePanelOpened() ? 'flex' : 'hidden' }} flex-col max-h-full items-end gap-0.5 p-1 z-[3] bg-[#f4f4f4ac] dark:bg-[#1b1b1bac]">
+        <div class="flex flex-col justify-end px-3 py-1 gap-2">
+          @for (tf of timeframes; track tf) {
+            <button
+              (click)="changeTimeframe(tf)"
+              class="px-3 py-1 text-xs font-medium cursor-pointer rounded transition-all text-dark-text4 dark:text-white duration-200 ease-in-out"
+              [ngClass]="activeTimeframe() === tf
+                ? ''
+                : ''">
+              {{ tf }}
+            </button>  
+          }
         </div>
       </div>
     </div>

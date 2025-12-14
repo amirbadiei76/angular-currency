@@ -22,7 +22,9 @@ enum SortingType {
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  reqestClass?: RequestArrayService;
+  reqestClass? = inject(RequestArrayService);
+  lastHomeState = inject(HomeStateService);
+  notificationService = inject(NotificationService);
 
   categories = [
     {
@@ -157,14 +159,15 @@ export class HomeComponent {
   priceSortingText: WritableSignal<string> = signal("قیمت")
 
 
-  constructor(private requestArray: RequestArrayService, private lastHomeState: HomeStateService, private notificationService: NotificationService) {
-    this.reqestClass = requestArray;
+  constructor() {
     this.setCurrentCategory(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory);
 
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
       }
+      window.scrollTo(0, 0)
+
 
       if (window.innerWidth <= 624) {
         this.change24hText.set('24h')

@@ -1,11 +1,11 @@
 <article (click)="onSelectItem()" class="min-h-[4.853rem] px-4 sm:px-0 sm:min-h-[5.8rem] relative w-full flex items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border md:hover:bg-light-hover md:hover:dark:bg-dark-hover hover:cursor-pointer">
     <div class="justify-start items-center gap-1.5 w-[20%] hidden md:flex leading-5 font-normal text-sm">
         <i class="bi bi-caret-left-fill text-dark-text dark:text-white font-normal text-xs"></i>
-        <strong class="text-dark-text3 dark:text-light-text3 font-normal text-nowrap line-clamp-1 md:text-xs lg:text-sm">اطلاعات بیشتر</strong>
+        <p class="text-dark-text3 dark:text-light-text3 font-normal text-nowrap line-clamp-1 md:text-xs lg:text-sm">اطلاعات بیشتر</p>
     </div>
     <div class="flex justify-start md:justify-center items-center gap-2 w-[15%]">
-        <strong *ngIf="currencyItem?.groupName !== 'World_Market'" class="font-normal text-xs leading-4.5 {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</strong>
-        <strong *ngIf="currencyItem?.groupName === 'World_Market'" class="font-normal text-xs leading-4.5 {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}{{currencyItem?.lastPriceInfo?.dp}}%</strong>
+        <p *ngIf="currencyItem?.groupName !== 'World_Market'" class="font-normal text-xs leading-4.5 {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</p>
+        <p *ngIf="currencyItem?.groupName === 'World_Market'" class="font-normal text-xs leading-4.5 {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}{{currencyItem?.lastPriceInfo?.dp}}%</p>
     </div>
     <div class="flex flex-col items-end justify-center w-[25%] mr-1 relative">
 
@@ -20,14 +20,14 @@
                 </div>
                 <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
             </div>
-            <strong class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</strong>
+            <p class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</p>
         </div>
     </div>
     <div class="flex justify-end items-start gap-1.5 flex-1">
         <div class="flex flex-1 justify-end pl-0.5 mt-1">
             <div class="flex flex-col items-end justify-start">
-                <span class="text-dark-text2 dark:text-light-text2 order-2 sm:order-1 sm:text-dark sm:dark:text-light rtl w-full text-2xs leading-3 sm:text-sm sm:leading-5 font-bold text-ellipsis line-clamp-1">{{currencyItem?.title}}</span>
-                <span class="text-dark order-1 sm:order-2 mb-1 sm:mt-1 ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal text-xs leading-4.5 md:text-sm md:leading-5 text-ellipsis line-clamp-1 {{currencyItem?.filterName === 'سکه در بورس' ? 'text-right rtl': ''}}">{{currencyItem?.shortedName}}</span>
+                <p class="text-dark-text2 dark:text-light-text2 order-2 sm:order-1 sm:text-dark sm:dark:text-light rtl w-full text-2xs leading-3 sm:text-sm sm:leading-5 font-bold text-ellipsis line-clamp-1">{{currencyItem?.title}}</p>
+                <p class="text-dark order-1 sm:order-2 mb-1 sm:mt-1 ml-1 dark:text-light sm:text-dark-text2 sm:dark:text-light-text2 font-normal text-xs leading-4.5 md:text-sm md:leading-5 text-ellipsis line-clamp-1 {{currencyItem?.filterName === 'سکه در بورس' ? 'text-right rtl': ''}}">{{currencyItem?.shortedName}}</p>
             </div>
         </div>
         <div class="flex gap-0 md:gap-1.5 flex-row sm:flex-col md:flex-row">

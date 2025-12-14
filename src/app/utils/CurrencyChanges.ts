@@ -67,7 +67,6 @@ function aggregateLineNDays(
     return result
 }
   
-  
 
 export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Current, unit: number) {
     if (data.length < 2) return null;

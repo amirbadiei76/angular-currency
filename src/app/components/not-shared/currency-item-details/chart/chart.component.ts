@@ -18,7 +18,8 @@ export class ChartComponent {
   @Input() historyData?: RawData[];
   @Input() item?: CurrencyItem;
   chartType = input(0)
-  currentUnit = input(0)
+  currentUnit = input(0);
+  timeFramePanelOpened = signal(false)
 
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
@@ -39,8 +40,25 @@ export class ChartComponent {
   isPositive = signal<boolean>(true);
  
   
-  timeframes = ['1D', '1W', '1M', '3M', '6M', '1Y'];
-  activeTimeframe = signal<string>('1D');
+  /*  
+  7D / 1D
+  1M / 1D
+  3M / 1W
+  6M / 1W
+  1Y / 1W
+  All / 1M
+  */
+  presets = [
+    { label: '7 روزه', range: '7D', interval: 'Raw' },
+    { label: '1 ماهه', range: '1M', interval: 'Raw' },
+    { label: '3 ماهه', range: '3M', interval: '1W' },
+    { label: '6 ماهه', range: '6M', interval: '1W' },
+    { label: '1 ساله', range: '1Y', interval: '1W' },
+    { label: 'کل تاریخ', range: 'All', interval: '1M' },
+  ];
+  timeRanges = ['پیشفرض', '1 هفته ای', '1 ماهه', '3 ماهه', '6 ماهه', '1 ساله'];
+  timeframes = ['پیشفرض', '1 هفته ای', '1 ماهه', '3 ماهه', '6 ماهه'];
+  activeTimeframe = signal<string>(this.timeframes[0]);
 
   private persianMonths = [
     "ژانویه",
@@ -72,6 +90,10 @@ export class ChartComponent {
     })
   }
 
+  toggleTimeFrame () {
+    this.timeFramePanelOpened.update((opened) => !opened)
+  }
+
   ngOnChanges(): void {
     if (this.historyData && this.chart === null) {
       const processedData = this.parseData(this.historyData as RawData[]);
@@ -86,27 +108,32 @@ export class ChartComponent {
     }
   }
 
-  // filterByDays (data: RawData[]) {
-  //   const now = new Date().getTime();
-  //   let days = 1;
-  //   if (this.activeTimeframe() === '1D') return data;
-  //   else if (this.activeTimeframe() === '1W') days = 7;
-  //   else if (this.activeTimeframe() === '1M') days = 30;
-  //   else if (this.activeTimeframe() === '3M') days = 90;
-  //   else if (this.activeTimeframe() === '6M') days = 180;
-  //   else if (this.activeTimeframe() === '1Y') days = 365;
+  filterByDays (data: RawData[]): RawData[] {
+    const now = new Date().getTime();
+    let days = 0;
+    if (this.activeTimeframe() === this.timeframes[0]) return data;
+    // else if (this.activeTimeframe() === '1W') days = 7;
+    // else if (this.activeTimeframe() === '1M') days = 30;
+    // else if (this.activeTimeframe() === '3M') days = 90;
+    // else if (this.activeTimeframe() === '6M') days = 180;
+    // else if (this.activeTimeframe() === '1Y') days = 365;
     
-  //   const limit = now - days * 24 * 60 * 60 * 1000;
-  //   return data.filter((i) => new Date(i.ts).getTime() >= limit);
-  // }
+    const limit = now - days * 24 * 60 * 60 * 1000;
+    return data.filter((i) => new Date(i.ts).getTime() >= limit);
+  }
+
+  groupByTimeFrame (data: RawData[]): RawData[] {
+    return data;
+  }
 
   parseData(rawData: RawData[]): { candles: CandleData[], volumes: VolumeData[], lineVolumes: VolumeData[] } {
     const sortedData = rawData?.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
-    // const filteredData = this.filterByDays(sortedData);
+    const filteredData = this.filterByDays(sortedData);
+    const groupedData = this.groupByTimeFrame(filteredData);
 
 
     const uniqueMap = new Map();
-    sortedData?.forEach(item => {
+    groupedData?.forEach(item => {
       const dateKey = item.ts.split(' ')[0];
       uniqueMap.set(dateKey, item);
     });
@@ -358,7 +385,6 @@ export class ChartComponent {
     this.candlestickSeries!.setData(data.candles);
 
 
-    // تنظیمات حجم
     this.volumeSeries = this.chart.addSeries(HistogramSeries, {
       priceFormat: { type: 'volume' },
       priceScaleId: '',
@@ -406,7 +432,6 @@ export class ChartComponent {
       }
     });
 
-    // ست کردن مقدار اولیه
     if (data.candles.length > 0) {
         this.updateHeader(data.candles[data.candles.length - 1], data.volumes[data.volumes.length - 1]);
     }
@@ -426,10 +451,8 @@ export class ChartComponent {
 
   changeTimeframe(tf: string) {
     this.activeTimeframe.set(tf);
-    if (this.activeTimeframe() === '1D') {
-      
-    }
     console.log(`Switched to ${tf}`);
+    this.toggleTimeFrame()
   }
 
   formatPrice(price: number): string {

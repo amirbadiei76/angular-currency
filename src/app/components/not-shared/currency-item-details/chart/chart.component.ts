@@ -6,11 +6,29 @@ import { CurrencyItem } from '../../../../interfaces/data.types';
 import { dollar_unit, toman_unit } from '../../../../constants/Values';
 import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from '../../../../utils/CurrencyConverter';
 import { RequestArrayService } from '../../../../services/request-array.service';
+import { parse } from 'node:url';
+import { title } from 'node:process';
+import { TooltipDirective } from '../../../../directives/tooltip.directive';
 
+type RangeKey = '7D' | '1M' | '3M' | '6M' | '1Y' | 'ALL';
+type IntervalKey = 'RAW' | '1W' | '1M';
+
+export interface Preset {
+  key: string;
+  label: string;
+  title: string;
+  range: RangeKey;
+  interval: IntervalKey;
+}
+
+export interface ChartState {
+  range: RangeKey;
+  interval: IntervalKey;
+}
 
 @Component({
   selector: 'app-chart',
-  imports: [CommonModule],
+  imports: [CommonModule, TooltipDirective],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.css'
 })
@@ -38,27 +56,27 @@ export class ChartComponent {
   open = signal<string>('');
   volume = signal<string>('');
   isPositive = signal<boolean>(true);
- 
-  
-  /*  
-  7D / 1D
-  1M / 1D
-  3M / 1W
-  6M / 1W
-  1Y / 1W
-  All / 1M
-  */
-  presets = [
-    { label: '7 روزه', range: '7D', interval: 'Raw' },
-    { label: '1 ماهه', range: '1M', interval: 'Raw' },
-    { label: '3 ماهه', range: '3M', interval: '1W' },
-    { label: '6 ماهه', range: '6M', interval: '1W' },
-    { label: '1 ساله', range: '1Y', interval: '1W' },
-    { label: 'کل تاریخ', range: 'All', interval: '1M' },
+
+  presets: Preset[] = [
+    { key: '7d', label: '۷ روزه', title: '7 روز در بازه 1 روزه', range: '7D', interval: 'RAW' },
+    { key: '1m', label: '۱ ماهه', title: '1 ماهه در بازه 1 روزه', range: '1M', interval: 'RAW' },
+    { key: '3m', label: '۳ ماهه', title: '3 ماهه در بازه یک هفته ای', range: '3M', interval: '1W' },
+    { key: '6m', label: '۶ ماهه', title: '6 ماهه در بازه یک هفته ای', range: '6M', interval: '1W' },
+    { key: '1y', label: '۱ ساله', title: '1 ساله در بازه 1 هفته ای', range: '1Y', interval: '1W' },
+    { key: 'all', label: 'کل تاریخ', title: 'کل تاریخ در بازه 1 ماهه', range: 'ALL', interval: '1M' },
   ];
-  timeRanges = ['پیشفرض', '1 هفته ای', '1 ماهه', '3 ماهه', '6 ماهه', '1 ساله'];
-  timeframes = ['پیشفرض', '1 هفته ای', '1 ماهه', '3 ماهه', '6 ماهه'];
-  activeTimeframe = signal<string>(this.timeframes[0]);
+  INITIAL_PRESET: Preset = {
+    key: 'default',
+    label: 'پیش‌فرض',
+    title: 'پیش‌فرض',
+    range: 'ALL',
+    interval: 'RAW'
+  };
+  
+  state = signal<ChartState>({
+    range: this.INITIAL_PRESET.range,
+    interval: this.INITIAL_PRESET.interval
+  });
 
   private persianMonths = [
     "ژانویه",
@@ -108,28 +126,88 @@ export class ChartComponent {
     }
   }
 
-  filterByDays (data: RawData[]): RawData[] {
-    const now = new Date().getTime();
-    let days = 0;
-    if (this.activeTimeframe() === this.timeframes[0]) return data;
-    // else if (this.activeTimeframe() === '1W') days = 7;
-    // else if (this.activeTimeframe() === '1M') days = 30;
-    // else if (this.activeTimeframe() === '3M') days = 90;
-    // else if (this.activeTimeframe() === '6M') days = 180;
-    // else if (this.activeTimeframe() === '1Y') days = 365;
-    
-    const limit = now - days * 24 * 60 * 60 * 1000;
-    return data.filter((i) => new Date(i.ts).getTime() >= limit);
+  filterByRange(data: RawData[], range: RangeKey): RawData[] {
+    if (range === 'ALL') return data;
+  
+    const now = Date.now();
+    const map: Record<RangeKey, number> = {
+      '7D': 7,
+      '1M': 30,
+      '3M': 90,
+      '6M': 180,
+      '1Y': 365,
+      'ALL': 0
+    };
+  
+    const from = now - map[range] * 24 * 60 * 60 * 1000;
+    console.log(new Date(from), new Date(now))
+    return data.filter(c => new Date(c.ts).getTime() >= from);
   }
 
-  groupByTimeFrame (data: RawData[]): RawData[] {
-    return data;
+  getBucketKey(time: number, interval: IntervalKey): string {
+    const d = new Date(time);
+  
+    if (interval === '1W') {
+      const week = Math.floor(d.getTime() / (7 * 24 * 60 * 60 * 1000));
+      return `W-${week}`;
+    }
+  
+    if (interval === '1M') {
+      return `${d.getFullYear()}-${d.getMonth()}`;
+    }
+  
+    return String(time);
+  }
+
+  aggregateCandles(data: RawData[], interval: IntervalKey): RawData[] {
+  
+    if (interval === 'RAW') return data;
+  
+    const map = new Map<string, RawData>();
+  
+    for (const c of data) {
+      const key = this.getBucketKey(new Date(c.ts).getTime(), interval);
+  
+      if (!map.has(key)) {
+        map.set(key, { ...c });
+        continue;
+      }
+  
+      const agg = map.get(key)!;
+  
+      agg.h = Math.max(parseFloat(agg.h.replaceAll(',', '')), parseFloat(c.h.replaceAll(',', ''))) + '';
+      agg.l = Math.max(parseFloat(agg.l.replaceAll(',', '')), parseFloat(c.l.replaceAll(',', ''))) + '';
+      agg.p = c.p;
+      agg.ts = c.ts;
+    }
+  
+    return Array.from(map.values());
+  }
+
+  applyPreset(data: RawData[], state: ChartState): RawData[] {
+    const ranged = this.filterByRange(data, state.range);
+    return this.aggregateCandles(ranged, state.interval);
+  }
+
+  selectPreset(p: Preset) {
+    this.state.set({
+      range: p.range,
+      interval: p.interval
+    });
+    this.toggleTimeFrame()
+  }
+  
+  resetToRaw() {
+    this.state.set({
+      range: 'ALL',
+      interval: 'RAW'
+    });
+    if (this.timeFramePanelOpened()) this.toggleTimeFrame()
   }
 
   parseData(rawData: RawData[]): { candles: CandleData[], volumes: VolumeData[], lineVolumes: VolumeData[] } {
     const sortedData = rawData?.sort((a, b) => new Date(a.ts).getTime() - new Date(b.ts).getTime());
-    const filteredData = this.filterByDays(sortedData);
-    const groupedData = this.groupByTimeFrame(filteredData);
+    const groupedData = this.applyPreset(sortedData, this.state())
 
 
     const uniqueMap = new Map();
@@ -447,12 +525,6 @@ export class ChartComponent {
       this.close.set(commafy(priceData.close))
       this.volume.set(commafy(volumeData.value))
       this.isPositive.set(change >= 0);
-  }
-
-  changeTimeframe(tf: string) {
-    this.activeTimeframe.set(tf);
-    console.log(`Switched to ${tf}`);
-    this.toggleTimeFrame()
   }
 
   formatPrice(price: number): string {

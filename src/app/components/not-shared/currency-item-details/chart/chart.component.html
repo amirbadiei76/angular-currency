@@ -1,30 +1,17 @@
 <div class="relative flex flex-col w-full h-full bg-light2 dark:bg-theme-black rounded-lg overflow-hidden font-sans mb-6 lg:mb-10">
   
-    <div class="{{ historyData ? 'flex flex-row-reverse' : 'hidden' }} relative px-4 py-3 border-b border-light-text3 dark:border-dark-text3">
-     
-      <button title="تغییر بازه" (click)="toggleTimeFrame()" class="hover:cursor-pointer text-dark dark:text-light text-sm flex items-center justify-center gap-2">
-        {{ activeTimeframe() }}
-        <i class="bi bi-calendar4 text-xl"></i>
+    <div class="{{ historyData ? 'flex flex-row-reverse' : 'hidden' }} gap-4 relative justify-between px-5 py-3 border-b border-light-text3 dark:border-dark-text3">
+
+      <button (click)="toggleTimeFrame()" class="hover:cursor-pointer text-dark-text3 dark:text-light-text3 hover:text-dark hover:dark:text-light duration-300 ease-in-out text-xs md:text-sm flex items-center justify-center gap-2">
+        تغییر بازه (تقویمی)
+        <i class="bi bi-calendar4 text-lg"></i>
       </button>
-      <!-- <div class="w-fit flex items-center gap-4">
-       
-        <span class="px-1.5 py-0.5 text-xs font-medium text-dark-text4 dark:text-white rounded border border-light-text3 dark:border-dark-text3">
-          {{ activeTimeframe() }}
-        </span>
-      </div>
-  
-      <div class="w-fit flex items-center gap-1">
-        @for (tf of timeframes; track tf) {
-          <button
-            (click)="changeTimeframe(tf)"
-            class="px-3 py-1 text-xs font-medium cursor-pointer rounded transition-all text-dark-text4 dark:text-white duration-200 ease-in-out"
-            [ngClass]="activeTimeframe() === tf
-              ? ''
-              : ''">
-            {{ tf }}
-          </button>  
-        }
-      </div> -->
+      
+      <button
+        class="hover:cursor-pointer text-dark-text3 dark:text-light-text3 hover:text-dark hover:dark:text-light duration-300 ease-in-out text-xs md:text-sm flex items-center justify-center gap-2" (click)="resetToRaw()">
+        <i class="bi bi-arrow-counterclockwise text-lg"></i>
+        نمودار پیشفرض
+      </button>
     </div>
   
     <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} rounded-lg z-0 h-75 md:h-94 text-transparent animate-pulse bg-light-border dark:bg-dark-border"></div>
@@ -73,18 +60,18 @@
         </div>
       </div>
       <div class="absolute right-0 top-0 {{ timeFramePanelOpened() ? 'flex' : 'hidden' }} flex-col max-h-full items-end gap-0.5 p-1 z-[3] bg-[#f4f4f4ac] dark:bg-[#1b1b1bac]">
-        <div class="flex flex-col justify-end px-3 py-1 gap-2">
-          @for (tf of timeframes; track tf) {
+        <div class="flex flex-col gap-2 py-2">
+          @for (p of presets; track p.label) {
             <button
-              (click)="changeTimeframe(tf)"
-              class="px-3 py-1 text-xs font-medium cursor-pointer rounded transition-all text-dark-text4 dark:text-white duration-200 ease-in-out"
-              [ngClass]="activeTimeframe() === tf
-                ? ''
-                : ''">
-              {{ tf }}
-            </button>  
+              appTooltip="{{p.title}}"
+              id="preset"
+              class="rtl px-15 hover:cursor-pointer text-sm text-dark-text2 dark:text-light-text2 hover:text-dark hover:dark:text-light duration-300 ease-in-out"
+              (click)="selectPreset(p)">
+              {{ p.label }}
+            </button>
           }
         </div>
+
       </div>
     </div>
    

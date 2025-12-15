@@ -1,10 +1,54 @@
 <main class="min-h-[var(--screen-height-sm)] md:min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-end px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
-    <h2 class="text-dark-text dark:text-light-text text-sm md:text-base">مبدل ارز</h2>
+    
     <div class="lg:flex-row-reverse flex-col flex-1 w-full flex gap-4 h-full">
-        <div class="flex flex-col border border-light-border dark:border-dark-border bg-light-text dark:bg-dark-text rounded-lg lg:flex-none p-4 flex-1">
-            دسته بندی
+        <div class="flex flex-col items-end border border-light-border2 dark:border-dark-border2 rounded-lg lg:flex-none p-4 gap-4 flex-1">
+            <h2 class="text-dark-text dark:text-light-text text-sm md:text-base">مبدل ارز</h2>
+            <div class="relative min-w-60 text-sm">
+                <button
+                    type="button"
+                    (click)="toggleCurrencyTypeDropdown()"
+                    class="w-full flex justify-end items-center
+                        px-6 py-3 rounded-lg border
+                        text-dark-text4 dark:text-white
+                        text-sm font-medium gap-4 hover:cursor-pointer"
+                >
+                    <span class="flex items-end gap-4 max-h-min" >
+                    {{ currencyTypes[currencyType()].title }}
+                    
+                    </span>
+
+                    <svg
+                    class="w-4 h-4 transition-transform"
+                    [class.rotate-180]="currencyDropdownOpen()"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                @if (currencyDropdownOpen()) {
+                    <ul class="absolute z-50 mt-2 w-full rounded-lg text-dark-text4 dark:text-white border">
+                      @for (type of currencyTypes; track type.id) {
+                        <li>
+                          <button
+                            type="button"
+                            (click)="selectCurrencyTypeDropdown(type)"
+                            class="w-full text-right px-4 py-2 text-dark-text4 dark:text-white hover:cursor-pointer"
+                          >
+                            {{ type.title }}
+                          </button>
+                        </li>
+                      }
+                    </ul>
+                }
+            </div>
+            <div class="flex gap-4 items-center justify-end">
+
+            </div>
         </div>
-        <div class="flex flex-col flex-1 border border-light-border dark:border-dark-border bg-light-text dark:bg-dark-text p-4 rounded-lg">
+        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-4 rounded-lg">
     
         </div>
     </div>

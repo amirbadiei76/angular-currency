@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CurrencyItem } from '../../../../interfaces/data.types';
+import { CurrencyItem } from '../../../interfaces/data.types';
 
 @Component({
   selector: 'app-search-item',

@@ -73,7 +73,7 @@ export class TooltipDirective implements OnDestroy {
       'pointer-events-none',
       'opacity-0',
       'transition-opacity',
-      'duration-150'
+      'duration-500'
     ];
 
     classes.forEach(c =>

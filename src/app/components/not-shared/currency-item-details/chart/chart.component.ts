@@ -115,7 +115,7 @@ export class ChartComponent {
   ngOnChanges(): void {
     if (this.historyData && this.chart === null) {
       const processedData = this.parseData(this.historyData as RawData[]);
-      console.log(this.chartType(), this.currentUnit())
+      (this.chartType(), this.currentUnit())
       this.initChart(processedData);
       this.lineSeries?.applyOptions({ visible: false })
     }
@@ -140,7 +140,6 @@ export class ChartComponent {
     };
   
     const from = now - map[range] * 24 * 60 * 60 * 1000;
-    console.log(new Date(from), new Date(now))
     return data.filter(c => new Date(c.ts).getTime() >= from);
   }
 
@@ -449,9 +448,7 @@ export class ChartComponent {
       width: this.chartContainer.nativeElement.clientWidth,
     });
 
-    const timeScale = this.chart.timeScale();
-
-    // تنظیمات کندل‌ها
+    
     this.candlestickSeries = this.chart.addSeries(CandlestickSeries, {
       upColor: '#30a46c',
       downColor: '#ff4245',
@@ -462,6 +459,7 @@ export class ChartComponent {
     });
     this.candlestickSeries!.setData(data.candles);
 
+    const timeScale = this.chart.timeScale();
 
     this.volumeSeries = this.chart.addSeries(HistogramSeries, {
       priceFormat: { type: 'volume' },
@@ -513,17 +511,15 @@ export class ChartComponent {
         const lastPrice = this.candlestickSeries?.data().at(dataLength! - 1) as CandleData;
         const lastVolume = this.volumeSeries?.data().at(dataLength! - 1) as VolumeData;
 
-        console.log(lastPrice, lastVolume)
-
-          this.currentPrice.set(this.formatPrice(lastPrice.close));
-          const change = ((lastPrice.close - lastPrice.open) / lastPrice.open) * 100;
-          this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
-          this.high.set(commafy(lastPrice.high))
-          this.low.set(commafy(lastPrice.low))
-          this.open.set(commafy(lastPrice.open))
-          this.close.set(commafy(lastPrice.close))
-          this.volume.set(commafy(trimDecimal(lastVolume.value)))
-          this.isPositive.set(change >= 0);
+        this.currentPrice.set(this.formatPrice(lastPrice.close));
+        const change = ((lastPrice.close - lastPrice.open) / lastPrice.open) * 100;
+        this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
+        this.high.set(commafy(lastPrice.high))
+        this.low.set(commafy(lastPrice.low))
+        this.open.set(commafy(lastPrice.open))
+        this.close.set(commafy(lastPrice.close))
+        this.volume.set(commafy(trimDecimal(lastVolume.value)))
+        this.isPositive.set(change >= 0);
       }
     });
 

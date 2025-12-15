@@ -60,8 +60,8 @@ export class ChartComponent {
   presets: Preset[] = [
     { key: '7d', label: '۷ روزه', title: '7 روز در بازه 1 روزه', range: '7D', interval: 'RAW' },
     { key: '1m', label: '۱ ماهه', title: '1 ماهه در بازه 1 روزه', range: '1M', interval: 'RAW' },
-    { key: '3m', label: '۳ ماهه', title: '3 ماهه در بازه یک هفته ای', range: '3M', interval: '1W' },
-    { key: '6m', label: '۶ ماهه', title: '6 ماهه در بازه یک هفته ای', range: '6M', interval: '1W' },
+    { key: '3m', label: '۳ ماهه', title: '3 ماهه در بازه 1 هفته ای', range: '3M', interval: '1W' },
+    { key: '6m', label: '۶ ماهه', title: '6 ماهه در بازه 1 هفته ای', range: '6M', interval: '1W' },
     { key: '1y', label: '۱ ساله', title: '1 ساله در بازه 1 هفته ای', range: '1Y', interval: '1W' },
     { key: 'all', label: 'کل تاریخ', title: 'کل تاریخ در بازه 1 ماهه', range: 'ALL', interval: '1M' },
   ];
@@ -494,8 +494,8 @@ export class ChartComponent {
 
     this.chart.subscribeCrosshairMove(param => {
       if (param.time) {
-        const price = param.seriesData.get(this.candlestickSeries!) as any;
-        const currentVolume = param.seriesData.get(this.volumeSeries!) as any;
+        const price = param.seriesData.get(this.candlestickSeries!) as CandleData;
+        const currentVolume = param.seriesData.get(this.volumeSeries!) as VolumeData;
         if(price) {
           this.currentPrice.set(this.formatPrice(price.close));
           const change = ((price.close - price.open) / price.open) * 100;
@@ -507,6 +507,23 @@ export class ChartComponent {
           this.volume.set(commafy(trimDecimal(currentVolume.value)))
           this.isPositive.set(change >= 0);
         }
+      }
+      else {
+        const dataLength = this.candlestickSeries?.data().length;
+        const lastPrice = this.candlestickSeries?.data().at(dataLength! - 1) as CandleData;
+        const lastVolume = this.volumeSeries?.data().at(dataLength! - 1) as VolumeData;
+
+        console.log(lastPrice, lastVolume)
+
+          this.currentPrice.set(this.formatPrice(lastPrice.close));
+          const change = ((lastPrice.close - lastPrice.open) / lastPrice.open) * 100;
+          this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
+          this.high.set(commafy(lastPrice.high))
+          this.low.set(commafy(lastPrice.low))
+          this.open.set(commafy(lastPrice.open))
+          this.close.set(commafy(lastPrice.close))
+          this.volume.set(commafy(trimDecimal(lastVolume.value)))
+          this.isPositive.set(change >= 0);
       }
     });
 

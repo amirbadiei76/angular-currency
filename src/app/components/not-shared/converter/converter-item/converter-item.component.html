@@ -1,0 +1,17 @@
+<div class="flex gap-3">
+    <a class="{{ currencyItem()?.shortedName === 'IRT' ? 'invisible' : '' }}" [routerLink]="['/', currencyItem()?.slugText]">قیمت {{ currencyItem()?.title }}</a>
+    
+    <div class="{{ currencyItem()?.shortedName === 'IRT' ? 'invisible' : '' }}">
+        <p class="font-normal text-sm leading-[180%] {{(currencyItem()?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currencyItem()?.rialChangeState === 'low') ? '-' : '+'}}{{currencyItem()?.rialChanges}}%</p>
+        <p class="dark:text-white text-dark text-sm font-normal leading-[180%] ml-1">{{ currencyItem()?.tomanStringPrice }}</p>
+    </div>
+
+    <div>
+        <p class="font-normal text-xs leading-[180%] {{(currencyItem()?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currencyItem()?.dollarChangeState === 'low') ? '-' : '+'}}{{currencyItem()?.dollarChanges}}%</p>
+        <p class="dark:text-white text-dark leading-[180%] text-xs font-normal align-middle ml-1">{{ currencyItem()?.dollarStringPrice }}</p>
+            
+    </div>
+    <p>{{ currencyItem()?.title }}</p>
+
+    <img class="w-8 h-8 object-cover rounded-full" src="{{ currencyItem()?.img }}" alt="{{ currencyItem()?.title }}">
+</div>

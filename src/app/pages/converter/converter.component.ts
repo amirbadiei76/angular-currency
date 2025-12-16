@@ -2,9 +2,10 @@ import { Component, inject, signal, TemplateRef } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { CurrencyItem } from '../../interfaces/data.types';
 import { filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
-import { Observable } from 'rxjs';
 import { SearchItemComponent } from '../../components/shared/search-item/search-item.component';
 import { FormsModule } from '@angular/forms';
+import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
+import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
 
 export interface ICurrencySelect {
   id: number,
@@ -14,14 +15,15 @@ export interface ICurrencySelect {
 
 @Component({
   selector: 'app-converter',
-  imports: [SearchItemComponent, FormsModule],
+  imports: [SearchItemComponent, CommafyNumberDirective, ConverterItemComponent, FormsModule],
   templateUrl: './converter.component.html',
   styleUrl: './converter.component.css'
 })
 export class ConverterComponent {
   requestArray = inject(RequestArrayService);
 
-  inputValue = signal(1)
+  inputValue = signal(1);
+  convertedValue = signal(1);
 
   mainFromList = signal<CurrencyItem[]>([])
   mainToList = signal<CurrencyItem[]>([])
@@ -70,15 +72,16 @@ export class ConverterComponent {
   toDropdownOpen = signal(false);
   
   constructor() {
-    console.log(this.requestArray)
     if (typeof window !== 'undefined') {      
       window.scrollTo(0, 0)
     }
   }
 
   ngOnInit () {
-    this.initLists(0)
-    this.initFirstValues()
+    if (this.requestArray.mainData) {
+      this.initLists(0)
+      this.initFirstValues()
+    }
   }
 
   initFirstValues () {
@@ -121,8 +124,7 @@ export class ConverterComponent {
   }
 
   onInputChange (event: Event) {
-    // (event.target as HTMLInputElement).value
-    console.log(this.inputValue())
+    console.log((event.target as HTMLInputElement).value)
   }
 
   toggleCurrencyTypeDropdown () {

@@ -10,7 +10,7 @@ import { parse } from 'node:url';
 import { title } from 'node:process';
 import { TooltipDirective } from '../../../../directives/tooltip.directive';
 
-type RangeKey = '7D' | '1M' | '3M' | '6M' | '1Y' | 'ALL';
+type RangeKey = '7D' | '1M' | '3M' | '6M' | '1Y' | 'All';
 type IntervalKey = '1D' | '1W' | '1M';
 
 export interface Preset {
@@ -63,13 +63,13 @@ export class ChartComponent {
     { key: '3m', label: '۳ ماهه', title: '3 ماهه در بازه 1 هفته ای', range: '3M', interval: '1W' },
     { key: '6m', label: '۶ ماهه', title: '6 ماهه در بازه 1 هفته ای', range: '6M', interval: '1W' },
     { key: '1y', label: '۱ ساله', title: '1 ساله در بازه 1 هفته ای', range: '1Y', interval: '1W' },
-    { key: 'all', label: 'کل تاریخ', title: 'کل تاریخ در بازه 1 ماهه', range: 'ALL', interval: '1M' },
+    { key: 'all', label: 'کل تاریخ', title: 'کل تاریخ در بازه 1 ماهه', range: 'All', interval: '1M' },
   ];
   INITIAL_PRESET: Preset = {
     key: 'default',
     label: 'پیش‌فرض',
     title: 'پیش‌فرض',
-    range: 'ALL',
+    range: 'All',
     interval: '1D'
   };
   
@@ -131,7 +131,7 @@ export class ChartComponent {
   }
 
   filterByRange(data: RawData[], range: RangeKey): RawData[] {
-    if (range === 'ALL') return data;
+    if (range === 'All') return data;
   
     const now = Date.now();
     const map: Record<RangeKey, number> = {
@@ -140,7 +140,7 @@ export class ChartComponent {
       '3M': 90,
       '6M': 180,
       '1Y': 365,
-      'ALL': 0
+      'All': 0
     };
   
     const from = now - map[range] * 24 * 60 * 60 * 1000;
@@ -202,7 +202,7 @@ export class ChartComponent {
   
   resetToRaw() {
     this.state.set({
-      range: 'ALL',
+      range: 'All',
       interval: '1D'
     });
     if (this.timeFramePanelOpened()) this.toggleTimeFrame()

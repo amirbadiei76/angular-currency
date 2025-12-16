@@ -3,6 +3,8 @@ import { RequestArrayService } from '../../services/request-array.service';
 import { CurrencyItem } from '../../interfaces/data.types';
 import { filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
 import { Observable } from 'rxjs';
+import { SearchItemComponent } from '../../components/shared/search-item/search-item.component';
+import { FormsModule } from '@angular/forms';
 
 export interface ICurrencySelect {
   id: number,
@@ -12,18 +14,36 @@ export interface ICurrencySelect {
 
 @Component({
   selector: 'app-converter',
-  imports: [],
+  imports: [SearchItemComponent, FormsModule],
   templateUrl: './converter.component.html',
   styleUrl: './converter.component.css'
 })
 export class ConverterComponent {
   requestArray = inject(RequestArrayService);
 
+  inputValue = signal(1)
+
+  mainFromList = signal<CurrencyItem[]>([])
+  mainToList = signal<CurrencyItem[]>([])
+
+  
   currentFromList = signal<CurrencyItem[]>([])
   currentToList = signal<CurrencyItem[]>([])
 
   currencyType = signal(0);
   currencyDropdownOpen = signal(false)
+
+  irItem: CurrencyItem = {
+    title: 'تومان ایران',
+    shortedName: 'IRT',
+    groupName: MAIN_CURRENCY_PREFIX,
+    filterName: filter_main_currencies,
+    historyCallInfo: undefined,
+    id: "200",
+    slugText: 'irt',
+    img: 'assets/images/country-flags/ir.svg',
+    lastPriceInfo: undefined
+  }
 
   currencyTypes: ICurrencySelect[] = [
     {
@@ -43,10 +63,10 @@ export class ConverterComponent {
     },
   ]
 
-  fromIndex = signal(0);
+  fromItem = signal<CurrencyItem>(this.irItem);
   fromDropdownOpen = signal(false);
   
-  toIndex = signal(1);
+  toItem= signal(this.irItem);
   toDropdownOpen = signal(false);
   
   constructor() {
@@ -57,6 +77,13 @@ export class ConverterComponent {
   }
 
   ngOnInit () {
+    this.initLists(0)
+    this.initFirstValues()
+  }
+
+  initFirstValues () {
+    this.fromItem.set(this.mainFromList()[this.currencyType() !== 2 ? 1 : 1])
+    this.toItem.set(this.mainToList()[this.currencyType() !== 2 ? 0 : 1])
   }
 
   selectCurrencyTypeDropdown (item: ICurrencySelect) {
@@ -66,36 +93,84 @@ export class ConverterComponent {
   }
 
   initLists (currentId: number) {
-    const irItem: CurrencyItem = {
-      title: 'تومان ایران',
-      groupName: MAIN_CURRENCY_PREFIX,
-      filterName: filter_main_currencies,
-      historyCallInfo: undefined,
-      id: "200",
-      img: 'assets/images/country-flags/ir.svg',
-      lastPriceInfo: undefined
-    }
     switch (currentId) {
       case 0:
-        const newCurrencyList = [irItem, ...this.requestArray.mainCurrencyList];
+        const newCurrencyList = [this.irItem, ...this.requestArray.mainCurrencyList];
+        this.mainFromList.set(newCurrencyList)
+        this.mainToList.set(newCurrencyList)
         this.currentFromList.set(newCurrencyList)
         this.currentToList.set(newCurrencyList)
         break;
       case 1:
         const cryptoList = [...this.requestArray.cryptoList]
+        this.mainFromList.set(cryptoList)
+        this.mainToList.set(cryptoList)
         this.currentFromList.set(cryptoList)
         this.currentToList.set(cryptoList)
         break;
       case 2:
-        const newCurrencies = [irItem, ...this.requestArray.mainCurrencyList];
+        const newCurrencies = [this.irItem, ...this.requestArray.mainCurrencyList];
         const cryptoItems = [...this.requestArray.cryptoList]
+        this.mainFromList.set(cryptoItems)
         this.currentFromList.set(cryptoItems)
+        this.mainToList.set(newCurrencies)
         this.currentToList.set(newCurrencies)
         break;
     }
+    this.initFirstValues();
+  }
+
+  onInputChange (event: Event) {
+    // (event.target as HTMLInputElement).value
+    console.log(this.inputValue())
   }
 
   toggleCurrencyTypeDropdown () {
     this.currencyDropdownOpen.update((opend) => !opend)
+  }
+
+  toggleFromeDropdown () {
+    this.fromDropdownOpen.update((opened) => !opened)
+  }
+  
+  toggleToDropdown () {
+    this.toDropdownOpen.update((opened) => !opened)
+  }
+
+  swipeCurrencies () {
+    const currentFromItem = this.fromItem()
+    const currentToItem = this.toItem()
+
+    this.fromItem.set(currentToItem)
+    this.toItem.set(currentFromItem)
+  }
+
+  onSelectFromItem (slug: string) {
+    this.fromItem.set(this.currentFromList().find((item) => item.slugText == slug)!)
+    this.toggleFromeDropdown();
+  }
+
+  
+  onSelectToItem (slug: string) {
+    this.toItem.set(this.currentToList().find((item) => item.slugText == slug)!)
+    this.toggleToDropdown();
+  }
+
+  filterFromList(event: Event) {
+    const listToFilter = [...this.mainFromList()]
+    const textToFilter = (event.target as HTMLInputElement).value.toLowerCase();
+    if (textToFilter !== null) {
+      const filteredFromItems = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
+      this.currentFromList.set(filteredFromItems)
+    }
+  }
+  
+  filterToList(event: Event) {
+    const listToFilter = [...this.mainToList()]
+    const textToFilter = (event.target as HTMLInputElement).value.toLowerCase();
+    if (textToFilter !== null) {
+      const filteredFromItems = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
+      this.currentToList.set(filteredFromItems)
+    }
   }
 }

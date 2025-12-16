@@ -77,6 +77,7 @@
     --margin: 2rem;
     --screen-height: calc(100vh - 80px);
     --screen-height-sm: calc(100vh - 119.6px);
+    --input-max-width: calc(50% - 18px - 6px);
 
     &:where(html.dark, html.dark *) {
         --bg-speech: #292a2a;

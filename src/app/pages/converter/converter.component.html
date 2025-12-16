@@ -1,28 +1,30 @@
 <main class="min-h-[var(--screen-height-sm)] md:min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-end px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
     
-    <div class="lg:flex-row-reverse flex-col flex-1 w-full flex gap-4 h-full">
-        <div class="flex flex-col items-end border border-light-border2 dark:border-dark-border2 rounded-lg lg:flex-none p-4 gap-4 flex-1">
-            <h2 class="text-dark-text dark:text-light-text text-sm md:text-base">مبدل ارز</h2>
-            <div class="relative min-w-58 text-sm">
+    <div class="2xl:flex-row-reverse flex-col flex-1 w-full flex gap-4 h-full">
+        <div class="flex flex-col items-end border border-light-border2 dark:border-dark-border2 rounded-lg 2xl:flex-none p-4 gap-4 flex-1">
+            <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">مبدل ارز</h2>
+            <!-- Types -->
+            <div class="relative max-w-[var(--input-max-width)] w-full 2xl:min-w-62 text-sm">
                 <button
                     type="button"
                     (click)="toggleCurrencyTypeDropdown()"
                     class="w-full flex justify-between items-center
-                        px-6 py-3 rounded-lg border outline-0
-                        text-dark-text3 dark:text-light-text3
+                        px-5 py-3.5 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
+                        text-dark-text dark:text-light-text
+                        hover:bg-light-text hover:dark:bg-dark-text
                         text-sm font-medium hover:cursor-pointer"
                 >
-                  <i [class.rotate-180]="currencyDropdownOpen()" class="bi bi-chevron-down transition-transform"></i>
+                  <i [class.rotate-180]="currencyDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
                   <span class="flex items-end gap-4 max-h-min" >{{ currencyTypes[currencyType()].title }}</span>
                 </button>
                 @if (currencyDropdownOpen()) {
-                    <ul class="absolute z-50 mt-2 w-full rounded-lg text-dark-text4 dark:text-white border">
+                    <ul class="absolute z-[3] w-full rounded-lg text-dark-text dark:text-light-text overflow-hidden border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
                       @for (type of currencyTypes; track type.id) {
                         <li>
                           <button
                             type="button"
                             (click)="selectCurrencyTypeDropdown(type)"
-                            class="w-full text-right px-4 py-2.5 text-dark-text4 dark:text-white hover:cursor-pointer"
+                            class="w-full text-right px-4 py-2.5 hover:bg-light-text3 hover:dark:bg-dark-text3 hover:cursor-pointer"
                           >
                             {{ type.title }}
                           </button>
@@ -31,34 +33,91 @@
                     </ul>
                 }
             </div>
-            <div class="flex gap-4 items-center justify-end">
-              <div class="relative min-w-58 text-sm">
+            <div class="flex w-full gap-2 items-center justify-end">
+              <!-- To -->
+              <div class="relative max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
                       type="button"
-                      (click)="toggleCurrencyTypeDropdown()"
+                      (click)="toggleToDropdown()"
                       class="w-full flex justify-between items-center
-                          px-6 py-3 rounded-lg border outline-0
+                          px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
+                          text-dark-text3 dark:text-light-text3
+                          text-sm font-medium hover:bg-light-text hover:dark:bg-dark-text hover:cursor-pointer"
+                  >
+                    <i [class.rotate-180]="toDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
+                    <app-search-item [item]="toItem()" />
+                  </button>
+                  @if (toDropdownOpen()) {
+                    <div class="absolute overflow-hidden flex flex-col z-[2] max-h-60 pt-2.5 w-full rounded-lg text-dark-text3 dark:text-light-text3 border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
+                      
+                      <div class="relative w-full h-10 text-sm leading-10 mb-3 px-5">
+                          <svg
+                              viewBox="0 -0.24 28.423 28.423" class="absolute right-5 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
+                              <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                              <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                          </svg>
+                          <input type="text" (input)="filterToList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ mainToList()[1].faGroupName }}" >
+                      </div>
+
+                      <ul class="flex flex-col scroll-hide overflow-y-scroll">
+                        @for (currentItem of currentToList(); track currentItem.id) {
+                            @if (currentItem.id !== fromItem().id) {
+                              <li class="py-1.5 px-5 hover:bg-light-text3 hover:dark:bg-dark-text3">
+                                <app-search-item (itemSelected)="onSelectToItem($event)" [item]="currentItem" />
+                              </li>
+                            }
+                        }
+                      </ul>
+                    </div>
+                  }
+              </div>
+
+              <button [disabled]="currencyType() == 2" (click)="swipeCurrencies()" class="px-2 py-1 disabled:hover:cursor-not-allowed not-disabled:hover:cursor-pointer not-disabled:hover:bg-light-border not-disabled:dark:hover:bg-dark-border rounded-md text-dark-text3 dark:text-light-text3">
+                <i class="bi bi-arrow-left-right"></i>
+              </button>
+              <!-- From -->
+              <div class="relative max-w-1/2 w-full 2xl:min-w-62 text-sm">
+                  <button
+                      type="button"
+                      (click)="toggleFromeDropdown()"
+                      class="w-full flex justify-between items-center
+                          px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
                           text-dark-text3 dark:text-light-text3
                           text-sm font-medium hover:cursor-pointer"
                   >
-                    <i [class.rotate-180]="currencyDropdownOpen()" class="bi bi-chevron-down transition-transform"></i>
-                    <span class="flex items-end gap-4 max-h-min" >{{ currencyTypes[currencyType()].title }}</span>
+                    <i [class.rotate-180]="fromDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
+                    <app-search-item class="text-dark-text3 dark:text-light-text3" [item]="fromItem()" />
                   </button>
-                  @if (currencyDropdownOpen()) {
-                      <ul class="absolute z-50 mt-2 w-full rounded-lg text-dark-text4 dark:text-white border">
-                        @for (type of currencyTypes; track type.id) {
-                          <li>
-                            <button
-                              type="button"
-                              (click)="selectCurrencyTypeDropdown(type)"
-                              class="w-full text-right px-4 py-2.5 text-dark-text4 dark:text-white hover:cursor-pointer"
-                            >
-                              {{ type.title }}
-                            </button>
-                          </li>
+                  @if (fromDropdownOpen()) {
+                    <div class="absolute overflow-hidden flex flex-col z-[2] max-h-60 pt-2.5 w-full rounded-lg text-dark-text3 dark:text-light-text3 border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
+                      <div class="relative w-full h-10 text-sm leading-10 px-5 mb-3">
+                        <svg
+                            viewBox="0 -0.24 28.423 28.423" class="absolute right-5 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
+                            <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                            <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
+                        </svg>  
+                        <input type="text" (input)="filterFromList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ mainFromList()[1].faGroupName }}" >
+                      </div>
+
+                      <ul class="flex flex-col scroll-hide overflow-y-scroll">
+                        @for (currentItem of currentFromList(); track currentItem.id) {
+                          @if (currentItem.id !== toItem().id) {
+                            <li class="py-1.5 px-5 hover:bg-light-text3 hover:dark:bg-dark-text3">
+                              <app-search-item (itemSelected)="onSelectFromItem($event)" [item]="currentItem" />
+                            </li>
+                          }
                         }
                       </ul>
+                    </div>
                   }
+              </div>
+            </div>
+            <!-- Input -->
+            <div class="w-full text-right">
+              <p class="text-dark-text3 dark:text-light-text3 text-xs md:text-sm mb-2">مقدار مورد نظر را وارد کنید</p>
+              <div class="relative w-full">
+                <p class="absolute left-2 top-1/2 -translate-y-1/2">{{fromItem().shortedName}}</p>
+                <input (input)="onInputChange($event)" [(ngModel)]="inputValue" inputmode="numeric" class="w-full h-full">
               </div>
             </div>
         </div>

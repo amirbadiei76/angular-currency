@@ -34,7 +34,7 @@ export class CurrencyItemComponent {
   }
   
   ngOnInit () {
-    this.priceValue = (this.currencyItem?.unit === toman_unit) ? this.currencyItem.tomanStringPrice : this.currencyItem?.lastPriceInfo.p
+    this.priceValue = (this.currencyItem?.unit === toman_unit) ? this.currencyItem.tomanStringPrice : this.currencyItem?.lastPriceInfo!.p
   }
 
   addToFav(event: MouseEvent) {

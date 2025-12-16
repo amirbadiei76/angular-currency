@@ -55,7 +55,7 @@ export class RequestArrayService {
 
   convertUnitChanges (item: CurrencyItem, current: Current) {
     const dollarChanges = (current.price_dollar_rl?.dt === 'low' ? -1 : 1) * (current.price_dollar_rl?.dp);
-    const itemChanges = (item.lastPriceInfo?.dt === 'low' ? -1 : 1) * (item.lastPriceInfo?.dp)
+    const itemChanges = (item.lastPriceInfo?.dt === 'low' ? -1 : 1) * (item.lastPriceInfo?.dp)!
     if (item.unit === toman_unit) {
         item.rialChangeState = item.lastPriceInfo?.dt
         item.rialChanges = item.lastPriceInfo?.dp + '';
@@ -124,7 +124,7 @@ export class RequestArrayService {
   calculateOtherCurrenccyPrices(list: CurrencyItem[], current: Current, faGroupName: string) {
 
     list.forEach(item => {
-        let priceValue = +(item?.lastPriceInfo?.p.replaceAll(',', ''))
+        let priceValue = +(item?.lastPriceInfo?.p.replaceAll(',', ''))!
         // convert all to rial for real price
         if (item.unit === dollar_unit) {
             let dollarValue = +(current.price_dollar_rl.p.replaceAll(',', ''))

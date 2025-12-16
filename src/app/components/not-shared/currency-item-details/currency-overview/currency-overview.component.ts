@@ -75,11 +75,11 @@ export class CurrencyOverviewComponent {
         else return -1
       }
       
-      const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
-      const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
+      const aValue = (a.lastPriceInfo!.dt === 'high' ? '+' : '-') + a.lastPriceInfo!.dp;
+      const bValue = (b.lastPriceInfo!.dt === 'high' ? '+' : '-') + b.lastPriceInfo!.dp;
 
-      const realAValue = aValue.startsWith('-') ? Number(aValue) : a.lastPriceInfo.dp;
-      const realBValue = bValue.startsWith('-') ? Number(bValue) : b.lastPriceInfo.dp;
+      const realAValue = aValue.startsWith('-') ? Number(aValue) : a.lastPriceInfo!.dp;
+      const realBValue = bValue.startsWith('-') ? Number(bValue) : b.lastPriceInfo!.dp;
       
       if (realAValue > realBValue) return 1
       else return -1
@@ -102,11 +102,11 @@ export class CurrencyOverviewComponent {
         else return 1
       }
 
-      const aValue = (a.lastPriceInfo.dt === 'high' ? '+' : '-') + a.lastPriceInfo.dp;
-      const bValue = (b.lastPriceInfo.dt === 'high' ? '+' : '-') + b.lastPriceInfo.dp;
+      const aValue = (a.lastPriceInfo!.dt === 'high' ? '+' : '-') + a.lastPriceInfo!.dp;
+      const bValue = (b.lastPriceInfo!.dt === 'high' ? '+' : '-') + b.lastPriceInfo!.dp;
 
-      const realAValue = aValue.startsWith('-') ? Number(aValue) : a.lastPriceInfo.dp;
-      const realBValue = bValue.startsWith('-') ? Number(bValue) : b.lastPriceInfo.dp;
+      const realAValue = aValue.startsWith('-') ? Number(aValue) : a.lastPriceInfo!.dp;
+      const realBValue = bValue.startsWith('-') ? Number(bValue) : b.lastPriceInfo!.dp;
       
       if (realAValue > realBValue) return -1
       else return 1

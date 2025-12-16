@@ -173,7 +173,7 @@ export class CurrencyItemDetailsComponent {
   }
 
   initializeChartHistory () {
-    this.currencyItem?.historyCallInfo
+    this.currencyItem?.historyCallInfo!
     .pipe(
       retry({count: Infinity})
     )
@@ -184,9 +184,9 @@ export class CurrencyItemDetailsComponent {
 
   initializeCurrencyInfo (type: number) {
     if (this.currencyItem?.faGroupName === 'بازارهای ارزی') {
-      const maxValue = +(this.currencyItem.lastPriceInfo.h.replaceAll(',', ''));
-      const minValue = +(this.currencyItem.lastPriceInfo.l.replaceAll(',', ''));
-      const currentValue = +(this.currencyItem.lastPriceInfo.p.replaceAll(',', ''));
+      const maxValue = +(this.currencyItem.lastPriceInfo!.h.replaceAll(',', ''));
+      const minValue = +(this.currencyItem.lastPriceInfo!.l.replaceAll(',', ''));
+      const currentValue = +(this.currencyItem.lastPriceInfo!.p.replaceAll(',', ''));
       const percent = (maxValue === minValue) ? 1 : ((currentValue - minValue) / (maxValue - minValue));
 
       this.currentMaxPrice.set(maxValue.toString());
@@ -239,9 +239,9 @@ export class CurrencyItemDetailsComponent {
           this.currentMinPrice.set(commafy(tommanDollarMinValue));
         }
         else if (this.currencyItem?.unit === dollar_unit) {
-          const dollarMaxValue = +(this.currencyItem.lastPriceInfo.h.replaceAll(',', ''));
-          const dollarMinValue = +(this.currencyItem.lastPriceInfo.l.replaceAll(',', ''));
-          const currentValue = +(this.currencyItem.lastPriceInfo.p.replaceAll(',', ''));
+          const dollarMaxValue = +(this.currencyItem.lastPriceInfo!.h.replaceAll(',', ''));
+          const dollarMinValue = +(this.currencyItem.lastPriceInfo!.l.replaceAll(',', ''));
+          const currentValue = +(this.currencyItem.lastPriceInfo!.p.replaceAll(',', ''));
           
           const percent = (dollarMaxValue === dollarMinValue) ? 1 : ((currentValue - dollarMinValue) / (dollarMaxValue - dollarMinValue));
           this.currentPercentMinMax.set(`${trimDecimal(percent * 100)}%`)

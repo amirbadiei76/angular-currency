@@ -11,7 +11,7 @@ import { title } from 'node:process';
 import { TooltipDirective } from '../../../../directives/tooltip.directive';
 
 type RangeKey = '7D' | '1M' | '3M' | '6M' | '1Y' | 'ALL';
-type IntervalKey = 'RAW' | '1W' | '1M';
+type IntervalKey = '1D' | '1W' | '1M';
 
 export interface Preset {
   key: string;
@@ -58,8 +58,8 @@ export class ChartComponent {
   isPositive = signal<boolean>(true);
 
   presets: Preset[] = [
-    { key: '7d', label: '۷ روزه', title: '7 روز در بازه 1 روزه', range: '7D', interval: 'RAW' },
-    { key: '1m', label: '۱ ماهه', title: '1 ماهه در بازه 1 روزه', range: '1M', interval: 'RAW' },
+    { key: '7d', label: '۷ روزه', title: '7 روز در بازه 1 روزه', range: '7D', interval: '1D' },
+    { key: '1m', label: '۱ ماهه', title: '1 ماهه در بازه 1 روزه', range: '1M', interval: '1D' },
     { key: '3m', label: '۳ ماهه', title: '3 ماهه در بازه 1 هفته ای', range: '3M', interval: '1W' },
     { key: '6m', label: '۶ ماهه', title: '6 ماهه در بازه 1 هفته ای', range: '6M', interval: '1W' },
     { key: '1y', label: '۱ ساله', title: '1 ساله در بازه 1 هفته ای', range: '1Y', interval: '1W' },
@@ -70,7 +70,7 @@ export class ChartComponent {
     label: 'پیش‌فرض',
     title: 'پیش‌فرض',
     range: 'ALL',
-    interval: 'RAW'
+    interval: '1D'
   };
   
   state = signal<ChartState>({
@@ -106,6 +106,10 @@ export class ChartComponent {
       this.volumeSeries?.setData(processedData.volumes as any[])
       this.lineSeries?.setData(processedData.lineVolumes as any[]);
     })
+  }
+
+  isPresetActive (p: Preset) {
+    return this.state().interval == p.interval && this.state().range == p.range
   }
 
   toggleTimeFrame () {
@@ -160,7 +164,7 @@ export class ChartComponent {
 
   aggregateCandles(data: RawData[], interval: IntervalKey): RawData[] {
   
-    if (interval === 'RAW') return data;
+    if (interval === '1D') return data;
   
     const map = new Map<string, RawData>();
   
@@ -199,7 +203,7 @@ export class ChartComponent {
   resetToRaw() {
     this.state.set({
       range: 'ALL',
-      interval: 'RAW'
+      interval: '1D'
     });
     if (this.timeFramePanelOpened()) this.toggleTimeFrame()
   }

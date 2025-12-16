@@ -6,7 +6,6 @@ import {
   Renderer2,
   OnDestroy
 } from '@angular/core';
-import { from } from 'rxjs';
 
 @Directive({
   selector: '[appTooltip]',
@@ -89,14 +88,14 @@ export class TooltipDirective implements OnDestroy {
   private setPosition() {
     const hostRect = this.el.nativeElement.getBoundingClientRect();
     const tooltipRect = this.tooltipEl!.getBoundingClientRect();
-    const gap = 8;
+    const gap = 4;
 
     let top = 0;
     let left = 0;
 
     switch (this.tooltipPosition) {
       case 'top':
-        top = hostRect.top - tooltipRect.height;
+        top = hostRect.top - tooltipRect.height - gap;
         left = hostRect.left + (hostRect.width - tooltipRect.width) / 2;
         break;
 

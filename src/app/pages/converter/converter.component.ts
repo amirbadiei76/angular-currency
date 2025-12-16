@@ -1,6 +1,8 @@
 import { Component, inject, signal, TemplateRef } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { CurrencyItem } from '../../interfaces/data.types';
+import { filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
+import { Observable } from 'rxjs';
 
 export interface ICurrencySelect {
   id: number,
@@ -17,8 +19,8 @@ export interface ICurrencySelect {
 export class ConverterComponent {
   requestArray = inject(RequestArrayService);
 
-  currentFromList = signal([])
-  currentToList = signal([])
+  currentFromList = signal<CurrencyItem[]>([])
+  currentToList = signal<CurrencyItem[]>([])
 
   currencyType = signal(0);
   currencyDropdownOpen = signal(false)
@@ -59,22 +61,36 @@ export class ConverterComponent {
 
   selectCurrencyTypeDropdown (item: ICurrencySelect) {
     this.currencyType.set(item.id)
-
+    this.initLists(item.id)
     this.toggleCurrencyTypeDropdown()
   }
 
   initLists (currentId: number) {
+    const irItem: CurrencyItem = {
+      title: 'تومان ایران',
+      groupName: MAIN_CURRENCY_PREFIX,
+      filterName: filter_main_currencies,
+      historyCallInfo: undefined,
+      id: "200",
+      img: 'assets/images/country-flags/ir.svg',
+      lastPriceInfo: undefined
+    }
     switch (currentId) {
       case 0:
-        // this.currentFromList.set(this.requestArray.mainCurrencyList)
+        const newCurrencyList = [irItem, ...this.requestArray.mainCurrencyList];
+        this.currentFromList.set(newCurrencyList)
+        this.currentToList.set(newCurrencyList)
         break;
-
       case 1:
-
+        const cryptoList = [...this.requestArray.cryptoList]
+        this.currentFromList.set(cryptoList)
+        this.currentToList.set(cryptoList)
         break;
-
       case 2:
-
+        const newCurrencies = [irItem, ...this.requestArray.mainCurrencyList];
+        const cryptoItems = [...this.requestArray.cryptoList]
+        this.currentFromList.set(cryptoItems)
+        this.currentToList.set(newCurrencies)
         break;
     }
   }

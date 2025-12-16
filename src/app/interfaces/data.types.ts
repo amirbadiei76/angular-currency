@@ -584,8 +584,8 @@ export interface Price {
 
 export interface CurrencyItem {
     id: string,
-    historyCallInfo: Observable<RawData[]>;
-    lastPriceInfo: Price;
+    historyCallInfo?: Observable<RawData[]>;
+    lastPriceInfo?: Price;
     title: string;
     filterName: string;
     mainTitle?: string;

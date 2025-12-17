@@ -1,7 +1,7 @@
-<main class="min-h-[var(--screen-height-sm)] md:min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-end px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
+<main class="min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-end px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
     
     <div class="2xl:flex-row-reverse flex-col flex-1 w-full flex gap-4 h-full">
-        <div class="flex flex-col h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg 2xl:flex-none p-4 gap-4 flex-1">
+        <div class="flex flex-col h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-4 gap-4 ">
             <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">مبدل ارز</h2>
             <!-- Types -->
             <div class="relative max-w-[var(--input-max-width)] w-full 2xl:min-w-62 text-sm">
@@ -121,7 +121,6 @@
                 <input maxlength="12" (input)="onInputChange($event)" [(ngModel)]="inputValue" type="text" commafyNumber class="leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] rtl pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0">
               </div>
             </div>
-            <button class="bg-green-btn dark:bg-dark-green-text hover:dark:bg-sorting-green-light hover:bg-light-green-text duration-300 text-dark-border2 dark:text-white w-full py-2.5 rounded-lg hover:cursor-pointer">محاسبه</button>
         </div>
         <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-4 rounded-lg">
           <div class="w-full justify-center rtl gap-1 flex">

@@ -29,7 +29,7 @@ export class ConverterComponent {
   @ViewChild('toBtn') toBtn?: ElementRef<HTMLDivElement>
 
   inputValue = signal(1);
-  convertedValue = signal(1);
+  convertedValue = signal('');
 
   mainFromList = signal<CurrencyItem[]>([])
   mainToList = signal<CurrencyItem[]>([])
@@ -50,7 +50,8 @@ export class ConverterComponent {
     id: "200",
     slugText: 'irt',
     img: 'assets/images/country-flags/ir.svg',
-    lastPriceInfo: undefined
+    lastPriceInfo: undefined,
+    realPrice: 1
   }
 
   currencyTypes: ICurrencySelect[] = [
@@ -84,6 +85,8 @@ export class ConverterComponent {
     
     effect(() => {
       if (this.fromDropdownOpen() || this.toDropdownOpen()) this.initLists(this.currencyType())
+      
+      this.calculateOutput()
     })
   }
 
@@ -92,7 +95,7 @@ export class ConverterComponent {
       this.initLists(0)
       this.initFirstValues();
       this.initRialChanges()
-      this.initFirstValues()
+      this.calculateOutput()
     }
   }
 
@@ -170,7 +173,34 @@ export class ConverterComponent {
   }
 
   calculateOutput () {
-    // console.log(this.inputValue())
+    const currentValue = Number(this.inputValue().toString().replace(/,/g, '') || 1);
+    const fromRealValue = this.fromItem().realPrice;
+    const toRealValue = this.toItem().realPrice;
+    if (this.currencyType() === 0) {
+      const outputValue = currentValue * (fromRealValue! / toRealValue!);
+      if (this.toItem().shortedName === 'IRT') {
+        this.convertedValue.set(commafy(outputValue / 10))
+      }
+      else if (this.fromItem().shortedName === 'IRT') {
+        this.convertedValue.set((outputValue / 10).toFixed(9))
+      }
+      else {
+        this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))
+      }
+    }
+    else if (this.currencyType() === 1) {
+      const outputValue = currentValue * (fromRealValue! / toRealValue!);
+      this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))
+    }
+    else if (this.currencyType() === 2) {
+      const outputValue = currentValue * (fromRealValue! / toRealValue!);
+      if (this.toItem().shortedName === 'IRT') {
+        this.convertedValue.set(commafy(outputValue / 10))
+      }
+      else {
+        this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))
+      }
+    }
   }
 
   toggleCurrencyTypeDropdown () {

@@ -19,7 +19,7 @@
         </span>
         <p class="font-normal text-xs md:text-sm leading-[180%] {{(currencyItem()?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currencyItem()?.rialChangeState === 'low') ? '-' : '+'}}{{currencyItem()?.rialChanges}}%</p>
     </div>
-    <div class="flex justify-end col-span-4 gap-2">
+    <div class="flex justify-end items-center col-span-4 gap-2">
         <div class="flex flex-col items-end gap-1">
             <p class="text-dark dark:text-white text-right rtl w-full font-bold text-xs md:text-sm line-clamp-2 text-ellipsis">{{ currencyItem()?.title }}</p>
             <p class="text-dark-text2 dark:text-light-text2 text-right w-full font-normal text-xs">{{ currencyItem()?.shortedName }}</p>

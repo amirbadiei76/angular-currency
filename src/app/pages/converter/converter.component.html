@@ -34,7 +34,7 @@
                     </ul>
                 }
             </div>
-            <div class="flex flex-col md:flex-row w-full h-max gap-2 items-center justify-end">
+            <div class="flex flex-col-reverse md:flex-row w-full h-max gap-2 items-center justify-end">
               <!-- To -->
               <div #toBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
@@ -79,10 +79,10 @@
                 </button>
 
                 <div class="group top-[-0.1rem] left-0 h-full flex justify-center items-start absolute  {{ currencyType() == 2 ? 'visible' : 'invisible' }} "> 
-                    <span class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 h-12 justify-center items-end w-45 top-speech-bubble">
+                    <span class="z-[2] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 h-12 justify-center items-end w-45 top-speech-bubble">
                         <p class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">تبدیل فقط از ارز دیجیتال به ارز پشتیبانی می‌شود</p>
                     </span>
-                    <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                    <i class="hover:cursor-pointer z-[2] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
                 </div>
               </div>
               <!-- From -->
@@ -133,12 +133,16 @@
             </div>
         </div>
         <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit min-h-[286.4px]">
-          <div class="w-full items-center justify-center rtl gap-1 flex pb-2 md:py-3">
-              <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
-              <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
+          <div class="w-full items-center justify-center rtl gap-1 flex xs:flex-row flex-col pb-2 md:py-3">
+              <span class="flex items-center gap-1">
+                <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
+                <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
+              </span>
               <p class="text-dark-text dark:text-light-text text-xs md:text-sm">برابر است با&nbsp;</p>
-              <p commafyNumber class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
-              <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
+              <span class="flex items-center gap-1">
+                <p commafyNumber class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
+                <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
+              </span>
           </div>
           <hr class="border border-light-text4 dark:border-dark-text2">
           <span class="grid grid-cols-12 w-full rtl py-1 md:py-2 mb-2">

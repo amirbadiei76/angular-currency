@@ -88,4 +88,3 @@ export function valueToDollarChanges (itemChanges: number, dollarChanges: number
 export function valueToRialChanges (itemChanges: number, dollarChanges: number) {
     return (((1 + itemChanges) * (1 + dollarChanges)) + 1)
 }
-  

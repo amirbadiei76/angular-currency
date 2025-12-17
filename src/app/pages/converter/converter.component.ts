@@ -8,6 +8,7 @@ import { CommafyNumberDirective } from '../../directives/commafy-number.directiv
 import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
 import { fromEvent } from 'rxjs';
 import { commafy, trimDecimal, valueToDollarChanges } from '../../utils/CurrencyConverter';
+import { ConverterItemSkeletonComponent } from '../../components/not-shared/converter/converter-item-skeleton/converter-item-skeleton.component';
 
 export interface ICurrencySelect {
   id: number,
@@ -17,7 +18,7 @@ export interface ICurrencySelect {
 
 @Component({
   selector: 'app-converter',
-  imports: [SearchItemComponent, CommafyNumberDirective, ConverterItemComponent, FormsModule],
+  imports: [SearchItemComponent, CommafyNumberDirective, ConverterItemComponent, ConverterItemSkeletonComponent, FormsModule],
   templateUrl: './converter.component.html',
   styleUrl: './converter.component.css'
 })
@@ -93,9 +94,9 @@ export class ConverterComponent {
   ngOnInit () {
     if (this.requestArray.mainData) {
       this.initLists(0)
+      this.initRialChanges();
       this.initFirstValues();
-      this.initRialChanges()
-      this.calculateOutput()
+      this.calculateOutput();
     }
   }
 

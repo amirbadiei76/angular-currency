@@ -39,14 +39,18 @@
               <div #toBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
                     type="button"
+                    [disabled]="mainFromList().length === 0"
                     (click)="toggleToDropdown()"
                     class="w-full flex justify-between items-center
                         px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
                         text-dark-text3 dark:text-light-text3
-                        text-sm font-medium hover:bg-light-text hover:dark:bg-dark-text hover:cursor-pointer"
+                        text-sm font-medium hover:bg-light-text hover:dark:bg-dark-text hover:cursor-pointer
+                        {{ mainFromList().length === 0 ? 'min-h-[49.6px] animate-pulse bg-light-border dark:bg-dark-border' : ''}}"
                   >
                     <i [class.rotate-180]="toDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
-                    <app-search-item [item]="toItem()" />
+                    @if (mainFromList().length) {
+                      <app-search-item [item]="toItem()" />
+                    }
                   </button>
                   @if (toDropdownOpen()) {
                     <div class="absolute overflow-hidden flex flex-col z-[2] max-h-64 pt-2.5 w-full rounded-lg text-dark-text3 dark:text-light-text3 border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
@@ -89,15 +93,19 @@
               <div #fromBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
                       type="button"
+                      [disabled]="mainFromList().length === 0"
                       (click)="toggleFromeDropdown()"
                       class="w-full flex justify-between items-center
                           px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
                           text-dark-text3 dark:text-light-text3
                           hover:bg-light-text hover:dark:bg-dark-text
-                          text-sm font-medium hover:cursor-pointer"
+                          text-sm font-medium hover:cursor-pointer
+                          {{ mainFromList().length === 0 ? 'min-h-[49.6px] animate-pulse bg-light-border dark:bg-dark-border' : ''}}"
                   >
                     <i [class.rotate-180]="fromDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
-                    <app-search-item class="text-dark-text3 dark:text-light-text3" [item]="fromItem()" />
+                    @if (mainFromList().length) {
+                      <app-search-item [item]="fromItem()" />
+                    }
                   </button>
                   @if (fromDropdownOpen()) {
                     <div class="absolute overflow-hidden flex flex-col z-[2] max-h-64 pt-2.5 w-full rounded-lg text-dark-text3 dark:text-light-text3 border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
@@ -128,20 +136,30 @@
               <p class="text-dark-text3 dark:text-light-text3 text-xs md:text-sm mb-3">مقدار مورد نظر را وارد کنید</p>
               <div class="relative w-full">
                 <p class="leading-[180%] absolute left-5 top-1/2 -translate-y-1/2 text-dark-text dark:text-light-text text-xs md:text-sm">{{fromItem().shortedName}}</p>
-                <input maxlength="13" (input)="onInputChange($event)" [(ngModel)]="inputValue" type="text" commafyNumber class="leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] rtl pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0">
+                <input maxlength="16" (input)="onInputChange($event)" [(ngModel)]="inputValue" type="text" commafyNumber class="focus:border-green-btn transition duration-300 ease-out leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] rtl pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0">
               </div>
             </div>
         </div>
         <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit min-h-[286.4px]">
           <div class="w-full items-center justify-center rtl gap-1 flex xs:flex-row flex-col pb-2 md:py-3">
               <span class="flex items-center gap-1">
-                <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
-                <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
+                @if (mainFromList().length) {
+                  <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
+                }
+                <span class="font-bold ext-sm md:text-base rounded-lg text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
+                @if (mainFromList().length) {
+                  <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
+                }
               </span>
               <p class="text-dark-text dark:text-light-text text-xs md:text-sm">برابر است با&nbsp;</p>
               <span class="flex items-center gap-1">
-                <p commafyNumber class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
-                <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
+                @if (mainFromList().length) {
+                  <p class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
+                }
+                <span class="font-bold ext-sm md:text-base rounded-lg text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
+                @if (mainFromList().length) {
+                  <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
+                }
               </span>
           </div>
           <hr class="border border-light-text4 dark:border-dark-text2">
@@ -150,8 +168,12 @@
             <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-4 md:col-span-3">قیمت تومانی</p>
             <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-3">قیمت دلاری</p>
           </span>
-          <app-converter-item class="w-full mb-1" [currencyItem]="fromItem()" />
-          <app-converter-item class="w-full" [currencyItem]="toItem()" />
+          @if (mainFromList().length) {
+            <app-converter-item class="w-full mb-1" [currencyItem]="fromItem()" />
+            <app-converter-item class="w-full" [currencyItem]="toItem()" />
+          }
+          <app-converter-item-skeleton class="w-full mb-1 z-[3] {{ mainFromList().length ? 'hidden' : 'block' }}" />
+          <app-converter-item-skeleton class="w-full z-[3] {{ mainFromList().length ? 'hidden' : 'block' }}" />
         </div>
     </div>
 </main>

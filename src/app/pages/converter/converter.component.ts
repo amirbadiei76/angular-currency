@@ -1,4 +1,4 @@
-import { Component, inject, signal, TemplateRef } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, TemplateRef, ViewChild } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { CurrencyItem } from '../../interfaces/data.types';
 import { filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
@@ -6,6 +6,8 @@ import { SearchItemComponent } from '../../components/shared/search-item/search-
 import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
 import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
+import { fromEvent } from 'rxjs';
+import { commafy, trimDecimal, valueToDollarChanges } from '../../utils/CurrencyConverter';
 
 export interface ICurrencySelect {
   id: number,
@@ -21,6 +23,10 @@ export interface ICurrencySelect {
 })
 export class ConverterComponent {
   requestArray = inject(RequestArrayService);
+
+  @ViewChild('typesBtn') typesBtn?: ElementRef<HTMLDivElement>
+  @ViewChild('fromBtn') fromBtn?: ElementRef<HTMLDivElement>
+  @ViewChild('toBtn') toBtn?: ElementRef<HTMLDivElement>
 
   inputValue = signal(1);
   convertedValue = signal(1);
@@ -75,12 +81,46 @@ export class ConverterComponent {
     if (typeof window !== 'undefined') {      
       window.scrollTo(0, 0)
     }
+    
+    effect(() => {
+      if (this.fromDropdownOpen() || this.toDropdownOpen()) this.initLists(this.currencyType())
+    })
   }
 
   ngOnInit () {
     if (this.requestArray.mainData) {
       this.initLists(0)
+      this.initFirstValues();
+      this.initRialChanges()
       this.initFirstValues()
+    }
+  }
+
+  initRialChanges () {
+    const dollarChanges = (this.requestArray.mainData?.current.price_dollar_rl?.dt === 'low' ? -1 : 1) * (this.requestArray?.mainData?.current.price_dollar_rl?.dp!);
+    const dollarValue = +(this.requestArray.mainData?.current?.price_dollar_rl?.p!.replaceAll(',', '')!);
+    const mainDollarValue = (1/dollarValue).toFixed(8)
+    const dollarChangeState = valueToDollarChanges(0, dollarChanges);
+    
+    this.irItem.dollarChangeState = dollarChangeState >= 0 ? 'high' : 'low';
+    this.irItem.dollarChanges = trimDecimal(Math.abs(dollarChangeState)) + '';
+    this.irItem.dollarStringPrice = mainDollarValue;
+  }
+
+  ngAfterViewInit () {
+    if (typeof document !== 'undefined') {
+      fromEvent<MouseEvent>(document, 'click')
+      .subscribe((event) => {
+        if (!this.typesBtn?.nativeElement.contains(event.target as Node)) {
+          this.currencyDropdownOpen.set(false)
+        }
+        if (!this.fromBtn?.nativeElement.contains(event.target as Node)) {
+          this.fromDropdownOpen.set(false)
+        }
+        if (!this.toBtn?.nativeElement.contains(event.target as Node)) {
+          this.toDropdownOpen.set(false)
+        }
+      })
     }
   }
 
@@ -92,6 +132,7 @@ export class ConverterComponent {
   selectCurrencyTypeDropdown (item: ICurrencySelect) {
     this.currencyType.set(item.id)
     this.initLists(item.id)
+    this.initFirstValues()
     this.toggleCurrencyTypeDropdown()
   }
 
@@ -120,11 +161,16 @@ export class ConverterComponent {
         this.currentToList.set(newCurrencies)
         break;
     }
-    this.initFirstValues();
   }
 
+
+
   onInputChange (event: Event) {
-    console.log((event.target as HTMLInputElement).value)
+    this.calculateOutput()
+  }
+
+  calculateOutput () {
+    // console.log(this.inputValue())
   }
 
   toggleCurrencyTypeDropdown () {
@@ -150,12 +196,14 @@ export class ConverterComponent {
   onSelectFromItem (slug: string) {
     this.fromItem.set(this.currentFromList().find((item) => item.slugText == slug)!)
     this.toggleFromeDropdown();
+    this.initLists(this.currencyType())
   }
 
   
   onSelectToItem (slug: string) {
     this.toItem.set(this.currentToList().find((item) => item.slugText == slug)!)
     this.toggleToDropdown();
+    this.initLists(this.currencyType())
   }
 
   filterFromList(event: Event) {

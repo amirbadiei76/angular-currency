@@ -1,10 +1,10 @@
-<main class="min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-end px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
+<main class="min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-center px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
     
-    <div class="2xl:flex-row-reverse flex-col flex-1 w-full flex gap-4 h-full">
-        <div class="flex flex-col h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-4 gap-4">
+    <div class="2xl:flex-row-reverse flex-col max-w-[1440px] flex-1 w-full flex gap-4 h-full">
+        <div class="flex flex-col h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-2 md:p-4 gap-3 md:gap-4">
             <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">مبدل ارز</h2>
             <!-- Types -->
-            <div class="relative max-w-[var(--input-max-width)] w-full 2xl:min-w-62 text-sm">
+            <div #typesBtn class="relative md:max-w-[var(--input-max-width)] w-full 2xl:min-w-62 text-sm">
                 <button
                     type="button"
                     (click)="toggleCurrencyTypeDropdown()"
@@ -22,6 +22,7 @@
                       @for (type of currencyTypes; track type.id) {
                         <li>
                           <button
+                            #fromBtn
                             type="button"
                             (click)="selectCurrencyTypeDropdown(type)"
                             class="w-full text-right px-4 py-2.5 hover:bg-light-text3 hover:dark:bg-dark-border2 hover:cursor-pointer"
@@ -33,16 +34,16 @@
                     </ul>
                 }
             </div>
-            <div class="flex w-full h-max gap-2 items-center justify-end">
+            <div class="flex flex-col md:flex-row w-full h-max gap-2 items-center justify-end">
               <!-- To -->
-              <div class="relative max-w-1/2 w-full 2xl:min-w-62 text-sm">
+              <div #toBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
-                      type="button"
-                      (click)="toggleToDropdown()"
-                      class="w-full flex justify-between items-center
-                          px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
-                          text-dark-text3 dark:text-light-text3
-                          text-sm font-medium hover:bg-light-text hover:dark:bg-dark-text hover:cursor-pointer"
+                    type="button"
+                    (click)="toggleToDropdown()"
+                    class="w-full flex justify-between items-center
+                        px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
+                        text-dark-text3 dark:text-light-text3
+                        text-sm font-medium hover:bg-light-text hover:dark:bg-dark-text hover:cursor-pointer"
                   >
                     <i [class.rotate-180]="toDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
                     <app-search-item [item]="toItem()" />
@@ -62,8 +63,8 @@
                       <ul class="flex flex-col scroll-hide overflow-y-scroll">
                         @for (currentItem of currentToList(); track currentItem.id) {
                             @if (currentItem.id !== fromItem().id) {
-                              <li class="py-1.5 px-5 hover:bg-light-text3 hover:dark:bg-dark-border2">
-                                <app-search-item (itemSelected)="onSelectToItem($event)" [item]="currentItem" />
+                              <li (click)="onSelectToItem(currentItem?.slugText!)" class="py-1.5 hover:cursor-pointer px-5 hover:bg-light-text3 hover:dark:bg-dark-border2">
+                                <app-search-item [item]="currentItem" />
                               </li>
                             }
                         }
@@ -73,7 +74,7 @@
               </div>
 
               <div class="relative h-full py-2">
-                <button [disabled]="currencyType() == 2" (click)="swipeCurrencies()" class="px-2 h-full py-1 {{ currencyType() == 2 ? 'opacity-30' : 'opacity-100' }} disabled:pointer-events-none not-disabled:hover:cursor-pointer not-disabled:hover:bg-light-text3 not-disabled:hover:dark:bg-dark-border2 rounded-md text-dark-text3 dark:text-light-text3">
+                <button [disabled]="currencyType() == 2" (click)="swipeCurrencies()" class="px-2 h-full py-1 {{ currencyType() == 2 ? 'opacity-30' : 'opacity-100' }} disabled:pointer-events-none not-disabled:hover:cursor-pointer md:rotate-0 rotate-90 not-disabled:hover:bg-light-text3 not-disabled:hover:dark:bg-dark-border2 rounded-md text-dark-text3 dark:text-light-text3">
                   <i class="bi bi-arrow-left-right"></i>
                 </button>
 
@@ -85,7 +86,7 @@
                 </div>
               </div>
               <!-- From -->
-              <div class="relative max-w-1/2 w-full 2xl:min-w-62 text-sm">
+              <div #fromBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
                       type="button"
                       (click)="toggleFromeDropdown()"
@@ -112,8 +113,8 @@
                       <ul class="flex flex-col scroll-hide overflow-y-scroll">
                         @for (currentItem of currentFromList(); track currentItem.id) {
                           @if (currentItem.id !== toItem().id) {
-                            <li class="py-1.5 px-5 hover:bg-light-text3 hover:dark:bg-dark-border2">
-                              <app-search-item (itemSelected)="onSelectFromItem($event)" [item]="currentItem" />
+                            <li (click)="onSelectFromItem(currentItem?.slugText!)" class="py-1.5 px-5 hover:cursor-pointer hover:bg-light-text3 hover:dark:bg-dark-border2">
+                              <app-search-item [item]="currentItem" />
                             </li>
                           }
                         }
@@ -127,11 +128,11 @@
               <p class="text-dark-text3 dark:text-light-text3 text-xs md:text-sm mb-3">مقدار مورد نظر را وارد کنید</p>
               <div class="relative w-full">
                 <p class="leading-[180%] absolute left-5 top-1/2 -translate-y-1/2 text-dark-text dark:text-light-text text-xs md:text-sm">{{fromItem().shortedName}}</p>
-                <input maxlength="12" (input)="onInputChange($event)" [(ngModel)]="inputValue" type="text" commafyNumber class="leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] rtl pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0">
+                <input maxlength="13" (input)="onInputChange($event)" [(ngModel)]="inputValue" type="text" commafyNumber class="leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] rtl pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0">
               </div>
             </div>
         </div>
-        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-4 rounded-lg leading-[180%]">
+        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit min-h-[286.4px]">
           <div class="w-full items-center justify-center rtl gap-1 flex pb-2 md:py-3">
               <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
               <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
@@ -140,12 +141,12 @@
               <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
           </div>
           <hr class="border border-light-text4 dark:border-dark-text2">
-          <span class="flex w-full rtl">
-            <p>عنوان</p>
-            <p>قیمت تومانی</p>
-            <p>قیمت دلاری</p>
+          <span class="grid grid-cols-12 w-full rtl py-1 md:py-2 mb-2">
+            <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-4">عنوان</p>
+            <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-4 md:col-span-3">قیمت تومانی</p>
+            <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-3">قیمت دلاری</p>
           </span>
-          <app-converter-item class="w-full" [currencyItem]="fromItem()" />
+          <app-converter-item class="w-full mb-1" [currencyItem]="fromItem()" />
           <app-converter-item class="w-full" [currencyItem]="toItem()" />
         </div>
     </div>

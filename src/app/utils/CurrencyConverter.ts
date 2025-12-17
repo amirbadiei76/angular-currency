@@ -80,4 +80,12 @@ export function normalizeValue (high: number, low: number, open: number, close: 
   
     return Math.min(normalized, MAX_SAFE_VOLUME);
 }
+
+export function valueToDollarChanges (itemChanges: number, dollarChanges: number) {
+    return (((1 + itemChanges) / (1 + dollarChanges)) - 1)
+}
+
+export function valueToRialChanges (itemChanges: number, dollarChanges: number) {
+    return (((1 + itemChanges) * (1 + dollarChanges)) + 1)
+}
   

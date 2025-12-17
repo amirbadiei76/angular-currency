@@ -1,7 +1,7 @@
 <main class="min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-end px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
     
     <div class="2xl:flex-row-reverse flex-col flex-1 w-full flex gap-4 h-full">
-        <div class="flex flex-col h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-4 gap-4 ">
+        <div class="flex flex-col h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-4 gap-4">
             <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">مبدل ارز</h2>
             <!-- Types -->
             <div class="relative max-w-[var(--input-max-width)] w-full 2xl:min-w-62 text-sm">
@@ -33,7 +33,7 @@
                     </ul>
                 }
             </div>
-            <div class="flex w-full gap-2 items-center justify-end">
+            <div class="flex w-full h-max gap-2 items-center justify-end">
               <!-- To -->
               <div class="relative max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
@@ -72,9 +72,18 @@
                   }
               </div>
 
-              <button [disabled]="currencyType() == 2" (click)="swipeCurrencies()" class="px-2 py-1 disabled:hover:cursor-not-allowed not-disabled:hover:cursor-pointer not-disabled:hover:bg-light-text3 not-disabled:hover:dark:bg-dark-border2 rounded-md text-dark-text3 dark:text-light-text3">
-                <i class="bi bi-arrow-left-right"></i>
-              </button>
+              <div class="relative h-full py-2">
+                <button [disabled]="currencyType() == 2" (click)="swipeCurrencies()" class="px-2 h-full py-1 {{ currencyType() == 2 ? 'opacity-30' : 'opacity-100' }} disabled:pointer-events-none not-disabled:hover:cursor-pointer not-disabled:hover:bg-light-text3 not-disabled:hover:dark:bg-dark-border2 rounded-md text-dark-text3 dark:text-light-text3">
+                  <i class="bi bi-arrow-left-right"></i>
+                </button>
+
+                <div class="group top-[-0.1rem] left-0 h-full flex justify-center items-start absolute  {{ currencyType() == 2 ? 'visible' : 'invisible' }} "> 
+                    <span class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 h-12 justify-center items-end w-45 top-speech-bubble">
+                        <p class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">تبدیل فقط از ارز دیجیتال به ارز پشتیبانی می‌شود</p>
+                    </span>
+                    <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                </div>
+              </div>
               <!-- From -->
               <div class="relative max-w-1/2 w-full 2xl:min-w-62 text-sm">
                   <button
@@ -122,15 +131,15 @@
               </div>
             </div>
         </div>
-        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-4 rounded-lg">
-          <div class="w-full justify-center rtl gap-1 flex">
-              <p>{{ inputValue() }}</p>
-              <p>{{ fromItem().shortedName }}</p>
-              <p>برابر است با&nbsp;</p>
-              <p commafyNumber >{{ convertedValue() }}</p>
-              <p>{{ toItem().shortedName }}</p>
+        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-4 rounded-lg leading-[180%]">
+          <div class="w-full items-center justify-center rtl gap-1 flex pb-2 md:py-3">
+              <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
+              <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
+              <p class="text-dark-text dark:text-light-text text-xs md:text-sm">برابر است با&nbsp;</p>
+              <p commafyNumber class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
+              <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
           </div>
-          <hr>
+          <hr class="border border-light-text4 dark:border-dark-text2">
           <span class="flex w-full rtl">
             <p>عنوان</p>
             <p>قیمت تومانی</p>

@@ -9,6 +9,7 @@ import { RequestArrayService } from '../../../../services/request-array.service'
 import { parse } from 'node:url';
 import { title } from 'node:process';
 import { TooltipDirective } from '../../../../directives/tooltip.directive';
+import { fromEvent } from 'rxjs';
 
 type RangeKey = '7D' | '1M' | '3M' | '6M' | '1Y' | 'All';
 type IntervalKey = '1D' | '1W' | '1M';
@@ -546,6 +547,15 @@ export class ChartComponent {
 
   formatPrice(price: number): string {
     return price.toLocaleString('en-US');
+  }
+
+  ngAfterViewInit () {
+    if (typeof window !== 'undefined') {
+      fromEvent(window, 'resize')
+      .subscribe((event) => {
+          this.timeFramePanelOpened.set(false)
+      })
+    }
   }
 
   ngOnDestroy(): void {

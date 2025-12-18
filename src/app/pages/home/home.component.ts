@@ -1,11 +1,11 @@
-import { Component, ElementRef, HostListener, inject, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { Component, ElementRef, inject, signal, ViewChild, WritableSignal } from '@angular/core';
 import { Currencies, CurrencyItem } from '../../interfaces/data.types';
 import { CurrencyItemComponent } from '../../components/not-shared/home/currency-item/currency-item.component';
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../../constants/Values';
 import { StarIconComponent } from '../../components/shared/star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
-import { fromEvent, single, Subject, BehaviorSubject, of, timer } from 'rxjs';
-import { concatMap, debounceTime, distinctUntilChanged, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators'
+import { fromEvent, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators'
 import { RequestArrayService } from '../../services/request-array.service';
 import { EmptyItemComponent } from '../../components/not-shared/home/empty-item/empty-item.component';
 import { HomeStateService } from '../../services/home-state.service';
@@ -549,6 +549,12 @@ export class HomeComponent {
           this.searchInput?.nativeElement.classList.add('dark:border-dark-text2');
         }
       })
+
+      fromEvent(window, 'resize')
+      .subscribe((event) => {
+        this.checkSubCategoryScrollPosition()
+        this.checkCategoryScrollPosition()
+      })
       
     }
     this.checkSubCategoryScrollPosition();
@@ -593,11 +599,5 @@ export class HomeComponent {
     this.categoryScrollValue.set(scrollLeft);
     this.showRightCategoryArrow.set(currentScroll > 5)
     this.showLeftCategoryArrow.set(currentScroll < (maxScroll - 5))
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
-    this.checkSubCategoryScrollPosition()
-    this.checkCategoryScrollPosition()
   }
 }

@@ -4,8 +4,10 @@ import {
   HostListener,
   Input,
   Renderer2,
-  OnDestroy
+  OnDestroy,
+  inject
 } from '@angular/core';
+import { fromEvent } from 'rxjs';
 
 @Directive({
   selector: '[appTooltip]',
@@ -17,30 +19,32 @@ export class TooltipDirective implements OnDestroy {
 
   private tooltipEl?: HTMLElement;
 
-  constructor(
-    private el: ElementRef,
-    private renderer: Renderer2
-  ) {}
+  renderer = inject(Renderer2)
+  el = inject(ElementRef);
 
 
-  @HostListener('mouseenter')
-  onMouseEnter() {
-    if (this.tooltipEl) return;
+  ngOnInit () {
+    if (typeof window !== 'undefined' && this.el.nativeElement) {
+      fromEvent(this.el.nativeElement, 'mouseleave')
+      .subscribe((event) => {
+        this.destroyTooltip();
+      })
 
-    this.tooltipEl = this.renderer.createElement('span');
-    this.renderer.appendChild(
-      this.tooltipEl,
-      this.renderer.createText(this.text)
-    );
+      fromEvent(this.el.nativeElement, 'mouseenter')
+      .subscribe((event) => {
+        if (this.tooltipEl) return;
 
-    this.renderer.appendChild(document.body, this.tooltipEl);
-    this.applyBaseStyles();
-    this.setPosition();
-  }
-
-  @HostListener('mouseleave')
-  onMouseLeave() {
-    this.destroyTooltip();
+        this.tooltipEl = this.renderer.createElement('span');
+        this.renderer.appendChild(
+          this.tooltipEl,
+          this.renderer.createText(this.text)
+        );
+    
+        this.renderer.appendChild(document.body, this.tooltipEl);
+        this.applyBaseStyles();
+        this.setPosition();
+      })
+    }
   }
 
   ngOnDestroy() {

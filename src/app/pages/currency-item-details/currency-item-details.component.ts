@@ -1,7 +1,7 @@
-import { Component, ElementRef, HostListener, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../components/shared/breadcrumb/breadcrumb.component';
-import { CurrencyItem, Price } from '../../interfaces/data.types';
+import { CurrencyItem } from '../../interfaces/data.types';
 import { RequestArrayService } from '../../services/request-array.service';
 import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
 import { NotificationService } from '../../services/notification.service';
@@ -66,12 +66,15 @@ export class CurrencyItemDetailsComponent {
     this.itemList?.nativeElement.classList.add('hidden')
   }
 
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clicked = event.target as Node;
-    if (!this.inputContainer?.nativeElement.contains(clicked)) {
-      this.inputBlur()
+  ngAfterViewInit () {
+    if (typeof document !== 'undefined') {
+      fromEvent(document, 'click')
+      .subscribe((event) => {
+        const clicked = event.target as Node;
+        if (!this.inputContainer?.nativeElement.contains(clicked)) {
+          this.inputBlur()
+        }
+      })
     }
   }
 
@@ -83,7 +86,6 @@ export class CurrencyItemDetailsComponent {
 
   onChartTypeChange (type: number) {
     this.currentChartType.set(type)
-    // this.initializeChartHistory();
   }
 
   
@@ -298,6 +300,8 @@ export class CurrencyItemDetailsComponent {
     })
 
     if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+
       fromEvent(window, 'resize')
       .pipe(
         throttleTime(100),

@@ -1,14 +1,19 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, HostListener, inject } from '@angular/core';
+import { fromEvent } from 'rxjs';
 
 @Directive({
   selector: '[commafyNumber]',
   standalone: true,
 })
 export class CommafyNumberDirective {
-  constructor(private el: ElementRef<HTMLInputElement>) {}
+  private el = inject(ElementRef<HTMLInputElement>);
 
-  @HostListener('input')
-  onInput() {
+  ngOnInit() {
+    fromEvent<InputEvent>(this.el.nativeElement, 'input')
+      .subscribe(() => this.format());
+  }
+
+  format() {
     const input = this.el.nativeElement;
     const cursor = input.selectionStart ?? 0;
 

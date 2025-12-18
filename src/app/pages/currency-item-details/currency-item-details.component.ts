@@ -116,31 +116,6 @@ export class CurrencyItemDetailsComponent {
     this.initializeCurrentCategoryItems();
   }
 
-  // ngOnChanges () {
-  //   if (this.requestArray.mainData) {
-  //     console.log(this.requestArray.mainData)
-  //     this.route.params.subscribe((params) => {
-  //       this.title = params['title'];
-  
-  //       this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
-        
-  //       if (this.currencyItem) {
-  //         this.breadCrumbItems = [
-  //           {
-  //             title: 'صفحه اصلی', link: '/'
-  //           },
-  //           {
-  //             title: this.currencyItem!.title,
-  //           }
-  //         ];
-  //         this.initializeCurrentCategoryItems();
-  //         this.initializeCurrencyInfo(0);
-  //         this.initializeChartHistory();
-  //       }
-  //     })
-  //   }
-  // }
-
   initializeCurrentCategoryItems () {
     switch (this.currencyItem?.groupName) {
       case MAIN_CURRENCY_PREFIX:

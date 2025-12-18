@@ -1,13 +1,11 @@
-import { AfterViewInit, Component, effect, ElementRef, input, Input, OnDestroy, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, input, Input, signal, ViewChild } from '@angular/core';
 import { createChart, IChartApi, ISeriesApi, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries, LineStyle } from 'lightweight-charts'
 import { CommonModule } from '@angular/common';
 import { CandleData, RawData, VolumeData } from '../../../../interfaces/chart.types';
 import { CurrencyItem } from '../../../../interfaces/data.types';
-import { dollar_unit, toman_unit } from '../../../../constants/Values';
-import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from '../../../../utils/CurrencyConverter';
+import { dollar_unit, pound_unit, toman_unit } from '../../../../constants/Values';
+import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal, valueToDollarChanges, valueToRialChanges } from '../../../../utils/CurrencyConverter';
 import { RequestArrayService } from '../../../../services/request-array.service';
-import { parse } from 'node:url';
-import { title } from 'node:process';
 import { TooltipDirective } from '../../../../directives/tooltip.directive';
 import { fromEvent } from 'rxjs';
 
@@ -494,6 +492,8 @@ export class ChartComponent {
       this.chart?.applyOptions({ width: newRect.width, height: newRect.height });
     });
     resizeObserver.observe(this.chartContainer.nativeElement);
+    const mainDollarValueChanes = this.requestService?.mainData?.current.price_dollar_rl.dp;
+    const mainPoundValueChanes = this.requestService?.mainData?.current.price_gbp.dp;
 
     this.chart.subscribeCrosshairMove(param => {
       if (param.time) {
@@ -501,14 +501,52 @@ export class ChartComponent {
         const currentVolume = param.seriesData.get(this.volumeSeries!) as VolumeData;
         if(price) {
           this.currentPrice.set(this.formatPrice(price.close));
-          const change = ((price.close - price.open) / price.open) * 100;
-          this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
           this.high.set(commafy(price.high))
           this.low.set(commafy(price.low))
           this.open.set(commafy(price.open))
           this.close.set(commafy(price.close))
           this.volume.set(commafy(trimDecimal(currentVolume.value)))
-          this.isPositive.set(change >= 0);
+
+          const change = ((price.close - price.open) / price.open) * 100;
+          if (this.item?.faGroupName !== 'بازارهای ارزی') {
+            if (this.currentUnit() === 0) {
+              if (this.item?.unit === toman_unit) {
+                this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
+                this.isPositive.set(change >= 0);
+              }
+              else if (this.item?.unit === dollar_unit) {
+                const dollarItemRialChanges = valueToRialChanges(change, mainDollarValueChanes!)
+                this.priceChange.set(`(${dollarItemRialChanges >= 0 ? '+' : ''}${dollarItemRialChanges.toFixed(2)})%`);
+                this.isPositive.set(dollarItemRialChanges >= 0);
+              }
+              else if (this.item?.unit === pound_unit) {
+                const poundItemRialChanges = valueToRialChanges(change, mainPoundValueChanes!)
+                this.priceChange.set(`(${poundItemRialChanges >= 0 ? '+' : ''}${poundItemRialChanges.toFixed(2)})%`);
+                this.isPositive.set(poundItemRialChanges >= 0);
+              }
+            }
+            else if (this.currentUnit() === 1) {
+              if (this.item?.unit === toman_unit) {
+                const rialItemDollarChanges = valueToDollarChanges(change, mainDollarValueChanes!)
+                this.priceChange.set(`(${rialItemDollarChanges >= 0 ? '+' : ''}${rialItemDollarChanges.toFixed(2)})%`);
+                this.isPositive.set(rialItemDollarChanges >= 0);
+              }
+              else if (this.item?.unit === dollar_unit) {
+                this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
+                this.isPositive.set(change >= 0);
+              }
+              else if (this.item?.unit === pound_unit) {
+                const poundAskChanges = (this.requestService.mainData?.current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (this.requestService.mainData?.current['gbp-usd-ask'].dp!)
+                const poundItemDollarChanges = valueToDollarChanges(change, poundAskChanges)
+                this.priceChange.set(`(${poundItemDollarChanges >= 0 ? '+' : ''}${poundItemDollarChanges.toFixed(2)})%`);
+                this.isPositive.set(poundItemDollarChanges >= 0);
+              }
+            }
+          }
+          else {
+            this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
+            this.isPositive.set(change >= 0);
+          }
         }
       }
       else {
@@ -556,9 +594,5 @@ export class ChartComponent {
           this.timeFramePanelOpened.set(false)
       })
     }
-  }
-
-  ngOnDestroy(): void {
-    
   }
 }

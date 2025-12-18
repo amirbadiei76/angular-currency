@@ -38,7 +38,8 @@ export class ChartComponent {
   currentUnit = input(0);
   timeFramePanelOpened = signal(false)
 
-  @ViewChild('chartContainer') chartContainer!: ElementRef;
+  @ViewChild('chartContainer') chartContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('toggleFrameBtn') toggleFrameBtn!: ElementRef<HTMLDivElement>;
 
   private chart: IChartApi | null = null;
   private candlestickSeries: ISeriesApi<"Candlestick"> | null = null;
@@ -592,6 +593,17 @@ export class ChartComponent {
       fromEvent(window, 'resize')
       .subscribe((event) => {
           this.timeFramePanelOpened.set(false)
+      })
+    }
+
+    if (typeof document !== 'undefined') {
+      
+      fromEvent(document, 'click')
+      .subscribe((event) => {
+        const clicked = event.target as Node;
+        if (!this.toggleFrameBtn?.nativeElement.contains(clicked)) {
+          this.timeFramePanelOpened.set(false)
+        }
       })
     }
   }

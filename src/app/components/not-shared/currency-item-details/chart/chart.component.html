@@ -1,6 +1,6 @@
 <div class="relative flex flex-col w-full h-full bg-light2 dark:bg-theme-black rounded-lg overflow-hidden font-sans mb-6 lg:mb-10">
   
-    <div class="{{ historyData ? 'flex flex-row-reverse' : 'hidden' }} gap-4 relative justify-between px-5 py-3 border-b border-light-text3 dark:border-dark-text3">
+    <div #toggleFrameBtn class="{{ historyData ? 'flex flex-row-reverse' : 'hidden' }} gap-4 relative justify-between px-5 py-3 border-b border-light-text3 dark:border-dark-text3">
 
       <button (click)="toggleTimeFrame()" class="hover:cursor-pointer lg:hidden text-dark-text3 dark:text-light-text3 hover:text-dark hover:dark:text-light duration-300 ease-in-out text-xs md:text-sm flex items-center justify-center gap-2">
         <span>تغییر بازه (تقویمی)</span>

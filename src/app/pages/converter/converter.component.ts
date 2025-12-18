@@ -29,7 +29,7 @@ export class ConverterComponent {
   @ViewChild('fromBtn') fromBtn?: ElementRef<HTMLDivElement>
   @ViewChild('toBtn') toBtn?: ElementRef<HTMLDivElement>
 
-  inputValue = signal(1);
+  inputValue = signal('1');
   convertedValue = signal('');
 
   mainFromList = signal<CurrencyItem[]>([])
@@ -87,7 +87,7 @@ export class ConverterComponent {
     effect(() => {
       if (this.fromDropdownOpen() || this.toDropdownOpen()) this.initLists(this.currencyType())
       
-      this.calculateOutput()
+      this.calculateOutput(this.inputValue())
     })
   }
 
@@ -96,7 +96,7 @@ export class ConverterComponent {
       this.initLists(0)
       this.initRialChanges();
       this.initFirstValues();
-      this.calculateOutput();
+      this.calculateOutput('1');
     }
   }
 
@@ -170,11 +170,13 @@ export class ConverterComponent {
 
 
   onInputChange (event: Event) {
-    this.calculateOutput()
+    const value = (event.target as HTMLInputElement).value;
+    this.inputValue.set(commafy(Number(value.replace(/,/g, '') || 1)))
+    this.calculateOutput(value)
   }
 
-  calculateOutput () {
-    const currentValue = Number(this.inputValue().toString().replace(/,/g, '') || 1);
+  calculateOutput (value: string) {
+    const currentValue = Number(value.replace(/,/g, '') || 1);
     const fromRealValue = this.fromItem().realPrice;
     const toRealValue = this.toItem().realPrice;
     if (this.currencyType() === 0) {

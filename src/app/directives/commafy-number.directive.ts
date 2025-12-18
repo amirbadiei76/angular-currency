@@ -13,6 +13,13 @@ export class CommafyNumberDirective {
       .subscribe(() => this.format());
   }
 
+  private commafyFromRight(value: string): string {
+    const reversed = value.split('').reverse().join('');
+    const grouped = reversed.match(/.{1,3}/g)?.join(',') ?? '';
+    return grouped.split('').reverse().join('');
+  }
+  
+
   format() {
     const input = this.el.nativeElement;
     const cursor = input.selectionStart ?? 0;

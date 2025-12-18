@@ -1,4 +1,3 @@
-import { RawData, VolumeData } from "../interfaces/chart.types";
 import { Current } from "../interfaces/data.types";
 
 const MAX_SAFE_VOLUME = 9_007_199_254_740_99;
@@ -6,7 +5,7 @@ const SCALE = 1_000_000;
 
 export function commafy (num: number) {
     var str = num.toString().split('.');
-    if (str[0].length >= 5) {
+    if (str[0].length >= 4) {
         str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
     }
     if (str[1] && str[1].length >= 5) {
@@ -87,4 +86,9 @@ export function valueToDollarChanges (itemChanges: number, dollarChanges: number
 
 export function valueToRialChanges (itemChanges: number, dollarChanges: number) {
     return (((1 + itemChanges) * (1 + dollarChanges)) + 1)
+}
+
+export function meltedToGram (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue / 4.608
 }

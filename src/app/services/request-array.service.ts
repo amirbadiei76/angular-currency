@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { CurrenciesService } from './currencies.service';
 import { Currencies, CurrencyItem, Current } from '../interfaces/data.types';
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, pound_unit, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../constants/Values';
 import { commafy, trimDecimal, valueToDollarChanges, valueToRialChanges } from '../utils/CurrencyConverter';
-import { timer } from 'rxjs';
+import { BehaviorSubject, timer } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -2807,6 +2808,17 @@ export class RequestArrayService {
     //     unit: toman_unit,
     //     img: '/assets/images/coins/treasure-chest2.webp'
     // });
+    this.goldList.push({
+        id: "1000231",
+        historyCallInfo: this.currencyService.getGoldGc67HistoryInfo(),
+        lastPriceInfo: current.gc67,
+        title: "صندوق طلای قیراط",
+        shortedName: "Ghirat Gold ETF",
+        filterName: filter_etf,
+        groupName: GOLD_PREFIX,
+        unit: toman_unit,
+        img: '/assets/images/coins/treasure-chest2.webp'
+    });
     this.goldList.push({
         id: "1000232",
         historyCallInfo: this.currencyService.getGoldGc11HistoryInfo(),

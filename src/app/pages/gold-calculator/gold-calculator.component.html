@@ -1,0 +1,160 @@
+<main class="min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-center px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
+    <div class="lg:flex-row-reverse flex-col max-w-[1440px] flex-1 w-full flex gap-4 h-full">
+        <div class="flex flex-col flex-2/5 h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-2 md:p-4 gap-3 md:gap-4">
+            <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">محاسبه‌گر قیمت طلا</h2>
+            <!-- Types -->
+            <div  class="relative w-full text-sm">
+                <button
+                    #typesBtn
+                    type="button"
+                    (click)="toggleCalculatorTypeDropdown()"
+                    class="dropdown-button-base"
+                >
+                <i [class.rotate-180]="calculatorTypeDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
+                <span class="dropdown-text-base" >{{ calculatorTypes[calculatorType()].title }}</span>
+                </button>
+                @if (calculatorTypeDropdownOpen()) {
+                    <ul class="dropdown-items-container-base">
+                    @for (type of calculatorTypes; track type.id) {
+                        <li>
+                        <button
+                            #fromBtn
+                            type="button"
+                            (click)="selectCalculatorType(type)"
+                            class="dropdown-single-item-base"
+                        >
+                            {{ type.title }}
+                        </button>
+                        </li>
+                    }
+                    </ul>
+                }
+            </div>
+
+            @if (calculatorType() === 0 || calculatorType() === 1 || calculatorType() === 2) {
+                <!-- Gold Types -->
+                <div class="w-full text-right">
+                    <p class="dropdown-title-base">نوع طلا</p>
+                    <div  class="relative w-full text-sm">
+                        <button
+                            #goldBtn
+                            type="button"
+                            (click)="toggleGoldTypeDropdown()"
+                            class="dropdown-button-base"
+                        >
+                        <i [class.rotate-180]="currentGoldTypeDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
+                        <span class="dropdown-text-base" >{{ goldTypes[currentGoldType()].title }}</span>
+                        </button>
+                        @if (currentGoldTypeDropdownOpen()) {
+                            <ul class="dropdown-items-container-base">
+                            @for (type of goldTypes; track type.id) {
+                                <li>
+                                    <button
+                                        type="button"
+                                        (click)="selectGoldType(type)"
+                                        class="dropdown-single-item-base"
+                                    >
+                                        {{ type.title }}
+                                    </button>
+                                </li>
+                            }
+                            </ul>
+                        }
+                    </div>
+                </div>
+                <!-- Gold Input -->
+                <div class="w-full text-right">
+                    <p class="dropdown-title-base">قیمت طلا</p>
+                    <div class="relative w-full">
+                        <p class="input-unit-base">تومان</p>
+                        <input [value]="goldValue()" type="text" commafyNumber class="input-base">
+                    </div>
+                </div>
+                <div class="w-full flex flex-row-reverse gap-4">
+                    <!-- Weight Input -->
+                    <div class="w-full text-right">
+                        <p class="dropdown-title-base">وزن</p>
+                        <div class="relative w-full">
+                            <p class="input-unit-base">گرم</p>
+                            <input maxlength="16" value="1" [(ngModel)]="weight" type="text" commafyNumber class="input-base">
+                        </div>
+                    </div>
+                    <!-- Wage Input -->
+                    <div class="w-full text-right">
+                        <p class="dropdown-title-base">اجرت</p>
+                        <div class="relative w-full">
+                            <p class="input-unit-base">درصد</p>
+                            <input maxlength="16" [(ngModel)]="wageValue" type="text" commafyNumber class="input-base">
+                        </div>
+                    </div>
+                </div>
+                <!-- Tax Input -->
+                <div class="w-full text-right">
+                    <p class="dropdown-title-base">مالیات</p>
+                    <div class="relative w-full">
+                        <p class="input-unit-base">درصد</p>
+                        <input maxlength="16" [(ngModel)]="taxValue" type="text" commafyNumber class="input-base">
+                    </div>
+                </div>
+                <!-- Profit Input -->
+                <div class="w-full text-right">
+                    <p class="dropdown-title-base">سود فروشنده</p>
+                    <div class="relative w-full">
+                        <p class="input-unit-base">{{ profitType() === 0 ? 'درصد' : 'تومان' }}</p>
+                        <input maxlength="16" [(ngModel)]="profitValue" type="text" commafyNumber class="input-base">
+                    </div>
+                </div>
+                <div class="flex justify-start gap-4 w-full">
+                    <button (click)="changeProfitType(0)" class="related-type-button w-full xs:w-auto lg:w-full {{ profitType() === 0 ? 'border text-sorting-green-light dark:text-sorting-green-dark border-green-btn bg-white dark:bg-dark-border2' : 'dark:text-white text-light-text2' }}">درصد</button>
+                    <button (click)="changeProfitType(1)" class="related-type-button w-full xs:w-auto lg:w-full {{ profitType() === 1 ? 'border text-sorting-green-light dark:text-sorting-green-dark border-green-btn bg-white dark:bg-dark-border2' : 'dark:text-white text-light-text2' }}">تومان</button>
+                </div>
+            }
+            @else {
+                <!-- Ounce Types -->
+                <div class="w-full text-right">
+                    <p class="dropdown-title-base">نوع طلا</p>
+                    
+                    <div  class="relative w-full text-sm">
+                        <button
+                            #ounceBtn
+                            type="button"
+                            (click)="toggleOunceTypeDropdown()"
+                            class="dropdown-button-base"
+                        >
+                        <i [class.rotate-180]="currentOunceTypeDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
+                        <span class="dropdown-text-base" >{{ ounceTypes[currentOunceType()].title }}</span>
+                        </button>
+                        @if (currentOunceTypeDropdownOpen()) {
+                            <ul class="dropdown-items-container-base">
+                            @for (type of ounceTypes; track type.id) {
+                                <li>
+                                    <button
+                                        type="button"
+                                        (click)="selectOunceType(type)"
+                                        class="dropdown-single-item-base"
+                                    >
+                                        {{ type.title }}
+                                    </button>
+                                </li>
+                            }
+                            </ul>
+                        }
+                    </div>
+                </div>
+                <!-- Weight Input -->
+                <div class="w-full text-right">
+                    <p class="dropdown-title-base">وزن</p>
+                    <div class="relative w-full">
+                        <p class="input-unit-base">{{ ounceTypes[currentOunceType()].title }}</p>
+                        <input maxlength="16" [(ngModel)]="taxValue" type="text" commafyNumber class="input-base">
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="flex flex-col flex-3/5 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit">
+
+        </div>
+            
+    </div>
+</main>

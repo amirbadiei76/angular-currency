@@ -191,6 +191,41 @@
     @apply text-dark-text dark:text-light-text text-2xl hover:cursor-pointer hover:text-green-btn dark:hover:text-popup-border-green-light duration-300 ease-in-out
 }
 
+@utility dropdown-button-base {
+    @apply w-full flex justify-between items-center
+    px-5 py-3.5 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
+    text-dark-text dark:text-light-text
+    hover:bg-light-text hover:dark:bg-dark-text
+    text-sm font-medium hover:cursor-pointer
+}
+
+@utility dropdown-arrow-base {
+    @apply text-xs transition-transform
+}
+
+@utility dropdown-text-base {
+    @apply flex items-end gap-4 max-h-min
+}
+
+@utility dropdown-title-base {
+    @apply text-dark-text3 dark:text-light-text3 text-xs md:text-sm mb-3
+}
+
+@utility dropdown-items-container-base {
+    @apply absolute z-[3] w-full rounded-lg text-dark-text dark:text-light-text overflow-hidden border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text
+}
+
+@utility dropdown-single-item-base {
+    @apply w-full text-right px-4 py-2.5 hover:bg-light-text3 hover:dark:bg-dark-border2 hover:cursor-pointer
+}
+
+@utility input-unit-base {
+    @apply leading-[180%] absolute left-5 top-1/2 -translate-y-1/2 text-dark-text dark:text-light-text text-xs md:text-sm
+}
+
+@utility input-base {
+    @apply focus:border-green-btn transition duration-300 ease-out leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
+}
 
 .scroll-snap-x {
     scroll-snap-type: x mandatory;
@@ -282,7 +317,6 @@
 .top-speech-bubble {
 	border-radius: .4em;
     padding-inline: 0.3rem;
-	/* left: 1.4rem; */
     top: -4rem;
 	padding-inline: 0.7rem;
 	padding-block: 0.5rem;
@@ -299,19 +333,6 @@
 	border-bottom: 0;
 	margin-left: -10px;
 	margin-bottom: -0.8rem;
-	/*
-    content: '';
-	position: absolute;
-	left: 50%;
-    bottom: 0;
-	width: 0;
-	height: 0;
-	border: 0.813em solid transparent;
-	margin-top: -0.812em;
-	border-left: 0;
-	border-right-color: var(--bg-speech);
-	margin-left: -0.8rem;
-    */
 }
 
 

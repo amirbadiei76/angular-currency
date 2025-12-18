@@ -4125,6 +4125,21 @@ export class CurrenciesService {
     return this.http.get<Price[]>(url)
   }
 
+  
+
+
+
+  
+  getGoldGc67PriceInfo() {
+    const url = this.base_url + "/margani/pricedb/main/tgju/current/gc67/latest.json";
+    return this.http.get<Price>(url)
+  }
+
+  getGoldGc67HistoryInfo() {
+    const url = this.base_url + "/margani/pricedb/main/tgju/current/gc67/history.json";
+    return this.http.get<Price[]>(url)
+  }
+
   //#endregion
 
 

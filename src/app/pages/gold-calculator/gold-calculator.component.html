@@ -1,7 +1,7 @@
 <main class="min-h-[var(--screen-height)] w-full bg-theme-white dark:bg-theme-black gap-4 flex items-center px-4 pt-20 pb-6 flex-col lg:px-18 lg:pb-8 lg:pt-24 xl:pt-29 xl:px-41 xl:pb-16">
     <div class="lg:flex-row-reverse flex-col max-w-[1440px] flex-1 w-full flex gap-4 h-full">
         <div class="flex flex-col flex-2/5 h-fit items-end border border-light-border2 dark:border-dark-border2 rounded-lg p-2 md:p-4 gap-3 md:gap-4">
-            <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">محاسبه‌گر قیمت طلا</h2>
+            <h2 class="text-dark-text3 dark:text-light-text3 text-sm md:text-base">محاسبه‌گر طلا</h2>
             <!-- Types -->
             <div  class="relative w-full text-sm">
                 <button
@@ -75,8 +75,8 @@
                     <div class="w-full text-right">
                         <p class="dropdown-title-base">وزن</p>
                         <div class="relative w-full">
-                            <p class="input-unit-base">گرم</p>
-                            <input maxlength="16" [value]="weight()" type="text" commafyNumber class="input-base rtl">
+                            <p class="input-unit-base">{{ goldTypes[currentGoldType()].weightUnit }}</p>
+                            <input maxlength="16" [value]="weightValue()" type="text" commafyNumber class="input-base rtl">
                         </div>
                     </div>
                     <!-- Wage Input -->
@@ -146,20 +146,36 @@
                     <p class="dropdown-title-base">وزن</p>
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ ounceTypes[currentOunceType()].title }}</p>
-                        <input maxlength="16" [value]="taxValue()" type="text" commafyNumber class="input-base rtl">
+                        <input maxlength="16" [value]="weightValue()" commafyNumber (input)="onWeightInputChange($event)" type="text" commafyNumber class="input-base rtl">
                     </div>
                 </div>
             }
         </div>
 
         <div class="flex flex-col flex-3/5 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit">
-            <div class="w-full items-center justify-start rtl gap-1 flex xs:flex-row flex-col pb-2 md:py-3">
+            <div class="w-full items-center justify-start rtl gap-1 flex flex-col pb-2 md:py-3">
                 @if (calculatorType() === 0) {
-    
+                    <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
+                        قیمت نهایی:&nbsp;
+                        <p class="text-dark dark:text-light">{{ weightValue() }}</p>
+                        <p class="text-dark-text4 dark:text-light-text4">تومان</p>
+                    </span>
                 }
                 @else {
-                    <span>
-                        <p>{{ weight() }}</p>
+                    <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
+                        <p class="text-dark font-bold dark:text-light">{{ weightValue() }}</p>
+                        <p class="text-dark-text4 font-bold dark:text-light-text4">{{ ounceTypes[currentOunceType()].title }}</p>
+                        برابر است با:
+                    </span>
+                    <span class="w-full flex flex-col justify-start text-dark-text dark:text-light-text text-xs md:text-sm gap-2">
+                        @for (ounceValue of ounceTypes; track ounceValue.id) {
+                            @if (ounceValue.id !== currentOunceType()) {
+                                <span class="flex gap-2">
+                                    <p class="text-dark font-bold dark:text-light text-sm md:text-base {{ ounceValue.id == 0 ? 'font-bold' : '' }}">{{ ounceValue.value }}</p>
+                                    <p class="text-dark-text4 dark:text-light-text4 {{ ounceValue.id == 0 ? 'font-bold text-sm md:text-base' : 'text-xs md:text-sm' }}">{{ ounceValue.title }}</p>
+                                </span>
+                            }
+                        }
                     </span>
                 }
             </div>

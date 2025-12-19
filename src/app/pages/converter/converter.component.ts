@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
 import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
 import { fromEvent } from 'rxjs';
-import { commafy, trimDecimal, valueToDollarChanges } from '../../utils/CurrencyConverter';
+import { commafy, commafyString, trimDecimal, valueToDollarChanges } from '../../utils/CurrencyConverter';
 import { ConverterItemSkeletonComponent } from '../../components/not-shared/converter/converter-item-skeleton/converter-item-skeleton.component';
 
 export interface ICurrencySelect {
@@ -112,6 +112,12 @@ export class ConverterComponent {
   }
 
   ngAfterViewInit () {
+    if (this.requestArray.mainData) {
+      this.initLists(0)
+      this.initRialChanges();
+      this.initFirstValues();
+      this.calculateOutput('1');
+    }
     if (typeof document !== 'undefined') {
       fromEvent<MouseEvent>(document, 'click')
       .subscribe((event) => {
@@ -170,13 +176,13 @@ export class ConverterComponent {
 
 
   onInputChange (event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value || '1';
     this.inputValue.set(commafy(Number(value.replace(/,/g, '') || 1)))
     this.calculateOutput(value)
   }
 
   calculateOutput (value: string) {
-    const currentValue = Number(value.replace(/,/g, '') || 1);
+    const currentValue = Number(value.replace(/,/g, '')) || 1;
     const fromRealValue = this.fromItem().realPrice;
     const toRealValue = this.toItem().realPrice;
     if (this.currencyType() === 0) {
@@ -185,7 +191,7 @@ export class ConverterComponent {
         this.convertedValue.set(commafy(outputValue / 10))
       }
       else if (this.fromItem().shortedName === 'IRT') {
-        this.convertedValue.set((outputValue / 10).toFixed(9))
+        this.convertedValue.set(commafyString((outputValue / 10).toFixed(9)))
       }
       else {
         this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))

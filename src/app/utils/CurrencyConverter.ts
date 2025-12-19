@@ -14,6 +14,18 @@ export function commafy (num: number) {
     return str.join('.');
 }
 
+
+export function commafyString (value: string) {
+    var str = value.split('.');
+    if (str[0].length >= 4) {
+        str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+    }
+    if (str[1] && str[1].length >= 5) {
+        str[1] = str[1].replace(/(\d{3})/g, '$1');
+    }
+    return str.join('.');
+}
+
 export function rialToToman (value: string) {
     const priceValue = +(value.replaceAll(',', ''))
     return trimDecimal(priceValue / 10)
@@ -88,7 +100,52 @@ export function valueToRialChanges (itemChanges: number, dollarChanges: number) 
     return (((1 + itemChanges) * (1 + dollarChanges)) + 1)
 }
 
-export function meltedToGram (value: string) {
+
+export function mesghalToGramMoney (value: string) {
     const mainValue = Number(value.replaceAll(',', ''));
     return mainValue / 4.608
+}
+
+// Mesghal
+export function mesghalToGram (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue * 4.608
+}
+
+export function gramToMesghal (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue / 4.608
+}
+
+
+// Ounce
+export function ounceToGram (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue * 31.1034768
+}
+
+export function gramToOunce (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue / 31.1034768
+}
+
+// Sut
+export function sutToGram (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue / 1000
+}
+
+export function gramToSut (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue * 1000
+}
+
+// Carat
+export function caratToGram (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue / 5
+}
+export function gramToCarat (value: string) {
+    const mainValue = Number(value.replaceAll(',', ''));
+    return mainValue * 5
 }

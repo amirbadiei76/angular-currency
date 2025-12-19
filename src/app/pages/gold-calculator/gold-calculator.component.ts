@@ -4,7 +4,7 @@ import { fromEvent } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
 import { CurrencyItem } from '../../interfaces/data.types';
-import { meltedToGram, trimDecimal } from '../../utils/CurrencyConverter';
+import { commafy, meltedToGram, trimDecimal } from '../../utils/CurrencyConverter';
 
 interface CalculatorType {
   id: number,
@@ -41,9 +41,10 @@ export class GoldCalculatorComponent {
   @ViewChild('goldBtn') goldBtn?: ElementRef<HTMLDivElement>
   @ViewChild('ounceBtn') ounceBtn?: ElementRef<HTMLDivElement>
 
+
+  currentSelectedCurrency? = signal<CurrencyItem | undefined>(undefined)
   currentGoldType = signal(0);
   currentGoldTypeDropdownOpen = signal(false);
-
   
   currentOunceType = signal(0);
   currentOunceTypeDropdownOpen = signal(false);
@@ -53,31 +54,11 @@ export class GoldCalculatorComponent {
   calculatorTypes: CalculatorType[] = [
     {
       id: 0,
-      title: 'محاسبه طلای 18 عیار'
+      title: 'محاسبه قیمت طلا'
     },
     {
       id: 1,
-      title: 'محاسبه طلای دست دوم'
-    },
-    {
-      id: 2,
-      title: 'محاسبه طلای آب شده'
-    },
-    {
-      id: 3,
-      title: 'تبدیل اونس به گرم'
-    },
-    {
-      id: 4,
-      title: 'تبدیل سوت به گرم'
-    },
-    {
-      id: 5,
-      title: 'تبدیل مثقال به گرم'
-    },
-    {
-      id: 6,
-      title: 'تبدیل قیراط به گرم'
+      title: 'تبدیل واحدهای طلا'
     },
   ]
 
@@ -135,7 +116,7 @@ export class GoldCalculatorComponent {
   gram18Value?: CurrencyItem;
   gram24Value?: CurrencyItem;
   goldMiniValue?: CurrencyItem;
-  goldMesghalValue?: CurrencyItem;
+  goldFuturesValue?: CurrencyItem;
   
 
   constructor () {
@@ -146,16 +127,20 @@ export class GoldCalculatorComponent {
 
         if (this.currentGoldType() === 0) {
           this.goldValue.set(this.gram18Value?.tomanStringPrice!)
+          this.currentSelectedCurrency?.set(this.gram18Value)
         }
         else if (this.currentGoldType() === 1) {
           this.goldValue.set(this.gram24Value?.tomanStringPrice!)
+          this.currentSelectedCurrency?.set(this.gram24Value)
         }
         else if (this.currentGoldType() === 2) {
-          const meltedValue = meltedToGram(this.goldMesghalValue?.tomanStringPrice!)
-          this.goldValue.set(trimDecimal(meltedValue, 0) + '')
+          const meltedValue = meltedToGram(this.goldFuturesValue?.tomanStringPrice!)
+          this.goldValue.set(commafy(trimDecimal(meltedValue, 0)))
+          this.currentSelectedCurrency?.set(this.goldFuturesValue)
         }
         else if (this.currentGoldType() === 3) {
           this.goldValue.set(this.goldMiniValue?.tomanStringPrice!)
+          this.currentSelectedCurrency?.set(this.goldMiniValue)
         }
       })
 
@@ -166,7 +151,7 @@ export class GoldCalculatorComponent {
     this.gram18Value = this.requestClass.allItemsList.find((item) => item.id == '1000217');
     this.gram24Value = this.requestClass.allItemsList.find((item) => item.id == '1000219');
     this.goldMiniValue = this.requestClass.allItemsList.find((item) => item.id == '1000220');
-    this.goldMesghalValue = this.requestClass.allItemsList.find((item) => item.id == '1000223');
+    this.goldFuturesValue = this.requestClass.allItemsList.find((item) => item.id == '1000227');
   }
 
   changeProfitType (value: number) {
@@ -205,22 +190,7 @@ export class GoldCalculatorComponent {
       this.currentGoldType.set(0)
     }
     else if (this.calculatorType() === 1) {
-      this.currentGoldType.set(3)
-    }
-    else if (this.calculatorType() === 2) {
-      this.currentGoldType.set(2)
-    }
-    else if (this.calculatorType() === 3) {
       this.currentOunceType.set(0)
-    }
-    else if (this.calculatorType() === 4) {
-      this.currentOunceType.set(2)
-    }
-    else if (this.calculatorType() === 5) {
-      this.currentOunceType.set(1)
-    }
-    else if (this.calculatorType() === 6) {
-      this.currentOunceType.set(4)
     }
   }
 

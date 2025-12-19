@@ -31,7 +31,7 @@
                 }
             </div>
 
-            @if (calculatorType() === 0 || calculatorType() === 1 || calculatorType() === 2) {
+            @if (calculatorType() === 0) {
                 <!-- Gold Types -->
                 <div class="w-full text-right">
                     <p class="dropdown-title-base">نوع طلا</p>
@@ -67,7 +67,7 @@
                     <p class="dropdown-title-base">قیمت طلا</p>
                     <div class="relative w-full">
                         <p class="input-unit-base">تومان</p>
-                        <input [value]="goldValue()" type="text" commafyNumber class="input-base">
+                        <input [value]="goldValue()" type="text" commafyNumber class="input-base rtl">
                     </div>
                 </div>
                 <div class="w-full flex flex-row-reverse gap-4">
@@ -76,7 +76,7 @@
                         <p class="dropdown-title-base">وزن</p>
                         <div class="relative w-full">
                             <p class="input-unit-base">گرم</p>
-                            <input maxlength="16" value="1" [(ngModel)]="weight" type="text" commafyNumber class="input-base">
+                            <input maxlength="16" [value]="weight()" type="text" commafyNumber class="input-base rtl">
                         </div>
                     </div>
                     <!-- Wage Input -->
@@ -84,7 +84,7 @@
                         <p class="dropdown-title-base">اجرت</p>
                         <div class="relative w-full">
                             <p class="input-unit-base">درصد</p>
-                            <input maxlength="16" [(ngModel)]="wageValue" type="text" commafyNumber class="input-base">
+                            <input maxlength="16" [value]="wageValue()" type="text" commafyNumber class="input-base rtl">
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                     <p class="dropdown-title-base">مالیات</p>
                     <div class="relative w-full">
                         <p class="input-unit-base">درصد</p>
-                        <input maxlength="16" [(ngModel)]="taxValue" type="text" commafyNumber class="input-base">
+                        <input maxlength="16" [value]="taxValue()" type="text" commafyNumber class="input-base rtl">
                     </div>
                 </div>
                 <!-- Profit Input -->
@@ -101,7 +101,7 @@
                     <p class="dropdown-title-base">سود فروشنده</p>
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ profitType() === 0 ? 'درصد' : 'تومان' }}</p>
-                        <input maxlength="16" [(ngModel)]="profitValue" type="text" commafyNumber class="input-base">
+                        <input maxlength="16" [value]="profitValue()" type="text" commafyNumber class="input-base rtl">
                     </div>
                 </div>
                 <div class="flex justify-start gap-4 w-full">
@@ -146,14 +146,24 @@
                     <p class="dropdown-title-base">وزن</p>
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ ounceTypes[currentOunceType()].title }}</p>
-                        <input maxlength="16" [(ngModel)]="taxValue" type="text" commafyNumber class="input-base">
+                        <input maxlength="16" [value]="taxValue()" type="text" commafyNumber class="input-base rtl">
                     </div>
                 </div>
             }
         </div>
 
         <div class="flex flex-col flex-3/5 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit">
-
+            <div class="w-full items-center justify-start rtl gap-1 flex xs:flex-row flex-col pb-2 md:py-3">
+                @if (calculatorType() === 0) {
+    
+                }
+                @else {
+                    <span>
+                        <p>{{ weight() }}</p>
+                    </span>
+                }
+            </div>
+            <hr class="border border-light-text4 dark:border-dark-text2">
         </div>
             
     </div>

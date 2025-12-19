@@ -8,24 +8,20 @@
                 <button
                     type="button"
                     (click)="toggleCurrencyTypeDropdown()"
-                    class="w-full flex justify-between items-center
-                        px-5 py-3.5 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
-                        text-dark-text dark:text-light-text
-                        hover:bg-light-text hover:dark:bg-dark-text
-                        text-sm font-medium hover:cursor-pointer"
+                    class="dropdown-button-base"
                 >
-                  <i [class.rotate-180]="currencyDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
-                  <span class="flex items-end gap-4 max-h-min" >{{ currencyTypes[currencyType()].title }}</span>
+                  <i [class.rotate-180]="currencyDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
+                  <span class="dropdown-text-base" >{{ currencyTypes[currencyType()].title }}</span>
                 </button>
                 @if (currencyDropdownOpen()) {
-                    <ul class="absolute z-[3] w-full rounded-lg text-dark-text dark:text-light-text overflow-hidden border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
+                    <ul class="dropdown-items-container-base">
                       @for (type of currencyTypes; track type.id) {
                         <li>
                           <button
                             #fromBtn
                             type="button"
                             (click)="selectCurrencyTypeDropdown(type)"
-                            class="w-full text-right px-4 py-2.5 hover:bg-light-text3 hover:dark:bg-dark-border2 hover:cursor-pointer"
+                            class="dropdown-single-item-base"
                           >
                             {{ type.title }}
                           </button>
@@ -41,13 +37,10 @@
                     type="button"
                     [disabled]="mainFromList().length === 0"
                     (click)="toggleToDropdown()"
-                    class="w-full flex justify-between items-center
-                        px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
-                        text-dark-text3 dark:text-light-text3
-                        text-sm font-medium hover:bg-light-text hover:dark:bg-dark-text hover:cursor-pointer
+                    class="dropdown-button-base h-[49.6px]
                         {{ mainFromList().length === 0 ? 'min-h-[49.6px] animate-pulse bg-light-border dark:bg-dark-border' : ''}}"
                   >
-                    <i [class.rotate-180]="toDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
+                    <i [class.rotate-180]="toDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
                     @if (mainFromList().length) {
                       <app-search-item [item]="toItem()" />
                     }
@@ -95,11 +88,7 @@
                       type="button"
                       [disabled]="mainFromList().length === 0"
                       (click)="toggleFromeDropdown()"
-                      class="w-full flex justify-between items-center
-                          px-5 py-2 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
-                          text-dark-text3 dark:text-light-text3
-                          hover:bg-light-text hover:dark:bg-dark-text
-                          text-sm font-medium hover:cursor-pointer
+                      class="dropdown-button-base h-[49.6px]
                           {{ mainFromList().length === 0 ? 'min-h-[49.6px] animate-pulse bg-light-border dark:bg-dark-border' : ''}}"
                   >
                     <i [class.rotate-180]="fromDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
@@ -135,8 +124,8 @@
             <div class="w-full text-right">
               <p class="text-dark-text3 dark:text-light-text3 text-xs md:text-sm mb-3">مقدار مورد نظر را وارد کنید</p>
               <div class="relative w-full">
-                <p class="leading-[180%] absolute left-5 top-1/2 -translate-y-1/2 text-dark-text dark:text-light-text text-xs md:text-sm">{{fromItem().shortedName}}</p>
-                <input maxlength="16" value="1" (input)="onInputChange($event)" type="text" commafyNumber class="focus:border-green-btn transition duration-300 ease-out leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0">
+                <p class="input-unit-base">{{fromItem().shortedName}}</p>
+                <input maxlength="16" [value]="inputValue() || 1" (input)="onInputChange($event)" type="text" commafyNumber class="input-base rtl">
               </div>
             </div>
         </div>

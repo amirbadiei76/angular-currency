@@ -193,10 +193,11 @@
 
 @utility dropdown-button-base {
     @apply w-full flex justify-between items-center
-    px-5 py-3.5 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
+    px-5 py-3.5 rounded-lg border not-focus:border-dark-text2 not-focus:dark:border-light-text2 outline-0
     text-dark-text dark:text-light-text
     hover:bg-light-text hover:dark:bg-dark-text
     text-sm font-medium hover:cursor-pointer
+    focus:border-green-btn
 }
 
 @utility dropdown-arrow-base {

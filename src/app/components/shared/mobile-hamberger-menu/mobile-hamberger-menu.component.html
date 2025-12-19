@@ -26,7 +26,7 @@
     <li>
       <a
         routerLink="/"
-        class="menu-item-base"
+        class="menu-item-base {{ currentRoute() == '/' ? 'text-light-green-text dark:text-dark-green-text' : '' }}"
         (click)="closeMenu()">
         صفحه اصلی
         <svg class="w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@
     <li>
       <a
         routerLink="/converter"
-        class="menu-item-base"
+        class="menu-item-base {{ currentRoute() == '/converter' ? 'text-light-green-text dark:text-dark-green-text' : '' }}"
         (click)="closeMenu()">
         مبدل ارز
         <svg class="w-5" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -60,9 +60,9 @@
     <li>
       <a
         routerLink="/gold-calculator"
-        class="menu-item-base"
+        class="menu-item-base {{ currentRoute() == '/gold-calculator' ? 'text-light-green-text dark:text-dark-green-text' : '' }}"
         (click)="closeMenu()">
-        محاسبه‌گر قیمت طلا
+        محاسبه‌گر طلا
         <svg
           viewBox="0 0 24 24" class="w-5" 
           fill="none" xmlns="http://www.w3.org/2000/svg">

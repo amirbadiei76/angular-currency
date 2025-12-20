@@ -90,7 +90,15 @@
                     </div>
                     <!-- Wage Input -->
                     <div class="w-full text-right">
-                        <p class="dropdown-title-base">اجرت</p>
+                        <div class="relative flex flex-row-reverse gap-2">
+                            <p class="dropdown-title-base">اجرت</p>
+                            <div class="group h-full flex justify-center items-start"> 
+                                <span class="z-[2] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 h-12 justify-center items-end w-70 top-speech-bubble">
+                                    <p class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">بصورت پیشفرض، طلای 18 و 24 عیار اجرت 7 درصد دارند و مابقی صفر درصد</p>
+                                </span>
+                                <i class="hover:cursor-pointer z-[2] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                            </div>
+                        </div>
                         <div class="relative w-full">
                             <p class="input-unit-base">درصد</p>
                             <input maxlength="16" placeholder="0" [value]="wageValue()" (input)="onWageInputChange($event)" type="text" commafyNumber class="input-base rtl">
@@ -99,7 +107,15 @@
                 </div>
                 <!-- Tax Input -->
                 <div class="w-full text-right">
-                    <p class="dropdown-title-base">مالیات</p>
+                    <div class="relative flex flex-row-reverse gap-2">
+                        <p class="dropdown-title-base">مالیات بر ارزش افزوده</p>
+                        <div class="group h-full flex justify-center items-start"> 
+                            <span class="z-[2] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 h-12 justify-center items-end w-52 top-speech-bubble">
+                                <p class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">بصورت پیشفرض، 10 درصد است</p>
+                            </span>
+                            <i class="hover:cursor-pointer z-[2] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                        </div>
+                    </div>
                     <div class="relative w-full">
                         <p class="input-unit-base">درصد</p>
                         <input maxlength="16" placeholder="0" [value]="taxValue()" (input)="onTaxInputChange($event)" type="text" commafyNumber class="input-base rtl">
@@ -107,7 +123,15 @@
                 </div>
                 <!-- Profit Input -->
                 <div class="w-full text-right">
-                    <p class="dropdown-title-base">سود فروشنده</p>
+                    <div class="relative flex flex-row-reverse gap-2">
+                        <p class="dropdown-title-base">سود فروشنده</p>
+                        <div class="group h-full flex justify-center items-start"> 
+                            <span class="z-[2] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 h-12 justify-center items-end w-52 top-speech-bubble">
+                                <p class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">بصورت پیشفرض، 3 درصد است</p>
+                            </span>
+                            <i class="hover:cursor-pointer z-[2] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                        </div>
+                    </div>
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ profitType() === 0 ? 'درصد' : 'تومان' }}</p>
                         <input maxlength="16" placeholder="0" [value]="profitValue()" (input)="onProfitInputChange($event)" type="text" commafyNumber class="input-base rtl">

@@ -341,27 +341,33 @@ export class GoldCalculatorComponent {
     if (this.currentGoldType() === 0) {
       this.goldValue.set(this.gram18Value?.tomanStringPrice!)
       this.relatedItems?.set([this.gram18Value!, this.gram24Value!, this.goldOunceValue!])
+      this.wageValue.set('7')
     }
     else if (this.currentGoldType() === 1) {
       this.goldValue.set(this.gram24Value?.tomanStringPrice!)
       this.relatedItems?.set([this.gram24Value!, this.goldOunceValue!, this.gram18Value!])
+      this.wageValue.set('7')
     }
     else if (this.currentGoldType() === 2) {
       const meltedValue = mesghalToGramMoney(this.goldFuturesValue?.tomanStringPrice!)
       this.goldValue.set(commafy(trimDecimal(meltedValue, 0)))
       this.relatedItems?.set([this.goldFuturesValue!, this.gram18Value!, this.goldMesghalValue!])
+      this.wageValue.set('0')
     }
     else if (this.currentGoldType() === 3) {
       this.goldValue.set(this.goldMiniValue?.tomanStringPrice!)
       this.relatedItems?.set([this.goldMiniValue!, this.gram18Value!, this.goldFuturesValue!])
+      this.wageValue.set('0')
     }
     else if (this.currentGoldType() === 4) {
       this.goldValue.set(this.goldOunceValue?.tomanStringPrice!)
       this.relatedItems?.set([this.goldOunceValue!, this.gram24Value!, this.gram18Value!])
+      this.wageValue.set('0')
     }
     else if (this.currentGoldType() === 5) {
       this.goldValue.set(this.goldMesghalValue?.tomanStringPrice!)
       this.relatedItems?.set([this.goldMesghalValue!, this.goldFuturesValue!, this.gram18Value!])
+      this.wageValue.set('0')
     }
   }
 

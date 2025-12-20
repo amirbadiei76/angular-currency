@@ -38,7 +38,7 @@
                     [disabled]="mainFromList().length === 0"
                     (click)="toggleToDropdown()"
                     class="dropdown-button-base h-[49.6px]
-                        {{ mainFromList().length === 0 ? 'min-h-[49.6px] animate-pulse bg-light-border dark:bg-dark-border' : ''}}"
+                        {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : ''}}"
                   >
                     <i [class.rotate-180]="toDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
                     @if (mainFromList().length) {
@@ -89,7 +89,7 @@
                       [disabled]="mainFromList().length === 0"
                       (click)="toggleFromeDropdown()"
                       class="dropdown-button-base h-[49.6px]
-                          {{ mainFromList().length === 0 ? 'min-h-[49.6px] animate-pulse bg-light-border dark:bg-dark-border' : ''}}"
+                          {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : ''}}"
                   >
                     <i [class.rotate-180]="fromDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
                     @if (mainFromList().length) {
@@ -135,7 +135,7 @@
                 @if (mainFromList().length) {
                   <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
                 }
-                <span class="font-bold ext-sm md:text-base rounded-lg text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
+                <span class="font-bold ext-sm md:text-base skeleton-base z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
                 @if (mainFromList().length) {
                   <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
                 }
@@ -145,7 +145,7 @@
                 @if (mainFromList().length) {
                   <p class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
                 }
-                <span class="font-bold ext-sm md:text-base rounded-lg text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
+                <span class="font-bold ext-sm md:text-base skeleton-base z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
                 @if (mainFromList().length) {
                   <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
                 }

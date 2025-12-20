@@ -31,7 +31,7 @@
       </button>
     </div>
   
-    <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} rounded-lg z-0 h-75 md:h-94 text-transparent animate-pulse bg-light-border dark:bg-dark-border"></div>
+    <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} z-0 h-75 md:h-94 skeleton-base"></div>
 
     <div #chartContainer id="chartContainer" class="relative {{ historyData ? 'flex' : 'hidden' }} w-full z-0 h-63 md:h-82 font-iranyekan text-light-text4 dark:text-dark-text4">
       <div class="absolute {{ chartType() === 0 ? 'opacity-0 md:opacity-100' : 'opacity-0' }} left-0 top-0 hidden md:flex flex-col items-start gap-0.5 p-1 z-[2]">

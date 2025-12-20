@@ -66,8 +66,17 @@
                 <div class="w-full text-right">
                     <p class="dropdown-title-base">قیمت طلا</p>
                     <div class="relative w-full">
-                        <p class="input-unit-base">تومان</p>
-                        <input maxlength="19" placeholder="0" [value]="goldValue()" (input)="onGoldInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        <p class="input-unit-base {{ !gram18Value ? 'invisible' : 'visible' }}">تومان</p>
+                        <input
+                            [disabled]="!gram18Value"
+                            maxlength="19"
+                            placeholder="0"
+                            [value]="goldValue()"
+                            (input)="onGoldInputChange($event)"
+                            type="text"
+                            commafyNumber
+                            class="input-base rtl {{ !gram18Value ? 'skeleton-base' : '' }}"
+                        >
                     </div>
                 </div>
                 <div class="w-full flex flex-row-reverse gap-4">
@@ -157,28 +166,43 @@
                 @if (calculatorType() === 0) {
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text font-bold text-sm md:text-base gap-2 mb-1">
                         قیمت نهایی:&nbsp;
-                        <p class="text-dark dark:text-light">{{ totalGoldValue() }}</p>
-                        <p class="text-dark-text4 dark:text-light-text4">تومان</p>
+                        @if (gram18Value) {
+                            <p class="text-dark dark:text-light">{{ totalGoldValue() }}</p>
+                            <p class="text-dark-text4 dark:text-light-text4">تومان</p>
+                        }
+                        <span class="skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">قیمت نهایی</span>
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         قیمت طلا:&nbsp;
-                        <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ mainGoldValue() }}</p>
-                        <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        @if (gram18Value) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ mainGoldValue() }}</p>
+                            <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        }
+                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">قیمت طلا</span>
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         اجرت:&nbsp;
-                        <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalWageValue() }}</p>
-                        <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        @if (gram18Value) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalWageValue() }}</p>
+                            <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        }
+                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">اجرت طلا</span>
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         مالیات:&nbsp;
-                        <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalTaxValue() }}</p>
-                        <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        @if (gram18Value) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalTaxValue() }}</p>
+                            <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        }
+                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">مالیات طلا</span>
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         سود فروشنده:&nbsp;
-                        <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalProfitValue() }}</p>
-                        <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        @if (gram18Value) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalProfitValue() }}</p>
+                            <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
+                        }
+                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">سود فروشنده</span>
                     </span>
                 }
                 @else {

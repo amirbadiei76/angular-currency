@@ -191,7 +191,7 @@ export class GoldCalculatorComponent {
 
   initFirstGoldValue () {
     this.currentGoldType.set(0)
-    this.goldValue.set(this.gram18Value?.tomanStringPrice!)
+    this.goldValue.set(this.gram18Value?.tomanStringPrice! || ' ')
     this.relatedItems?.set([this.gram18Value!, this.gram24Value!, this.goldOunceValue!])
     this.profitValue.set('3')
     this.weightValue.set('1')

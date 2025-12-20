@@ -228,6 +228,10 @@
     @apply focus:border-green-btn transition duration-300 ease-out leading-[180%] w-full text-xs md:text-sm text-dark-text dark:text-light-text text-right h-[49.6px] pr-5 pl-14 py-2.75 rounded-lg border border-dark-text2 dark:border-light-text2 outline-0
 }
 
+@utility skeleton-base {
+    @apply rounded-lg text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2]
+}
+
 .scroll-snap-x {
     scroll-snap-type: x mandatory;
     scroll-snap-align: center;

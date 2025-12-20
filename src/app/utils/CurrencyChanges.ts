@@ -2,7 +2,7 @@ import { PriceItem } from "../components/not-shared/currency-item-details/change
 import { dollar_unit, toman_unit } from "../constants/Values";
 import { CandleData, VolumeData } from "../interfaces/chart.types";
 import { CurrencyItem, Current } from "../interfaces/data.types";
-import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from "./CurrencyConverter";
+import { commafy, dollarToToman, poundToDollar, poundToToman, priceToNumber, rialToDollar, rialToToman, trimDecimal } from "./CurrencyConverter";
 
 export function filterByDays(data: PriceItem[], days: number) {
     const now = new Date().getTime();
@@ -95,8 +95,8 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
                 };
             }
             else if (item.unit === dollar_unit) {
-                const firstValue = +data[0].p.replaceAll(',', '');
-                const lastValue = +data[data.length - 1].p.replaceAll(',', '');
+                const firstValue = priceToNumber(data[0].p);
+                const lastValue = priceToNumber(data[data.length - 1].p);
 
                 const firstDollarValue = dollarToToman(data[0].p, current);
                 const lastDollarValue = dollarToToman(data[data.length - 1].p, current);
@@ -179,11 +179,11 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
                 const first = data[0].p;
                 const last = data[data.length - 1].p;
               
-                const change = Number(last.replaceAll(',', '')) - Number(first.replaceAll(',', ''));
-                const percent = trimDecimal(Math.abs(change / Number(first.replaceAll(',', ''))) * 100) + '';
+                const change = priceToNumber(last) - priceToNumber(first);
+                const percent = trimDecimal(Math.abs(change / priceToNumber(first)) * 100) + '';
               
                 const avg =
-                  data.reduce((sum, item) => sum + Number(item.p.replaceAll(',', '')), 0) / data.length;
+                  data.reduce((sum, item) => sum + priceToNumber(item.p), 0) / data.length;
               
                 
                 return {
@@ -198,8 +198,8 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
             else {
                 const poundAskChanges = (current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (current['gbp-usd-ask'].dp)
 
-                const firstValue = +data[0].p.replaceAll(',', '');
-                const lastValue = +data[data.length - 1].p.replaceAll(',', '');
+                const firstValue = priceToNumber(data[0].p);
+                const lastValue = priceToNumber(data[data.length - 1].p);
 
                 const change = lastValue - firstValue;
                 const percentPound = ((change / firstValue) * 100);
@@ -229,10 +229,10 @@ export function analyzeRange(data: PriceItem[], item: CurrencyItem, current: Cur
     const first = data[0].p;
     const last = data[data.length - 1].p;
   
-    const change = +(last.replaceAll(',', '')) - +(first.replaceAll(',', ''));
-    const percent = trimDecimal(Math.abs(change / +(first.replaceAll(',', ''))) * 100) + '';
+    const change = priceToNumber(last) - priceToNumber(first);
+    const percent = trimDecimal(Math.abs(change / priceToNumber(first)) * 100) + '';
     const avg =
-      data.reduce((sum, item) => sum + +(item.p.replaceAll(',', '')), 0) / data.length;
+      data.reduce((sum, item) => sum + priceToNumber(item.p), 0) / data.length;
   
     return {
       first,

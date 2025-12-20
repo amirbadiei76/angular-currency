@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CandleData, RawData, VolumeData } from '../../../../interfaces/chart.types';
 import { CurrencyItem } from '../../../../interfaces/data.types';
 import { dollar_unit, pound_unit, toman_unit } from '../../../../constants/Values';
-import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal, valueToDollarChanges, valueToRialChanges } from '../../../../utils/CurrencyConverter';
+import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, priceToNumber, rialToDollar, rialToToman, trimDecimal, valueToDollarChanges, valueToRialChanges } from '../../../../utils/CurrencyConverter';
 import { RequestArrayService } from '../../../../services/request-array.service';
 import { TooltipDirective } from '../../../../directives/tooltip.directive';
 import { fromEvent } from 'rxjs';
@@ -178,8 +178,8 @@ export class ChartComponent {
   
       const agg = map.get(key)!;
   
-      agg.h = Math.max(parseFloat(agg.h.replaceAll(',', '')), parseFloat(c.h.replaceAll(',', ''))) + '';
-      agg.l = Math.max(parseFloat(agg.l.replaceAll(',', '')), parseFloat(c.l.replaceAll(',', ''))) + '';
+      agg.h = Math.max(priceToNumber(agg.h), priceToNumber(c.h)) + '';
+      agg.l = Math.max(priceToNumber(agg.l), priceToNumber(c.l)) + '';
       agg.p = c.p;
       agg.ts = c.ts;
     }
@@ -336,9 +336,9 @@ export class ChartComponent {
             });
           }
           else if (this.item?.unit === dollar_unit) {
-            const close = parseFloat(current.p.replace(/,/g, ''));
-            const high = parseFloat(current.h.replace(/,/g, ''));
-            const low = parseFloat(current.l.replace(/,/g, ''));
+            const close = priceToNumber(current.p);
+            const high = priceToNumber(current.h)
+            const low = priceToNumber(current.l)
            
             const open = prev ? prev.close : low;
       
@@ -387,9 +387,9 @@ export class ChartComponent {
         }
       }
       else {
-        const close = parseFloat(current.p.replace(/,/g, ''));
-        const high = parseFloat(current.h.replace(/,/g, ''));
-        const low = parseFloat(current.l.replace(/,/g, ''));
+        const close = priceToNumber(current.p);
+        const high = priceToNumber(current.h);
+        const low = priceToNumber(current.l);
        
         const open = prev ? prev.close : low;
   

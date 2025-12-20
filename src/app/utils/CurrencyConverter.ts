@@ -14,6 +14,10 @@ export function commafy (num: number) {
     return str.join('.');
 }
 
+export function priceToNumber (value: string) {
+    return Number(value.replaceAll(',', ''))
+}
+
 
 export function commafyString (value: string) {
     var str = value.split('.');
@@ -27,36 +31,36 @@ export function commafyString (value: string) {
 }
 
 export function rialToToman (value: string) {
-    const priceValue = +(value.replaceAll(',', ''))
-    return trimDecimal(priceValue / 10)
+    const priceValue = priceToNumber(value)
+    return trimDecimal(priceValue / 10, 0)
 }
 
 export function dollarToToman (value: string, current: Current) {
-    const priceValue = +(value.replaceAll(',', ''))
-    const dollarValue = +(current.price_dollar_rl.p.replaceAll(',', ''))
-    return trimDecimal((priceValue * dollarValue) / 10);
+    const priceValue = priceToNumber(value)
+    const dollarValue = priceToNumber(current.price_dollar_rl.p)
+    return trimDecimal((priceValue * dollarValue) / 10, 0);
 }
 
 
 export function poundToToman (value: string, current: Current) {
-    const priceValue = +(value.replaceAll(',', ''))
-    const poundValue = +(current.price_gbp.p.replaceAll(',', ''))
-    return trimDecimal((priceValue * poundValue) / 10);
+    const priceValue = priceToNumber(value)
+    const poundValue = priceToNumber(current.price_gbp.p)
+    return trimDecimal((priceValue * poundValue) / 10, 0);
 }
 
 
 export function rialToDollar (value: string, current: Current) {
-    const priceValue = +(value.replaceAll(',', ''))
-    const dollarValue = +(current.price_dollar_rl.p.replaceAll(',', ''))
+    const priceValue = priceToNumber(value)
+    const dollarValue = priceToNumber(current.price_dollar_rl.p)
 
     const dollarMainValue = priceValue / dollarValue;
     return trimDecimal(dollarMainValue)
 }
 
 export function poundToDollar (value: string, current: Current) {
-    const priceValue = +(value.replaceAll(',', ''))
+    const priceValue = priceToNumber(value)
 
-    const priceDollarValue = priceValue * (+current['gbp-usd-ask'].p)
+    const priceDollarValue = priceValue * priceToNumber(current['gbp-usd-ask'].p)
     return trimDecimal(priceDollarValue);
 }
 
@@ -102,50 +106,50 @@ export function valueToRialChanges (itemChanges: number, dollarChanges: number) 
 
 
 export function mesghalToGramMoney (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue / 4.608
 }
 
 // Mesghal
 export function mesghalToGram (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue * 4.608
 }
 
 export function gramToMesghal (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue / 4.608
 }
 
 
 // Ounce
 export function ounceToGram (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue * 31.1034768
 }
 
 export function gramToOunce (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue / 31.1034768
 }
 
 // Sut
 export function sutToGram (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue / 1000
 }
 
 export function gramToSut (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue * 1000
 }
 
 // Carat
 export function caratToGram (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue / 5
 }
 export function gramToCarat (value: string) {
-    const mainValue = Number(value.replaceAll(',', ''));
+    const mainValue = priceToNumber(value);
     return mainValue * 5
 }

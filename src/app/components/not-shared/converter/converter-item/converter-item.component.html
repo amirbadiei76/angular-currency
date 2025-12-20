@@ -22,7 +22,7 @@
     <div class="flex justify-end items-center col-span-4 gap-2">
         <div class="flex flex-col items-end gap-1">
             <p class="text-dark dark:text-white text-right rtl w-full font-bold text-xs md:text-sm line-clamp-2 text-ellipsis">{{ currencyItem()?.title }}</p>
-            <p class="text-dark-text2 dark:text-light-text2 text-right w-full font-normal text-xs">{{ currencyItem()?.shortedName }}</p>
+            <p class="text-dark-text2 dark:text-light-text2 text-right w-full font-normal text-xs text-ellipsis line-clamp-1">{{ currencyItem()?.shortedName }}</p>
         </div>
     
         <img class="w-8 h-8 object-cover rounded-full" src="{{ currencyItem()?.img }}" alt="{{ currencyItem()?.title }}">

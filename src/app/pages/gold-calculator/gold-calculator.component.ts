@@ -1,10 +1,12 @@
-import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { fromEvent } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
 import { CurrencyItem } from '../../interfaces/data.types';
-import { caratToGram, commafy, gramToCarat, gramToMesghal, gramToOunce, gramToSut, mesghalToGram, mesghalToGramMoney, ounceToGram, sutToGram, trimDecimal } from '../../utils/CurrencyConverter';
+import { caratToGram, commafy, gramToCarat, gramToMesghal, gramToOunce, gramToSut, mesghalToGram, mesghalToGramMoney, ounceToGram, priceToNumber, sutToGram, trimDecimal } from '../../utils/CurrencyConverter';
+import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
+import { ConverterItemSkeletonComponent } from '../../components/not-shared/converter/converter-item-skeleton/converter-item-skeleton.component';
 
 interface CalculatorType {
   id: number,
@@ -21,7 +23,7 @@ interface OunceTypes extends CalculatorType {
 
 @Component({
   selector: 'app-gold-calculator',
-  imports: [FormsModule, CommafyNumberDirective],
+  imports: [FormsModule, CommafyNumberDirective, ConverterItemComponent, ConverterItemSkeletonComponent],
   templateUrl: './gold-calculator.component.html',
   styleUrl: './gold-calculator.component.css'
 })
@@ -31,17 +33,32 @@ export class GoldCalculatorComponent {
 
   goldValue = signal('')
   weightValue = signal('1');
-  wageValue = signal('1');
-  taxValue = signal(10);
-  profitValue = signal(1);
+  wageValue = signal('0');
+  taxValue = signal('10');
+  profitValue = signal('0');
 
   profitType = signal(0)
 
-  totalGoldValue = signal(1);
-  mainGoldValue = signal(1);
-  totalWageValue = signal(1);
-  totalProfitValue = signal(1);
-  totalTaxValue = signal(1);
+  totalGoldValue = computed(() => {
+    return commafy (
+      (priceToNumber(this.mainGoldValue()) + priceToNumber(this.totalWageValue()) + 
+      priceToNumber(this.totalTaxValue()) + priceToNumber(this.totalProfitValue())) || 0
+    )
+  })
+  mainGoldValue = computed(() => commafy(priceToNumber(this.weightValue() || '1') * priceToNumber(this.goldValue() || '0') || 0));
+  totalWageValue = computed(() => {
+    return (
+      commafy(((priceToNumber(this.wageValue())) * priceToNumber(this.mainGoldValue())) / 100 || 0)
+    )
+  })
+  totalTaxValue = computed(() => commafy(((priceToNumber(this.mainGoldValue()) * priceToNumber(this.taxValue())) / 100) || 0))
+  totalProfitValue = computed(() => {
+    return commafy(
+      (this.profitType() === 0 ?
+      ((priceToNumber(this.mainGoldValue()) * priceToNumber(this.profitValue())) / 100) :
+      priceToNumber(this.profitValue())) || 0
+    )
+  });
   
 
   @ViewChild('typesBtn') typesBtn?: ElementRef<HTMLDivElement>
@@ -49,7 +66,7 @@ export class GoldCalculatorComponent {
   @ViewChild('ounceBtn') ounceBtn?: ElementRef<HTMLDivElement>
 
 
-  currentSelectedCurrency? = signal<CurrencyItem | undefined>(undefined)
+  relatedItems = signal<CurrencyItem[]>([])
   currentGoldType = signal(0);
   currentGoldTypeDropdownOpen = signal(false);
   
@@ -147,11 +164,7 @@ export class GoldCalculatorComponent {
     
 
       effect(() => {
-        if (this.calculatorType() === 0) {
-          this.initFirstGoldValue();
-
-        }
-        else if (this.calculatorType() === 1) {
+        if (this.calculatorType() === 1) {
         
           this.calculateOunceTypes()
         }
@@ -171,14 +184,24 @@ export class GoldCalculatorComponent {
     this.goldOunceValue = this.requestClass.allItemsList.find((item) => item.id == '1000244');
   }
 
+  initFirstOunceValue () {
+    this.weightValue.set('1')
+    this.relatedItems?.set([this.goldOunceValue!, this.gram18Value!, this.goldMesghalValue!])
+  }
+
   initFirstGoldValue () {
     this.currentGoldType.set(0)
     this.goldValue.set(this.gram18Value?.tomanStringPrice!)
-    this.currentSelectedCurrency?.set(this.gram18Value)
+    this.relatedItems?.set([this.gram18Value!, this.gram24Value!, this.goldOunceValue!])
+    this.profitValue.set('3')
+    this.weightValue.set('1')
+    this.wageValue.set('7')
+    this.taxValue.set('10')
+    this.profitType.set(0)
   }
 
   calculateOunceTypes () {
-    const value = this.weightValue();
+    const value = this.weightValue() || '0';
     switch(this.currentOunceType()) {
       // Gram
       case 0:
@@ -252,9 +275,29 @@ export class GoldCalculatorComponent {
     }
   }
 
+  onGoldInputChange (event: Event) {
+    const goldValue = (event.target as HTMLInputElement).value;
+    this.goldValue.set(commafy(priceToNumber(goldValue)) || '0')
+  }
+
   onWeightInputChange (event: Event) {
     const weightValue = (event.target as HTMLInputElement).value;
-    this.weightValue.set(commafy(Number(weightValue.replace(/,/g, '') || 1)))
+    this.weightValue.set(commafy(priceToNumber(weightValue) || 0) || '0')
+  }
+  
+  onWageInputChange (event: Event) {
+    const wageValue = (event.target as HTMLInputElement).value;
+    this.wageValue.set(commafy(priceToNumber(wageValue)) || '0')
+  }
+  
+  onTaxInputChange (event: Event) {
+    const taxValue = (event.target as HTMLInputElement).value;
+    this.taxValue.set(commafy(priceToNumber(taxValue)) || '0')
+  }
+  
+  onProfitInputChange (event: Event) {
+    const profitValue = (event.target as HTMLInputElement).value;
+    this.profitValue.set(commafy(priceToNumber(profitValue)) || '0')
   }
 
   ngOnInit () {
@@ -263,6 +306,9 @@ export class GoldCalculatorComponent {
 
   changeProfitType (value: number) {
     this.profitType.set(value)
+
+    if (this.profitType() === 0) this.profitValue.set('3')
+    else if (this.profitType() === 1) this.profitValue.set('0')
   }
 
   
@@ -294,35 +340,28 @@ export class GoldCalculatorComponent {
 
     if (this.currentGoldType() === 0) {
       this.goldValue.set(this.gram18Value?.tomanStringPrice!)
-      this.currentSelectedCurrency?.set(this.gram18Value)
+      this.relatedItems?.set([this.gram18Value!, this.gram24Value!, this.goldOunceValue!])
     }
     else if (this.currentGoldType() === 1) {
       this.goldValue.set(this.gram24Value?.tomanStringPrice!)
-      this.currentSelectedCurrency?.set(this.gram24Value)
+      this.relatedItems?.set([this.gram24Value!, this.goldOunceValue!, this.gram18Value!])
     }
     else if (this.currentGoldType() === 2) {
       const meltedValue = mesghalToGramMoney(this.goldFuturesValue?.tomanStringPrice!)
       this.goldValue.set(commafy(trimDecimal(meltedValue, 0)))
-      this.currentSelectedCurrency?.set(this.goldFuturesValue)
+      this.relatedItems?.set([this.goldFuturesValue!, this.gram18Value!, this.goldMesghalValue!])
     }
     else if (this.currentGoldType() === 3) {
       this.goldValue.set(this.goldMiniValue?.tomanStringPrice!)
-      this.currentSelectedCurrency?.set(this.goldMiniValue)
+      this.relatedItems?.set([this.goldMiniValue!, this.gram18Value!, this.goldFuturesValue!])
     }
     else if (this.currentGoldType() === 4) {
       this.goldValue.set(this.goldOunceValue?.tomanStringPrice!)
-      this.currentSelectedCurrency?.set(this.goldOunceValue)
+      this.relatedItems?.set([this.goldOunceValue!, this.gram24Value!, this.gram18Value!])
     }
     else if (this.currentGoldType() === 5) {
       this.goldValue.set(this.goldMesghalValue?.tomanStringPrice!)
-      this.currentSelectedCurrency?.set(this.goldMesghalValue)
-    }
-
-    if (this.currentGoldType() === 4 || this.currentGoldType() === 5) {
-
-    }
-    else {
-
+      this.relatedItems?.set([this.goldMesghalValue!, this.goldFuturesValue!, this.gram18Value!])
     }
   }
 
@@ -332,11 +371,14 @@ export class GoldCalculatorComponent {
 
     if (this.calculatorType() === 0) {
       this.currentGoldType.set(0)
+      this.initFirstGoldValue();
     }
     else if (this.calculatorType() === 1) {
       this.currentOunceType.set(0)
+      this.initFirstOunceValue()
     }
   }
+
 
   ngAfterViewInit () {
     

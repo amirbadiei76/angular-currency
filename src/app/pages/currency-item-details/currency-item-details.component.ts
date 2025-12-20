@@ -10,7 +10,7 @@ import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dolla
 import { SearchItemComponent } from '../../components/shared/search-item/search-item.component';
 import { filter, fromEvent, retry, throttleTime } from 'rxjs';
 import { CurrencyOverviewComponent } from '../../components/not-shared/currency-item-details/currency-overview/currency-overview.component';
-import { commafy, dollarToToman, poundToDollar, poundToToman, rialToDollar, rialToToman, trimDecimal } from '../../utils/CurrencyConverter';
+import { commafy, dollarToToman, poundToDollar, poundToToman, priceToNumber, rialToDollar, rialToToman, trimDecimal } from '../../utils/CurrencyConverter';
 import { RawData } from '../../interfaces/chart.types';
 import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
 import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
@@ -161,9 +161,9 @@ export class CurrencyItemDetailsComponent {
 
   initializeCurrencyInfo (type: number) {
     if (this.currencyItem?.faGroupName === 'بازارهای ارزی') {
-      const maxValue = +(this.currencyItem.lastPriceInfo!.h.replaceAll(',', ''));
-      const minValue = +(this.currencyItem.lastPriceInfo!.l.replaceAll(',', ''));
-      const currentValue = +(this.currencyItem.lastPriceInfo!.p.replaceAll(',', ''));
+      const maxValue = priceToNumber(this.currencyItem.lastPriceInfo!.h)
+      const minValue = priceToNumber(this.currencyItem.lastPriceInfo!.l)
+      const currentValue = priceToNumber(this.currencyItem.lastPriceInfo!.p)
       const percent = (maxValue === minValue) ? 1 : ((currentValue - minValue) / (maxValue - minValue));
 
       this.currentMaxPrice.set(maxValue.toString());
@@ -216,9 +216,9 @@ export class CurrencyItemDetailsComponent {
           this.currentMinPrice.set(commafy(tommanDollarMinValue));
         }
         else if (this.currencyItem?.unit === dollar_unit) {
-          const dollarMaxValue = +(this.currencyItem.lastPriceInfo!.h.replaceAll(',', ''));
-          const dollarMinValue = +(this.currencyItem.lastPriceInfo!.l.replaceAll(',', ''));
-          const currentValue = +(this.currencyItem.lastPriceInfo!.p.replaceAll(',', ''));
+          const dollarMaxValue = priceToNumber(this.currencyItem.lastPriceInfo!.h)
+          const dollarMinValue = priceToNumber(this.currencyItem.lastPriceInfo!.l)
+          const currentValue = priceToNumber(this.currencyItem.lastPriceInfo!.p)
           
           const percent = (dollarMaxValue === dollarMinValue) ? 1 : ((currentValue - dollarMinValue) / (dollarMaxValue - dollarMinValue));
           this.currentPercentMinMax.set(`${trimDecimal(percent * 100)}%`)

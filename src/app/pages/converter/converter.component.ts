@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
 import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
 import { fromEvent } from 'rxjs';
-import { commafy, commafyString, trimDecimal, valueToDollarChanges } from '../../utils/CurrencyConverter';
+import { commafy, commafyString, priceToNumber, trimDecimal, valueToDollarChanges } from '../../utils/CurrencyConverter';
 import { ConverterItemSkeletonComponent } from '../../components/not-shared/converter/converter-item-skeleton/converter-item-skeleton.component';
 
 export interface ICurrencySelect {
@@ -102,7 +102,7 @@ export class ConverterComponent {
 
   initRialChanges () {
     const dollarChanges = (this.requestArray.mainData?.current.price_dollar_rl?.dt === 'low' ? -1 : 1) * (this.requestArray?.mainData?.current.price_dollar_rl?.dp!);
-    const dollarValue = +(this.requestArray.mainData?.current?.price_dollar_rl?.p!.replaceAll(',', '')!);
+    const dollarValue = priceToNumber(this.requestArray.mainData?.current?.price_dollar_rl?.p!);
     const mainDollarValue = (1/dollarValue).toFixed(8)
     const dollarChangeState = valueToDollarChanges(0, dollarChanges);
     
@@ -177,12 +177,12 @@ export class ConverterComponent {
 
   onInputChange (event: Event) {
     const value = (event.target as HTMLInputElement).value || '1';
-    this.inputValue.set(commafy(Number(value.replace(/,/g, '') || 1)))
+    this.inputValue.set(commafy(priceToNumber(value) || 1))
     this.calculateOutput(value)
   }
 
   calculateOutput (value: string) {
-    const currentValue = Number(value.replace(/,/g, '')) || 1;
+    const currentValue = priceToNumber(value) || 1;
     const fromRealValue = this.fromItem().realPrice;
     const toRealValue = this.toItem().realPrice;
     if (this.currencyType() === 0) {

@@ -14,10 +14,11 @@ import { commafy, dollarToToman, poundToDollar, poundToToman, priceToNumber, ria
 import { RawData } from '../../interfaces/chart.types';
 import { ChartComponent } from '../../components/not-shared/currency-item-details/chart/chart.component';
 import { ChangesTableComponent } from '../../components/not-shared/currency-item-details/changes-table/changes-table.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ValueChangeEvent } from '@angular/forms';
 import { ItemInfoSkeletonComponent } from '../../components/not-shared/currency-item-details/item-info-skeleton/item-info-skeleton.component';
 import { PercentProgressComponent } from '../../components/not-shared/currency-item-details/percent-progress/percent-progress.component';
 import { PercentProgressSkeletonComponent } from '../../components/not-shared/currency-item-details/percent-progress-skeleton/percent-progress-skeleton.component';
+import { NotFoundBoxComponent } from '../../components/shared/not-found-box/not-found-box.component';
 
 @Component({
   selector: 'app-currency-item-details',
@@ -39,7 +40,7 @@ export class CurrencyItemDetailsComponent {
   currentPercentMinMax = signal('0%')
   
   currentSupportCurrencyId = signal(0)
-  currentChartType = signal(0)
+  currentChartType = signal(0);
 
   inputValue = '';
 
@@ -52,6 +53,7 @@ export class CurrencyItemDetailsComponent {
     if (!requestArray.mainData) {
       requestArray.setupMainData();
     }
+
   }
   
 
@@ -92,9 +94,9 @@ export class CurrencyItemDetailsComponent {
   
   filterList(event: Event) {
     const listToFilter = [...this.currentCategoryItems!!]
-    const textToFilter = (event.target as HTMLInputElement).value.toLowerCase();
-    if (textToFilter !== null) {
-      this.currentFilteredList = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
+    this.inputValue = (event.target as HTMLInputElement).value.toLowerCase();
+    if (this.inputValue !== null) {
+      this.currentFilteredList = listToFilter.filter(item => item.title.toLowerCase().includes(this.inputValue) || item.shortedName?.toLowerCase().includes(this.inputValue))
     }
   }
 
@@ -245,12 +247,17 @@ export class CurrencyItemDetailsComponent {
     this.initializeCurrencyInfo(value)
   }
 
+  ngOnChange () {
+    console.log(this.currencyItem)
+  }
+
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.title = params['title'];
 
       this.currencyItem = this.requestArray.allItemsList.find((item) => item.slugText == this.title)!;
+
 
       if (this.currencyItem) {
         if (this.currencyItem.faGroupName === 'بازارهای ارزی') {

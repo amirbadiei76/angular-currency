@@ -80,6 +80,7 @@ export class CurrencyItemDetailsComponent {
 
   onItemSelect(slug: string) {
     this.inputBlur()
+    this.inputValue = ''
     this.router.navigate([`/${slug}`])
     window.scrollTo(0, 0)
   }

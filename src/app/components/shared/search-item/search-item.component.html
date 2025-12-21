@@ -1,4 +1,4 @@
 <div (click)="onSelectItem()" class="flex items-center justify-end gap-2 hover:cursor-pointer">
     <p class="text-sm text-dark-text text-right dark:text-light-text">{{item?.title}}</p>
-    <img class="rounded-full object-cover w-8 h-8" src={{item?.img}} alt={{item?.title}}>
+    <img loading="lazy" decoding="async" class="rounded-full object-cover w-8 h-8" src={{item?.img}} alt={{item?.title}}>
 </div>

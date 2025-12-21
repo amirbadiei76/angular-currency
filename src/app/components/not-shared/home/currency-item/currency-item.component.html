@@ -20,7 +20,7 @@
                 </div>
                 <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
             </div>
-            <p class="{{currencyItem?.groupName !== 'World_Market' ? 'opacity-100' : 'opacity-0'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</p>
+            <p class="{{currencyItem?.groupName !== 'World_Market' ? 'visible' : 'invisible'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</p>
         </div>
     </div>
     <div class="flex justify-end items-start gap-1.5 flex-1">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="flex gap-0 md:gap-1.5 flex-row sm:flex-col md:flex-row">
-            <img class="md:w-8 md:h-8 w-6 h-6 object-cover rounded-full mr-2 mt-1" src="{{currencyItem?.img}}" alt="">
+            <img loading="lazy" decoding="async" class="md:w-8 md:h-8 w-6 h-6 object-cover rounded-full mr-2 mt-1" src="{{currencyItem?.img}}" alt="{{currencyItem?.title}}">
         
             <div class="flex">
                 <span *ngIf="currencyItem?.isFav" class="w-6 h-7" (click)="removeFromFav($event)">

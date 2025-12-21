@@ -111,6 +111,7 @@
                 </div>
             </div>
         </div>
+        
         <div *ngIf="currenTemptList?.length !== 0" class="order-4">
             @for (item of currenTemptList2; track item.id) {
                 <currency-item
@@ -130,9 +131,10 @@
                 <p>
             }
         </div>
+        
         <div
-            *ngIf="currentCategory() !== 'دیده بان' && currenTemptList?.length === 0"
             class="order-5"
+            *ngIf="currentCategory() !== 'دیده بان' && currenTemptList?.length === 0"
             >
             <empty-item />
             <empty-item />

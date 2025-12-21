@@ -25,6 +25,6 @@
             <p class="text-dark-text2 dark:text-light-text2 text-right w-full font-normal text-xs text-ellipsis line-clamp-1">{{ currencyItem()?.shortedName }}</p>
         </div>
     
-        <img class="w-8 h-8 object-cover rounded-full" src="{{ currencyItem()?.img }}" alt="{{ currencyItem()?.title }}">
+        <img loading="lazy" decoding="async" class="w-8 h-8 object-cover rounded-full" src="{{ currencyItem()?.img }}" alt="{{ currencyItem()?.title }}">
     </div>
 </div>

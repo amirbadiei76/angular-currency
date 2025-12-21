@@ -64,7 +64,15 @@
                 </div>
                 <!-- Gold Input -->
                 <div class="w-full text-right">
-                    <p class="dropdown-title-base">قیمت طلا</p>
+                    <div class="relative flex flex-row-reverse gap-2">
+                        <p class="dropdown-title-base">قیمت طلا</p>
+                        <div class="group h-full flex justify-center items-start {{ currentGoldType() === 2 ? 'visible' : 'invisible' }}"> 
+                            <span class="z-[2] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col top-0 right-[-0.7rem] md:right-[-0.98rem] h-13 justify-center items-end w-40.5 md:w-47 top-speech-bubble">
+                                <p class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">محاسبه‌شده از قیمت مثقال طلای آب شده ÷ 4.608</p>
+                            </span>
+                            <i class="hover:cursor-pointer z-[2] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                        </div>
+                    </div>
                     <div class="relative w-full">
                         <p class="input-unit-base {{ !gram18Value ? 'invisible' : 'visible' }}">تومان</p>
                         <input

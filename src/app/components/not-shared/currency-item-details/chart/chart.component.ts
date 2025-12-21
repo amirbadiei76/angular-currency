@@ -102,9 +102,11 @@ export class ChartComponent {
       const processedData = this.parseData(this.historyData as RawData[]);
 
       this.currentUnit()
+
       this.candlestickSeries?.setData(processedData.candles as any[])
       this.volumeSeries?.setData(processedData.volumes as any[])
       this.lineSeries?.setData(processedData.lineVolumes as any[]);
+      this.chart?.timeScale().fitContent()
     })
   }
 
@@ -430,7 +432,8 @@ export class ChartComponent {
         horzLines: { color: 'rgba(42, 46, 57, 0.3)' },
       },
       rightPriceScale: {
-        borderColor: '#888'
+        borderColor: '#888',
+        autoScale: true
       },
       timeScale: {
         borderColor: 'rgba(197, 203, 206, 0.2)',
@@ -457,6 +460,8 @@ export class ChartComponent {
       },
       width: this.chartContainer.nativeElement.clientWidth,
     });
+
+    this.chart.timeScale().fitContent()
 
     
     this.candlestickSeries = this.chart.addSeries(CandlestickSeries, {

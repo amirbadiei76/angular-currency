@@ -97,6 +97,7 @@ export function normalizeValue (high: number, low: number, open: number, close: 
 }
 
 export function valueToDollarChanges (itemChanges: number, dollarChanges: number) {
+    if (dollarChanges === -1) return NaN;
     return (((1 + itemChanges) / (1 + dollarChanges)) - 1)
 }
 

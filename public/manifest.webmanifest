@@ -1,0 +1,15 @@
+{
+  "name": "ارزیاب | قیمت انواع ارزها",
+  "short_name": "ارزیاب",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "assets/images/arzyab144-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}

@@ -106,6 +106,7 @@ export class ChartComponent {
       this.candlestickSeries?.setData(processedData.candles as any[])
       this.volumeSeries?.setData(processedData.volumes as any[])
       this.lineSeries?.setData(processedData.lineVolumes as any[]);
+      
       this.chart?.timeScale().fitContent()
     })
   }

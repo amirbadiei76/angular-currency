@@ -94,8 +94,8 @@ export class RequestArrayService {
         const items: string[] | undefined = JSON.parse(localStorage.getItem('fav') as string)
         const favItems: CurrencyItem[] = []
         if (items) {
-            for (const item of this.allItemsList) {
-                for (const favId of items!) {
+            for (const favId of items!) {
+                for (const item of this.allItemsList) {
                     if (item.id === favId) favItems.push(item)
                 }
             }

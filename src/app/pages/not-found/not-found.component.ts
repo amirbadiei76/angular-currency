@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
 import { RequestArrayService } from '../../services/request-array.service';
 import { NotFoundBoxComponent } from '../../components/shared/not-found-box/not-found-box.component';
 
@@ -11,7 +11,19 @@ import { NotFoundBoxComponent } from '../../components/shared/not-found-box/not-
 })
 export class NotFoundComponent {
   
-  constructor(private requestClass: RequestArrayService) {
+  constructor(private requestClass: RequestArrayService, private meta: Meta) {
       requestClass.setupMainData();
+  }
+
+  ngOnInit () {
+    this.meta.updateTag({
+      name: 'description',
+      content: 'صفحه‌ای که به دنبال آن هستید پیدا نشد. لطفاً به صفحه اصلی ارزیاب بازگردید.'
+    });
+  
+    this.meta.updateTag({
+      name: 'robots',
+      content: 'noindex, follow'
+    });
   }
 }

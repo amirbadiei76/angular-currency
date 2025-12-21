@@ -6,6 +6,7 @@ import { RequestArrayService } from '../../services/request-array.service';
 import { ItemInfoComponent } from '../../components/not-shared/currency-item-details/item-info/item-info.component';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeService } from '../../services/theme.service';
+import { Meta, Title } from '@angular/platform-browser';
 import { BASE_METALS_PREFIX, COIN_PREFIX, COMMODITY_PREFIX, CRYPTO_PREFIX, dollar_unit, GOLD_PREFIX, MAIN_CURRENCY_PREFIX, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/shared/search-item/search-item.component';
 import { filter, fromEvent, retry, throttleTime } from 'rxjs';
@@ -48,7 +49,7 @@ export class CurrencyItemDetailsComponent {
   @ViewChild('inputContainer') inputContainer?: ElementRef;
 
 
-  constructor(private route: ActivatedRoute, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService, private router: Router) {
+  constructor(private route: ActivatedRoute, private pageTitle: Title, private meta: Meta, private requestArray: RequestArrayService, private notificationService: NotificationService, private themeService: ThemeService, private router: Router) {
     this.themeServiceInstance = themeService;
     if (!requestArray.mainData) {
       requestArray.setupMainData();
@@ -261,11 +262,17 @@ export class CurrencyItemDetailsComponent {
 
       if (this.currencyItem) {
         if (this.currencyItem.faGroupName === 'بازارهای ارزی') {
-          document.title = 'نسبت ' + this.currencyItem.title;
+          // document.title = 'نسبت ' + this.currencyItem.title;
+          this.pageTitle.setTitle(`ارزیاب | قیمت ${this.currencyItem.title}`);
         }
         else {
-          document.title = 'قیمت ' + this.currencyItem.title;
+          // document.title = 'قیمت ' + this.currencyItem.title;
+          this.pageTitle.setTitle(`ارزیاب | قیمت ${this.currencyItem.title}`);
         }
+        this.meta.updateTag({
+          name: 'description',
+          content: `قیمت لحظه‌ای ${this.currencyItem.title} همراه با نمودار، تغییرات و اطلاعات بازار در ارزیاب.`
+        });
         
   
         this.breadCrumbItems = [

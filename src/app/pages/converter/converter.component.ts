@@ -1,6 +1,7 @@
 import { Component, effect, ElementRef, inject, signal, TemplateRef, ViewChild } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { CurrencyItem } from '../../interfaces/data.types';
+import { Meta } from '@angular/platform-browser';
 import { filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/shared/search-item/search-item.component';
 import { FormsModule } from '@angular/forms';
@@ -79,7 +80,7 @@ export class ConverterComponent {
   toItem= signal(this.irItem);
   toDropdownOpen = signal(false);
   
-  constructor() {
+  constructor(private meta: Meta) {
     if (typeof window !== 'undefined') {      
       window.scrollTo(0, 0)
     }
@@ -92,6 +93,11 @@ export class ConverterComponent {
   }
 
   ngOnInit () {
+    this.meta.updateTag({
+      name: 'description',
+      content: `مبدل ارز ارزیاب؛ تبدیل سریع و دقیق ارزهای معتبر با نرخ به‌روز بازار.`
+    });
+
     if (this.requestArray.mainData) {
       this.initLists(0)
       this.initRialChanges();

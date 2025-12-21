@@ -1,6 +1,7 @@
 import { Component, computed, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { fromEvent } from 'rxjs';
+import { Meta } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
 import { CurrencyItem } from '../../interfaces/data.types';
@@ -156,7 +157,7 @@ export class GoldCalculatorComponent {
   goldOunceValue?: CurrencyItem;
   
 
-  constructor () {
+  constructor (private meta: Meta) {
     
 
       this.initAllGoldValues();
@@ -301,7 +302,10 @@ export class GoldCalculatorComponent {
   }
 
   ngOnInit () {
-    
+    this.meta.updateTag({
+      name: 'description',
+      content: `محاسبه‌گر قیمت طلا در ارزیاب؛ تبدیل انواع واحدهای طلا در ارزیاب؛ محاسبه قیمت طلای ۱۸ عیار، ۲۴ عیار و طلای آب‌شده بر اساس نرخ روز.`
+    });
   }
 
   changeProfitType (value: number) {

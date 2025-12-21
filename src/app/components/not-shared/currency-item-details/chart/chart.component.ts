@@ -430,7 +430,7 @@ export class ChartComponent {
         horzLines: { color: 'rgba(42, 46, 57, 0.3)' },
       },
       rightPriceScale: {
-        borderColor: '#888',
+        borderColor: '#888'
       },
       timeScale: {
         borderColor: 'rgba(197, 203, 206, 0.2)',
@@ -444,10 +444,16 @@ export class ChartComponent {
           if (date.getMonth() === 0 && day === 1) return `${year}`;
           if (day === 1) return `${month}`
           return `${day}`;
-        },
+        }
       },
       crosshair: {
         mode: CrosshairMode.Normal,
+        vertLine: {
+          labelBackgroundColor: '#333'
+        },
+        horzLine: {
+          labelBackgroundColor: '#333'
+        }
       },
       width: this.chartContainer.nativeElement.clientWidth,
     });

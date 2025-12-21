@@ -1,9 +1,10 @@
 import { Component, ElementRef, inject, signal, ViewChild, WritableSignal } from '@angular/core';
-import { Currencies, CurrencyItem } from '../../interfaces/data.types';
+import { CurrencyItem } from '../../interfaces/data.types';
 import { CurrencyItemComponent } from '../../components/not-shared/home/currency-item/currency-item.component';
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../../constants/Values';
 import { StarIconComponent } from '../../components/shared/star-icon/star-icon.component';
 import { NgIf } from '@angular/common';
+import { Meta, Title } from '@angular/platform-browser';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators'
 import { RequestArrayService } from '../../services/request-array.service';
@@ -159,7 +160,7 @@ export class HomeComponent {
   priceSortingText: WritableSignal<string> = signal("قیمت")
 
 
-  constructor() {
+  constructor(private title: Title, private meta: Meta) {
     this.setCurrentCategory(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory);
 
     if (typeof window !== 'undefined') {      
@@ -501,6 +502,12 @@ export class HomeComponent {
   }
 
   ngOnInit () {
+    this.title.setTitle('ارزیاب | مرجع قیمت بازارها');
+    this.meta.updateTag({
+      name: 'description',
+      content: 'قیمت لحظه‌ای ارز، طلا، سکه، ارز دیجیتال، فلزات گرانبها، فلزات پایه و بازار کالاها در ارزیاب؛ مرجع دقیق و به‌روز قیمت بازارها.'
+    });
+
     if (typeof window !== 'undefined') {
       
       fromEvent(window, 'resize')

@@ -461,8 +461,6 @@ export class ChartComponent {
       width: this.chartContainer.nativeElement.clientWidth,
     });
 
-    this.chart.timeScale().fitContent()
-
     
     this.candlestickSeries = this.chart.addSeries(CandlestickSeries, {
       upColor: '#30a46c',

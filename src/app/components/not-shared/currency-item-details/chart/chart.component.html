@@ -34,8 +34,8 @@
     <div class="relative w-full {{ historyData ? 'hidden' : 'flex' }} z-0 h-75 md:h-94 skeleton-base"></div>
 
     <div #chartContainer id="chartContainer" class="relative {{ historyData ? 'flex' : 'hidden' }} w-full z-0 h-63 md:h-82 font-iranyekan text-light-text4 dark:text-dark-text4">
-      <div class="absolute {{ chartType() === 0 ? 'invisible md:visible' : 'invisible' }} left-0 top-0 hidden md:flex flex-col items-start gap-0.5 p-1 z-[2]">
-        <div class="flex items-center gap-2 bg-[#f4f4f4ac] dark:bg-[#1b1b1bac] py-0.5 px-2">
+      <div class="absolute left-0 top-0 flex flex-col items-start gap-0.5 p-1 z-[2]">
+        <div class="flex items-center {{ chartType() === 0 ? 'hidden md:flex' : 'hidden' }} gap-2 bg-[#f4f4f4ac] dark:bg-[#1b1b1bac] py-0.5 px-2">
           <span
             class="text-xs font-mono font-medium"
             [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">
@@ -68,7 +68,7 @@
             {{ open() }}<p class="text-dark dark:text-light text-xs">O</p>
           </span>
         </div>
-        <div class="py-0.5">
+        <div class="py-0.5 {{ chartType() === 0 ? 'hidden md:flex' : 'hidden' }}">
           <span
             class="text-xs font-medium flex bg-[#f4f4f4ac] dark:bg-[#1b1b1bac] py-0.5 px-2"
             [ngClass]="isPositive() ? 'text-trade-green' : 'text-trade-red'">

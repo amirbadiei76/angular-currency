@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, input, Input, signal, ViewChild } from '@angular/core';
-import { createChart, IChartApi, ISeriesApi, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries, LineStyle } from 'lightweight-charts'
+import { createChart, IChartApi, ISeriesApi, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries, LineStyle, PriceScaleMode } from 'lightweight-charts'
 import { CommonModule } from '@angular/common';
 import { CandleData, RawData, VolumeData } from '../../../../interfaces/chart.types';
 import { CurrencyItem } from '../../../../interfaces/data.types';
@@ -472,8 +472,6 @@ export class ChartComponent {
       wickDownColor: '#ff4245',
     });
     this.candlestickSeries!.setData(data.candles);
-
-    const timeScale = this.chart.timeScale();
 
     this.volumeSeries = this.chart.addSeries(HistogramSeries, {
       priceFormat: { type: 'volume' },

@@ -68,9 +68,8 @@ export class RequestArrayService {
         const msg = JSON.parse(message.data) as ({type: string} & {payload: Currencies});
 
         if (msg.type === 'update') {
-            // const data = JSON.parse(msg.payload) as Currencies;
             const data: Currencies = msg.payload;
-
+            
             this.mainData = data;
             console.log(data)
             this.setupAllCurrentData(data.current)

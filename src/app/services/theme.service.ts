@@ -1,13 +1,15 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 
+type ThemeType = 'light' | 'dark';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
 
   private renderer: Renderer2;
-  private currentTheme: 'light' | 'dark';
+  private currentTheme: ThemeType = 'light';
   private isDark = false;
   private themeKey = 'user-theme';
 
@@ -17,13 +19,12 @@ export class ThemeService {
     this.currentTheme = this.document.documentElement.classList.contains('dark') ? 'dark' : 'light'
   }
 
-  private setTheme (theme: 'light' | 'dark') {
+  private setTheme (theme: ThemeType = 'light') {
     if (theme === this.currentTheme) return;
-    this.isDark = theme === 'dark' ? true : false
+    this.isDark = theme === 'dark' ? true : false;
     this.currentTheme = theme;
     if (theme === 'dark') this.renderer.addClass(this.document.documentElement, 'dark')
     else this.renderer.removeClass(this.document.documentElement, 'dark')
-
     this.setCookie(this.themeKey, theme, 365 * 10);
   }
 

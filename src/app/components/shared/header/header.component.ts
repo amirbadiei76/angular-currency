@@ -6,12 +6,13 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
-  imports: [NgIf, RouterLink],
+  imports: [RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
 
+  currentTheme = 'light'
   isDark: boolean = false;
   @Output() menuClick = new EventEmitter<void>();
   themeService: ThemeService;
@@ -21,16 +22,6 @@ export class HeaderComponent {
   constructor (private theme: ThemeService) {
     this.themeService = theme;
     this.themeService.getStringTheme();
-    // if (typeof window !== 'undefined') {
-    //   if (localStorage.getItem("theme") == null) localStorage.setItem("theme", "light");
-    //   else {
-    //     if (localStorage.getItem("theme") === 'dark') {
-    //       document.documentElement.classList.add("dark")
-    //       this.isDark = true
-    //     }
-    //     else this.isDark = false;
-    //   }
-    // }
   }
 
   ngOnInit() {

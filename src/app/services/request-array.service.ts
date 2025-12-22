@@ -10,6 +10,16 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root'
 })
 export class RequestArrayService {
+
+    private mainDataSubject? = new BehaviorSubject<Currencies | undefined>(undefined);
+    private allItemListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private cryptoListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private worldMarketListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private coinListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private goldListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private preciousMetalListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private baseMetalListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private commodityListSubject = new BehaviorSubject<CurrencyItem[]>([]);
   
     mainData?: Currencies;
     allItemsList: CurrencyItem[] = [];
@@ -29,9 +39,69 @@ export class RequestArrayService {
     currentState = '+';
     currentItem = '';
 
-  constructor(private currencyService: CurrenciesService) {
+    private ws?: WebSocket;
+    prices$ = new BehaviorSubject<any>(null);
+
+  constructor(private currencyService: CurrenciesService, @Inject(PLATFORM_ID) private platformId: Object) {
     this.setupMainData();
   }
+
+  connect () {
+    if (typeof window === 'undefined') return;
+
+    this.ws = new WebSocket(`wss://price-board.liara.run`);
+
+    // Handle socket events
+    this.ws.onopen = (event) => {
+        console.log("Websocket connection Opened");
+        this.startHeartbeat()
+    };
+
+    this.ws.onclose = (event) => {
+        this.stopHeartbeat()!;
+        console.log("Websocket connection closed");
+    };
+
+    // Handle incoming messages
+    this.ws.onmessage = (message) => {
+        console.log(message.data)
+        const msg = JSON.parse(message.data) as ({type: string} & {payload: Currencies});
+
+        if (msg.type === 'update') {
+            // const data = JSON.parse(msg.payload) as Currencies;
+            const data: Currencies = msg.payload;
+
+            this.mainData = data;
+            console.log(data)
+            this.setupAllCurrentData(data.current)
+        }
+        else if (msg.type === 'pong') {
+            console.log('pong recieved..')
+        }
+    }
+    
+  }
+
+    private heartbeatTimer?: number;
+
+    startHeartbeat() {
+        this.heartbeatTimer = window.setInterval(() => {
+            console.log(this.ws?.readyState)
+            if (this.ws?.readyState === WebSocket.OPEN) {
+                this.ws.send(JSON.stringify({ type: 'ping' }));
+                console.log('Heartbeat sent: ' + Date.now())
+            }
+        }, 20000);
+    }
+
+    stopHeartbeat() {
+        clearInterval(this.heartbeatTimer);
+    }
+
+    ngOnDestroy () {
+        this.stopHeartbeat()
+    }
+
 
   addToFavorite(item: CurrencyItem) {
     if (window.navigator.onLine) {
@@ -174,37 +244,45 @@ export class RequestArrayService {
   }
 
   setupMainData() {
+    if (isPlatformBrowser(this.platformId)) {
+        this.connect();
+    }
+
     this.currencyService.getAllCurrencies()
     .subscribe((data: Currencies) => {
       this.mainData = data;
       
-      this.setupMainCurrenciesList(data.current)
-      this.calculateOtherCurrenccyPrices(this.mainCurrencyList, data.current, currency_title)
+      this.setupAllCurrentData(data.current);
+    })
+  }
 
-      this.setupCryptoList(data.current)
-      this.calculateOtherCurrenccyPrices(this.cryptoList, data.current, crypto_title)
+  setupAllCurrentData (current: Current) {
+    this.setupMainCurrenciesList(current)
+      this.calculateOtherCurrenccyPrices(this.mainCurrencyList, current, currency_title)
 
-      this.setupWorldMarketList(data.current)
-      this.calculateOtherCurrenccyPrices(this.worldMarketList, data.current, world_title)
+      this.setupCryptoList(current)
+      this.calculateOtherCurrenccyPrices(this.cryptoList, current, crypto_title)
 
-      this.setupCoinList(data.current)
-      this.calculateOtherCurrenccyPrices(this.coinList, data.current, coin_title)
+      this.setupWorldMarketList(current)
+      this.calculateOtherCurrenccyPrices(this.worldMarketList, current, world_title)
 
-      this.setupGoldList(data.current)
-      this.calculateOtherCurrenccyPrices(this.goldList, data.current, gold_title)
+      this.setupCoinList(current)
+      this.calculateOtherCurrenccyPrices(this.coinList, current, coin_title)
 
-      this.setupPreciousMetals(data.current)
-      this.calculateOtherCurrenccyPrices(this.preciousMetalList, data.current, precious_metal_title)
+      this.setupGoldList(current)
+      this.calculateOtherCurrenccyPrices(this.goldList, current, gold_title)
 
-      this.setupBaseMetals(data.current)
-      this.calculateOtherCurrenccyPrices(this.baseMetalList, data.current, base_metal_title)
+      this.setupPreciousMetals(current)
+      this.calculateOtherCurrenccyPrices(this.preciousMetalList, current, precious_metal_title)
 
-      this.setupCommodityMarket(data.current)
-      this.calculateOtherCurrenccyPrices(this.commodityList, data.current, commodity_title)
+      this.setupBaseMetals(current)
+      this.calculateOtherCurrenccyPrices(this.baseMetalList, current, base_metal_title)
+
+      this.setupCommodityMarket(current)
+      this.calculateOtherCurrenccyPrices(this.commodityList, current, commodity_title)
 
       this.setupAllItemsList()
       this.getFavorites()
-    })
   }
 
 

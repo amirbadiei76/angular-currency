@@ -10,6 +10,12 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: ':title',
-    renderMode: RenderMode.Server
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: async () => {
+      const requestService = inject(RequestArrayService)
+
+      const items = requestService.allItemsList.map((item) => ({title: item.slugText!}))
+      return items;
+    }
   }
 ];

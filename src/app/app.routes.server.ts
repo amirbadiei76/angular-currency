@@ -7,7 +7,15 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'converter',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'gold-calculator',
+    renderMode: RenderMode.Server
+  },
+  {
     path: '**',
-    renderMode: RenderMode.Server,
+    renderMode: RenderMode.Prerender,
   }
 ];

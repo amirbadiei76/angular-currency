@@ -9,6 +9,10 @@ export const serverRoutes: ServerRoute[] = [
 
   },
   {
+    path: '',
+    renderMode: RenderMode.Server
+  },
+  {
     path: ':title',
     renderMode: RenderMode.Server
   }

@@ -27,7 +27,7 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: ':title',
-    fallback: PrerenderFallback.Server,
+    fallback: PrerenderFallback.Client,
     renderMode: RenderMode.Prerender,
     getPrerenderParams: async () => {
       const service = inject(RequestArrayService);

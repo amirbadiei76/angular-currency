@@ -285,8 +285,7 @@ export class HomeComponent {
     this.currenTemptList2 = this.currentList;
     this.autoSortList()
     this.scrollToStart();
-    this.checkSubCategoryScrollPosition();
-    this.checkCategoryScrollPosition();
+    this.checkAllSnapScrollPositions()
   }
 
   onFavAddItem = (id: string) => {
@@ -506,10 +505,6 @@ export class HomeComponent {
     this.change24hSorting = SortingType.None;
   }
 
-  ngOnChange () {
-    this.setCurrentCategory(this.currentCategory(), this.currentSubCategory())
-  }
-
   ngOnInit () {
     this.title.setTitle('ارزیاب | مرجع قیمت بازارها');
     this.meta.updateTag({
@@ -568,14 +563,17 @@ export class HomeComponent {
 
       fromEvent(window, 'resize')
       .subscribe((event) => {
-        this.checkSubCategoryScrollPosition()
-        this.checkCategoryScrollPosition()
+        this.checkAllSnapScrollPositions()
       })
       
     }
+    this.checkAllSnapScrollPositions()
+    this.filterByCategory(this.currentSubCategory())
+  }
+
+  checkAllSnapScrollPositions () {
     this.checkSubCategoryScrollPosition();
     this.checkCategoryScrollPosition();
-    this.filterByCategory(this.currentSubCategory())
   }
 
   onScrollEventHandler () {

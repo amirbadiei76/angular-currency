@@ -2,12 +2,50 @@
   "name": "ارزیاب | قیمت انواع ارزها",
   "short_name": "ارزیاب",
   "display": "standalone",
+  "theme_color": "#fafefd",
+  "background_color": "#fafefd",
   "scope": "./",
   "start_url": "./",
   "icons": [
     {
-      "src": "assets/images/arzyab144-144-r4.png",
+      "src": "assets/icons/webapp/favicon16×16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/webapp/favicon32×32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/webapp/favicon48×48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/webapp/favicon96×96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/webapp/favicon144×144.png",
       "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/webapp/favicon192×192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/webapp/favicon512×512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
     }

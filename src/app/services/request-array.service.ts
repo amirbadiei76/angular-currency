@@ -88,7 +88,7 @@ export class RequestArrayService {
             console.log(this.ws?.readyState)
             if (this.ws?.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({ type: 'ping' }));
-                console.log('Heartbeat sent: ' + Date.now())
+                console.log('Heartbeat sent: ' + new Date())
             }
         }, 20000);
     }

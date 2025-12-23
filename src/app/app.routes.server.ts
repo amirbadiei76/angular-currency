@@ -4,40 +4,12 @@ import { RequestArrayService } from './services/request-array.service';
 import { ActivatedRoute } from '@angular/router';
 
 export const serverRoutes: ServerRoute[] = [
-  // {
-  //   path: ':title',
-  //   renderMode: RenderMode.Server
-  // },
-  // {
-  //   path: '**',
-  //   renderMode: RenderMode.Prerender,
-
-  // }
-  {
-    path: 'converter',
-    renderMode: RenderMode.Server
-  },
-  {
-    path: 'gold-calculator',
-    renderMode: RenderMode.Server
-  },
-  {
-    path: '',
-    renderMode: RenderMode.Prerender
-  },
   {
     path: ':title',
-    fallback: PrerenderFallback.Client,
-    renderMode: RenderMode.Prerender,
-    getPrerenderParams: async () => {
-      const service = inject(RequestArrayService);
-      return service.allItemsList.map((item) => ({
-        title: item.slugText!
-      }))
-    }
+    renderMode: RenderMode.Server
   },
   {
     path: '**',
-    renderMode: RenderMode.Server
+    renderMode: RenderMode.Prerender,
   }
 ];

@@ -38,7 +38,7 @@
                     [disabled]="mainFromList().length === 0"
                     (click)="toggleToDropdown()"
                     class="dropdown-button-base h-[49.6px]
-                        {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : ''}}"
+                        {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : 'animate-none'}}"
                   >
                     <i [class.rotate-180]="toDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
                     @if (mainFromList().length) {
@@ -89,7 +89,7 @@
                       [disabled]="mainFromList().length === 0"
                       (click)="toggleFromeDropdown()"
                       class="dropdown-button-base h-[49.6px]
-                          {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : ''}}"
+                          {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : 'animate-none'}}"
                   >
                     <i [class.rotate-180]="fromDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
                     @if (mainFromList().length) {

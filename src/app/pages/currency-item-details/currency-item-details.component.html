@@ -1,4 +1,5 @@
 <main class="w-full min-h-[var(--screen-height)] bg-theme-white dark:bg-theme-black flex px-4 pt-20 pb-6 lg:px-18 lg:pb-8 lg:pt-24 lg:flex-row-reverse xl:pt-29 xl:px-41 xl:pb-16 flex-col flex-nowrap justify-between items-start">
+    @if (canShowItem()) {
     <div class="z-[2] w-full lg:w-[69%] flex flex-col flex-nowrap justify-end items-end content-center">
         <app-breadcrumb [items]="breadCrumbItems" />
         <div class="w-full flex justify-between items-center gap-2">
@@ -103,4 +104,8 @@
     <aside class="w-full lg:w-[27%] flex flex-col flex-nowrap justify-start items-end content-center">
         <app-currency-overview class="w-full h-full" [currentSelected]="currencyItem" (currentUnit)="onCurrencyUnitChange($event)" [relatedItems]="currentCategoryItems" />
     </aside>
+    }
+    @else {
+        <app-not-found-box class="w-full" />
+    }
 </main>

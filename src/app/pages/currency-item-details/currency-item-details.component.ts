@@ -23,7 +23,7 @@ import { NotFoundBoxComponent } from '../../components/shared/not-found-box/not-
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, FormsModule, ItemInfoComponent, ItemInfoSkeletonComponent, PercentProgressComponent, PercentProgressSkeletonComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
+  imports: [BreadcrumbComponent, NotFoundBoxComponent, FormsModule, ItemInfoComponent, ItemInfoSkeletonComponent, PercentProgressComponent, PercentProgressSkeletonComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -42,6 +42,8 @@ export class CurrencyItemDetailsComponent {
   
   currentSupportCurrencyId = signal(0)
   currentChartType = signal(0);
+
+  canShowItem = signal(true);
 
   inputValue = '';
 
@@ -262,11 +264,9 @@ export class CurrencyItemDetailsComponent {
 
       if (this.currencyItem) {
         if (this.currencyItem.faGroupName === 'بازارهای ارزی') {
-          // document.title = 'نسبت ' + this.currencyItem.title;
           this.pageTitle.setTitle(`ارزیاب | قیمت ${this.currencyItem.title}`);
         }
         else {
-          // document.title = 'قیمت ' + this.currencyItem.title;
           this.pageTitle.setTitle(`ارزیاب | قیمت ${this.currencyItem.title}`);
         }
         this.meta.updateTag({
@@ -286,6 +286,9 @@ export class CurrencyItemDetailsComponent {
         this.initializeCurrentCategoryItems();
         this.initializeCurrencyInfo(0);
         this.initializeChartHistory();
+      }
+      else {
+        if (typeof window !== 'undefined') this.canShowItem.set(false)
       }
     })
 

@@ -15,11 +15,11 @@ export const serverRoutes: ServerRoute[] = [
   // }
   {
     path: 'converter',
-    renderMode: RenderMode.Prerender
+    renderMode: RenderMode.Server
   },
   {
     path: 'gold-calculator',
-    renderMode: RenderMode.Prerender
+    renderMode: RenderMode.Server
   },
   {
     path: '',
@@ -27,7 +27,14 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: ':title',
-    renderMode: RenderMode.Server
+    fallback: PrerenderFallback.Server,
+    renderMode: RenderMode.Prerender,
+    getPrerenderParams: async () => {
+      const service = inject(RequestArrayService);
+      return service.allItemsList.map((item) => ({
+        title: item.slugText!
+      }))
+    }
   },
   {
     path: '**',

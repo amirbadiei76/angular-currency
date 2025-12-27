@@ -229,7 +229,7 @@
 }
 
 @utility skeleton-base {
-    @apply pointer-events-none rounded-lg text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2]
+    @apply pointer-events-none duration-150 rounded-md text-transparent animate-pulse bg-light-border dark:bg-dark-border z-[2]
 }
 
 .scroll-snap-x {

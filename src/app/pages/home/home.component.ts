@@ -1,24 +1,28 @@
-import { Component, effect, ElementRef, inject, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, signal, ViewChild, WritableSignal } from '@angular/core';
 import { CurrencyItem } from '../../interfaces/data.types';
 import { CurrencyItemComponent } from '../../components/not-shared/home/currency-item/currency-item.component';
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, favories_title, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_overview, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../../constants/Values';
 import { StarIconComponent } from '../../components/shared/star-icon/star-icon.component';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
-import { fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators'
+import { combineLatest, fromEvent, Observable, of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators'
 import { RequestArrayService } from '../../services/request-array.service';
 import { EmptyItemComponent } from '../../components/not-shared/home/empty-item/empty-item.component';
 import { HomeStateService } from '../../services/home-state.service';
 import { NotificationService } from '../../services/notification.service';
+
+import { toObservable } from '@angular/core/rxjs-interop';
+
 
 enum SortingType {
   Ascending, Descending, None
 }
 
 @Component({
+  standalone: true,
   selector: 'app-home',
-  imports: [CurrencyItemComponent, NgIf, StarIconComponent, EmptyItemComponent],
+  imports: [CurrencyItemComponent, NgIf, StarIconComponent, EmptyItemComponent, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -124,20 +128,27 @@ export class HomeComponent {
     }
   ]
 
-  currentList?: CurrencyItem[] = [];
-  currentSubCategoryList?: string[] = [];
-  currenTemptList?: CurrencyItem[] = [];
-  currenTemptList2?: CurrencyItem[] = [];
+  // currentList?: CurrencyItem[] = [];
+  // currentSubCategoryList?: string[] = [];
+  // currenTemptList?: CurrencyItem[] = [];
+  // currenTemptList2?: CurrencyItem[] = [];
+  textToFilter = signal('')
+  itemToRemove = signal<string>('')
   currentCategory: WritableSignal<string> = signal(this.categories[0].title)
   currentSubCategory: WritableSignal<string> = signal(filter_overview);
+
+  private currentCategory$ = toObservable(this.currentCategory);
+  private currentSubCategory$ = toObservable(this.currentSubCategory);
+  private textToFilter$ = toObservable(this.textToFilter);
+  private itemToRemove$ = toObservable(this.itemToRemove)
 
   lastCategory: WritableSignal<string> = signal(this.categories[0].title);
   categoryScrollValue: WritableSignal<number> = signal(0);
   subCategoryScrollValue: WritableSignal<number> = signal(0);
 
-  titleSorting: SortingType = SortingType.None;
-  priceSorting: SortingType = SortingType.None;
-  change24hSorting: SortingType = SortingType.None;
+  titleSorting = signal<SortingType>(SortingType.None);
+  priceSorting = signal<SortingType>(SortingType.None);
+  change24hSorting = signal<SortingType>(SortingType.None);
 
   private destroySubject = new Subject<void>();
 
@@ -159,6 +170,103 @@ export class HomeComponent {
   change24hText: WritableSignal<string> = signal("تغییر 24 ساعت")
   priceSortingText: WritableSignal<string> = signal("قیمت")
 
+  
+  private categoryStreamMap: Record<
+    string,
+    Observable<CurrencyItem[]>
+  > = {
+    [favories_title]: this.reqestClass?.favList!,
+    [currency_title]: this.reqestClass?.mainCurrencyList!,
+    [gold_title]: this.reqestClass?.goldList!,
+    [coin_title]: this.reqestClass?.coinList!,
+    [crypto_title]: this.reqestClass?.cryptoList!,
+    [world_title]: this.reqestClass?.worldMarketList!,
+    [precious_metal_title]: this.reqestClass?.preciousMetalList!,
+    [base_metal_title]: this.reqestClass?.baseMetalList!,
+    [commodity_title]: this.reqestClass?.commodityList!,
+  };
+
+  
+  titleSorting$ = toObservable(this.titleSorting);
+  priceSorting$ = toObservable(this.priceSorting);
+  change24hSorting$ = toObservable(this.change24hSorting);
+
+  currentList$ = this.currentCategory$.pipe(
+    switchMap(category =>
+      this.categoryStreamMap[category] ?? of([])
+    ),
+  )
+  
+  currentTempList$ = combineLatest([
+    this.currentCategory$,
+    this.currentSubCategory$
+  ]).pipe(
+    switchMap(([category, subCategory]) =>
+      (this.categoryStreamMap[category] ?? of([])).pipe(
+        map(list => ({ list, subCategory }))
+      )
+    ),
+    map(({ list, subCategory }) => {
+      const filteredList = (subCategory !== filter_overview) ? [...list].filter(item => item.filterName == subCategory) : list;
+      return filteredList
+    })
+  )
+  
+  // listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
+  currentTempList2$ = combineLatest([
+    this.currentCategory$,
+    this.titleSorting$,
+    this.priceSorting$,
+    this.change24hSorting$,
+    this.currentSubCategory$,
+    this.textToFilter$
+    
+  ]).pipe(
+    switchMap(([category, titleSort, priceSort, change24hSort, subCategory, textToFilter]) =>
+      (this.categoryStreamMap[category] ?? of([])).pipe(
+        map(list => ({ list, titleSort, priceSort, change24hSort, subCategory, textToFilter }))
+      )
+    ),
+    map(({ list, titleSort, priceSort, change24hSort, subCategory, textToFilter }) => {
+      const groupedList = (subCategory !== filter_overview) ? [...list].filter(item => item.filterName == subCategory) : list;
+
+      const trimedText = textToFilter.trim()
+      const filteredList = trimedText ? [...groupedList].filter(item => item.title.toLowerCase().includes(trimedText) || item.shortedName?.toLowerCase().includes(trimedText)) : groupedList;
+
+      if (titleSort === SortingType.Ascending) return this.setTitleListAscending(filteredList)
+      else if (titleSort === SortingType.Descending) return this.setTitleListDescending(filteredList)
+      
+
+      else if (priceSort === SortingType.Ascending) return this.setPriceListAscending(filteredList)
+      else if (priceSort === SortingType.Descending) return this.setPriceListDescending(filteredList)
+
+      else if (change24hSort === SortingType.Ascending) return this.setChange24hListAscending(filteredList)
+      else if (change24hSort === SortingType.Descending) return this.setChange24hListDescending(filteredList)
+
+      else return filteredList;
+    })
+  
+    // map(items => items.filter((item) => item.filterName === this.currentSubCategory() && item.id != this.itemToRemove() &&
+    //  (item.title.toLowerCase().includes(this.textToFilter()) || item.shortedName?.toLowerCase().includes(this.textToFilter()))
+    //  && (((this.titleSorting === SortingType.Ascending && this.setTitleListAscending(items)) || (this.titleSorting === SortingType.Descending && this.setTitleListDescending(items))) ||
+    //   ((this.priceSorting === SortingType.Ascending && this.setPriceListAscending(items)) || (this.priceSorting === SortingType.Descending && this.setPriceListDescending(items))) ||
+    //   ((this.change24hSorting === SortingType.Ascending && this.setChange24hListAscending(items)) || (this.change24hSorting === SortingType.Descending && this.setChange24hListDescending(items))))
+    // ))
+    
+    // map(items => items.filter((item) => item.filterName === this.currentSubCategory() && item.id != this.itemToRemove() &&
+    //  (item.title.toLowerCase().includes(this.textToFilter()) || item.shortedName?.toLowerCase().includes(this.textToFilter()))
+    //  && (((this.titleSorting === SortingType.Ascending && this.setTitleListAscending(items)) || (this.titleSorting === SortingType.Descending && this.setTitleListDescending(items))) ||
+    //   ((this.priceSorting === SortingType.Ascending && this.setPriceListAscending(items)) || (this.priceSorting === SortingType.Descending && this.setPriceListDescending(items))) ||
+    //   ((this.change24hSorting === SortingType.Ascending && this.setChange24hListAscending(items)) || (this.change24hSorting === SortingType.Descending && this.setChange24hListDescending(items))))
+    // ))
+
+  )
+
+  currentSubCategoryList = computed(() => {
+    return (
+      this.categories.find(c => c.title === this.currentCategory())?.subtitles
+    );
+  });
 
   constructor(private title: Title, private meta: Meta) {
     this.setCurrentCategory(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory);
@@ -183,6 +291,7 @@ export class HomeComponent {
       this.checkCategoryScrollPosition();
     })
   }
+
 
   categoryLeft () {
     const element = this.scrollViewCategory?.nativeElement;
@@ -218,72 +327,72 @@ export class HomeComponent {
     switch(title) {
       case favories_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.favList;
+        // this.currentList = this.reqestClass?.favList;
         this.initializeFavFilters();
         this.currentSupportCurrencyId = 0;
-        this.currentSubCategoryList = this.categories[0].subtitles
+        // this.currentSubCategoryList = this.categories[0].subtitles
         break;
 
       case currency_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.mainCurrencyList;
+        // this.currentList = this.reqestClass?.mainCurrencyList;
         this.currentSupportCurrencyId = 0;
-        this.currentSubCategoryList = this.categories[1].subtitles
+        // this.currentSubCategoryList = this.categories[1].subtitles
         break;
       
       case gold_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.goldList;
+        // this.currentList = this.reqestClass?.goldList;
         this.currentSupportCurrencyId = 0;
-        this.currentSubCategoryList = this.categories[2].subtitles
+        // this.currentSubCategoryList = this.categories[2].subtitles
         break;
 
       case coin_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.coinList;
+        // this.currentList = this.reqestClass?.coinList;
         this.currentSupportCurrencyId = 0;
-        this.currentSubCategoryList = this.categories[3].subtitles
+        // this.currentSubCategoryList = this.categories[3].subtitles
         break;
 
       case crypto_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.cryptoList;
+        // this.currentList = this.reqestClass?.cryptoList;
         this.currentSupportCurrencyId = 1;
-        this.currentSubCategoryList = this.categories[4].subtitles
+        // this.currentSubCategoryList = this.categories[4].subtitles
         break;
 
       case world_title:
         this.priceSortingText.set('نسبت');
-        this.currentList = this.reqestClass?.worldMarketList;
-        this.currentSubCategoryList = this.categories[5].subtitles
+        // this.currentList = this.reqestClass?.worldMarketList;
+        // this.currentSubCategoryList = this.categories[5].subtitles
         break;
 
       case precious_metal_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.preciousMetalList;
+        // this.currentList = this.reqestClass?.preciousMetalList;
         this.currentSupportCurrencyId = 1;
-        this.currentSubCategoryList = this.categories[6].subtitles
+        // this.currentSubCategoryList = this.categories[6].subtitles
         break;
 
       case base_metal_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.baseMetalList;
+        // this.currentList = this.reqestClass?.baseMetalList;
         this.currentSupportCurrencyId = 1;
-        this.currentSubCategoryList = this.categories[7].subtitles
+        // this.currentSubCategoryList = this.categories[7].subtitles
         break;
 
       case commodity_title:
         this.priceSortingText.set('قیمت');
-        this.currentList = this.reqestClass?.commodityList;
+        // this.currentList = this.reqestClass?.commodityList;
         this.currentSupportCurrencyId = 1;
-        this.currentSubCategoryList = this.categories[8].subtitles
+        // this.currentSubCategoryList = this.categories[8].subtitles
         break;
     }
     this.currentSubCategory.set(subCategory)
     this.lastHomeState.setSubCategory(subCategory);
-    this.currenTemptList = this.currentList;
-    this.currenTemptList2 = this.currentList;
-    this.autoSortList()
+    // this.currenTemptList = this.currentList;
+    // this.currenTemptList2 = this.currentList;
+    // this.autoSortList()
     this.scrollToStart();
     this.checkAllSnapScrollPositions()
   }
@@ -297,14 +406,43 @@ export class HomeComponent {
   onItemSelect = (id: string) => {
     
   }
+
+  private getChangeValue(item: CurrencyItem): number {
+    if (item.faGroupName !== 'بازارهای ارزی') {
+      const sign = item.rialChangeState === 'high' ? 1 : -1;
+      return sign * Number(item.rialChanges ?? 0);
+    }
+
+    const sign = item.lastPriceInfo?.dt === 'high' ? 1 : -1;
+    return sign * Number(item.lastPriceInfo?.dp ?? 0);
+  }
   
   onFavRemoveItem = (id: string) =>  {
       this.notificationService.show('با موفقیت از دیده بان حذف شد')
 
       if (this.currentCategory() == favories_title) {
-        this.currentList = this.currentList?.filter((item) => item.id !== id)
-        this.currenTemptList = this.currenTemptList?.filter((item) => item.id !== id)
-        this.currenTemptList2 = this.currenTemptList2?.filter((item) => item.id !== id) 
+        this.itemToRemove.set(id)
+        // this.currentList = this.currentList?.filter((item) => item.id !== id)
+        // this.currenTemptList = this.currenTemptList?.filter((item) => item.id !== id)
+        // this.currenTemptList2 = this.currenTemptList2?.filter((item) => item.id !== id) 
+        // this.currentList$ = this.currentList$.pipe(
+        //   map((items) => {
+        //     return items.filter((item) => item.id !== id)
+        //   })
+        // )
+
+        // this.currentTempList$ = this.currentTempList$.pipe(
+        //   map((items) => {
+        //     return items.filter((item) => item.id !== id)
+        //   })
+        // )
+        
+
+        // this.currentTempList2$ = this.currentTempList2$.pipe(
+        //   map((items) => {
+        //     return items.filter((item) => item.id !== id)
+        //   })
+        // )
       }
   }
 
@@ -314,10 +452,15 @@ export class HomeComponent {
 
 
   initializeFavFilters() {
-    let favSubCategoryList: string[] = [filter_overview]
-    this.reqestClass?.favList.forEach((item: CurrencyItem) => {
-      if (!favSubCategoryList.includes(item.filterName)) favSubCategoryList.push(item.filterName)
+    const favSubCategoryList: string[] = [filter_overview]
+    this.reqestClass?.favList.subscribe((items) => {
+      items.forEach((item) => {
+        if (!favSubCategoryList.includes(item.filterName)) favSubCategoryList.push(item.filterName)
+      })
     })
+    // this.reqestClass?.favList.forEach((item: CurrencyItem) => {
+    //   if (!favSubCategoryList.includes(item.filterName)) favSubCategoryList.push(item.filterName)
+    // })
     this.categories[0].subtitles = favSubCategoryList;
   }
 
@@ -325,184 +468,224 @@ export class HomeComponent {
     this.currentSubCategory.set(name);
     this.lastHomeState.setSubCategory(name);
 
-    if (this.currentSubCategory() === filter_overview) {
-      this.currenTemptList = this.currentList;
-      this.currenTemptList2 = this.currentList;
-    }
-    else {
-      let filteredList: CurrencyItem[] = [...this.currentList!!]
-      this.currenTemptList = filteredList.filter((item: CurrencyItem) => item.filterName == name)
-      this.currenTemptList2 = filteredList.filter((item: CurrencyItem) => item.filterName == name)
-    }
-    this.autoSortList()
+    // if (this.currentSubCategory() === filter_overview) {
+    //   this.currenTemptList = this.currentList;
+    //   this.currenTemptList2 = this.currentList;
+    // }
+    // else {
+    //   let filteredList: CurrencyItem[] = [...this.currentList!!]
+    //   this.currenTemptList = filteredList.filter((item: CurrencyItem) => item.filterName == name)
+    //   this.currenTemptList2 = filteredList.filter((item: CurrencyItem) => item.filterName == name)
+    // }
+    // const filteredList: CurrencyItem[] = [...this.currentList$!!]
+    // from(this.currentList$)
+    // .pipe(
+    //   map(items => items.filter((item) => item.filterName == name ))
+    // )
+    // let filteredList = new Observable();
+    // this.currentList$.subscribe((items) => )
+
+    // this.autoSortList()
   }
 
   filterList(event: Event) {
-    const listToFilter = [...this.currenTemptList!!]
+    // const listToFilter = [...this.currenTemptList!!]
     const textToFilter = (event.target as HTMLInputElement).value.toLowerCase()
-    if (textToFilter !== null) {
-      this.currenTemptList2 = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
-    }
+    this.textToFilter.set(textToFilter || '')
+    // if (textToFilter !== null) {
+    //   this.currenTemptList2 = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
+    // }
   }
 
-  convertToRial () {
-      if (this.currentList?.at(0)?.unit === dollar_unit) {
-          let convertedList: CurrencyItem[] = [...this.currenTemptList!!]
-          convertedList.forEach((item: CurrencyItem) => {
-            item.unit = toman_unit;
-          })
-      }
-      else {
-        this.currenTemptList = this.currentList;
-        this.currenTemptList2 = this.currentList;
-      }
-  }
+  // convertToRial () {
+  //     if (this.currentList?.at(0)?.unit === dollar_unit) {
+  //         let convertedList: CurrencyItem[] = [...this.currenTemptList!!]
+  //         convertedList.forEach((item: CurrencyItem) => {
+  //           item.unit = toman_unit;
+  //         })
+  //     }
+  //     else {
+  //       this.currenTemptList = this.currentList;
+  //       this.currenTemptList2 = this.currentList;
+  //     }
+  // }
 
   changeTitleSortingType() {
-    this.change24hSorting = SortingType.None;
-    this.priceSorting = SortingType.None;
+    this.change24hSorting.set(SortingType.None);
+    this.priceSorting.set(SortingType.None);
 
-    this.titleSorting++;
-    if (this.titleSorting.toString() === '3') this.titleSorting = 0;
+    this.titleSorting.update((type) => type + 1);
+    if (this.titleSorting().toString() === '3') this.titleSorting.set(0);
 
-    if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending()
-    else if (this.titleSorting === SortingType.Descending) this.setTitleListDescending()
-    else {
-      this.currenTemptList2 = this.currenTemptList;
-    }
+    // if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending()
+    // else if (this.titleSorting === SortingType.Descending) this.setTitleListDescending()
+    // else {
+    //   this.currenTemptList2 = this.currenTemptList;
+    // }
 
   }
 
-  autoSortList () {
-    if (this.titleSorting === SortingType.Ascending || this.titleSorting === SortingType.Descending) {
-      if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending();
-      else this.setTitleListDescending()
-    }
-    else if (this.priceSorting === SortingType.Ascending || this.priceSorting === SortingType.Descending) {
-      if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending();
-      else this.setPriceListDescending();
-    }
-    else if (this.change24hSorting === SortingType.Ascending || this.change24hSorting === SortingType.Descending) {
-      if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending();
-      else this.setChange24hListDescending();
-    }
-  }
+  // autoSortList () {
+  //   if (this.titleSorting === SortingType.Ascending || this.titleSorting === SortingType.Descending) {
+  //     if (this.titleSorting === SortingType.Ascending) this.setTitleListAscending();
+  //     else this.setTitleListDescending()
+  //   }
+  //   else if (this.priceSorting === SortingType.Ascending || this.priceSorting === SortingType.Descending) {
+  //     if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending();
+  //     else this.setPriceListDescending();
+  //   }
+  //   else if (this.change24hSorting === SortingType.Ascending || this.change24hSorting === SortingType.Descending) {
+  //     if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending();
+  //     else this.setChange24hListDescending();
+  //   }
+  // }
 
   
   changePriceSortingType() {
-    this.titleSorting = SortingType.None;
-    this.change24hSorting = SortingType.None;
+    this.titleSorting.set(SortingType.None);
+    this.change24hSorting.set(SortingType.None);
 
-    this.priceSorting++;
-    if (this.priceSorting.toString() === '3') this.priceSorting = 0;
+    this.priceSorting.update(type => type + 1);
+    if (this.priceSorting().toString() === '3') this.priceSorting.set(0);
 
-    if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending()
-    else if (this.priceSorting === SortingType.Descending) this.setPriceListDescending()
-    else {
-      this.currenTemptList2 = this.currenTemptList;
-    }
+    // if (this.priceSorting === SortingType.Ascending) this.setPriceListAscending()
+    // else if (this.priceSorting === SortingType.Descending) this.setPriceListDescending()
+    // else {
+    //   this.currenTemptList2 = this.currenTemptList;
+    // }
   }
 
   
   changeChange24hSortingType() {
-    this.titleSorting = SortingType.None;
-    this.priceSorting = SortingType.None;
+    this.titleSorting.set(SortingType.None);
+    this.priceSorting.set(SortingType.None);
 
-    this.change24hSorting++;
-    if (this.change24hSorting.toString() === '3') this.change24hSorting = 0;
+    this.change24hSorting.update(type => type + 1);
+    if (this.change24hSorting().toString() === '3') this.change24hSorting.set(0);
     
-    if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending()
-    else if (this.change24hSorting === SortingType.Descending) this.setChange24hListDescending()
-    else {
-      this.currenTemptList2 = this.currenTemptList;
-    }
+    // if (this.change24hSorting === SortingType.Ascending) this.setChange24hListAscending()
+    // else if (this.change24hSorting === SortingType.Descending) this.setChange24hListDescending()
+    // else {
+    //   this.currenTemptList2 = this.currenTemptList;
+    // }
   }
 
   
-  setChange24hListDescending () {
-    let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList2 = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
-      if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
-        const aValue = (a.dollarChangeState === 'high' ? '+' : '-') + a.dollarChanges!;
-        const bValue = (b.dollarChangeState === 'high' ? '+' : '-') + b.dollarChanges!;
+  setChange24hListDescending (items: CurrencyItem[]) {
+    const descendingPriceList: CurrencyItem[] = [...items]
+    return descendingPriceList.sort((a, b) => {
+      const aVal = this.getChangeValue(a);
+      const bVal = this.getChangeValue(b);
+      return aVal - bVal;
+    });
+    // return descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+    //   if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
+    //     const aValue = (a.rialChangeState === 'high' ? '+' : '-') + a.rialChanges!;
+    //     const bValue = (b.rialChangeState === 'high' ? '+' : '-') + b.rialChanges!;
   
-        const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
-        const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
+    //     const realAValue = aValue.startsWith('-') ? Number(aValue) : a.rialChanges!;
+    //     const realBValue = bValue.startsWith('-') ? Number(bValue) : b.rialChanges!;
         
-        if (realAValue > realBValue) return 1
-        else return -1
-      }
+    //     if (realAValue > realBValue) return 1
+    //     else return -1
+    //   }
       
-      const aValue = (a.lastPriceInfo!.dt === 'high' ? '+' : '-') + a.lastPriceInfo!.dp;
-      const bValue = (b.lastPriceInfo!.dt === 'high' ? '+' : '-') + b.lastPriceInfo!.dp;
+    //   const aValue = (a.lastPriceInfo!.dt === 'high' ? '+' : '-') + Math.abs(a.lastPriceInfo!.dp);
+    //   const bValue = (b.lastPriceInfo!.dt === 'high' ? '+' : '-') + Math.abs(b.lastPriceInfo!.dp);
 
-      const realAValue = aValue.startsWith('-') ? Number(aValue) : a.lastPriceInfo!.dp;
-      const realBValue = bValue.startsWith('-') ? Number(bValue) : b.lastPriceInfo!.dp;
+    //   const realAValue = aValue.startsWith('-') ? Number(aValue) : Math.abs(a.lastPriceInfo!.dp);
+    //   const realBValue = bValue.startsWith('-') ? Number(bValue) : Math.abs(b.lastPriceInfo!.dp);
       
-      if (realAValue > realBValue) return 1
-      else return -1
-    })
+    //   if (realAValue > realBValue) return 1
+    //   else return -1
+    // })
   }
 
   
-  setChange24hListAscending () {
-    let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList2 = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
-      if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
-        const aValue = (a.dollarChangeState === 'high' ? '+' : '-') + a.dollarChanges!;
-        const bValue = (b.dollarChangeState === 'high' ? '+' : '-') + b.dollarChanges!;
+  setChange24hListAscending (items: CurrencyItem[]) {
+    const ascendingPriceList: CurrencyItem[] = [...items]
+    return ascendingPriceList.sort((a, b) => {
+      const aVal = this.getChangeValue(a);
+      const bVal = this.getChangeValue(b);
+      return bVal - aVal;
+    });
+    // return ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => {
+    //   if (a.faGroupName !== 'بازارهای ارزی' && b.faGroupName !== 'بازارهای ارزی') {
+    //     const aValue = (a.rialChangeState === 'high' ? '+' : '-') + a.rialChanges!;
+    //     const bValue = (b.rialChangeState === 'high' ? '+' : '-') + b.rialChanges!;
   
-        const realAValue = aValue.startsWith('-') ? Number(aValue) : a.dollarChanges!;
-        const realBValue = bValue.startsWith('-') ? Number(bValue) : b.dollarChanges!;
+    //     const realAValue = aValue.startsWith('-') ? Number(aValue) : Number(a.rialChanges!);
+    //     const realBValue = bValue.startsWith('-') ? Number(bValue) : Number(b.rialChanges!);
         
-        if (realAValue > realBValue) return -1
-        else return 1
-      }
+    //     if (realAValue > realBValue) return -1
+    //     else return 1
+    //   }
 
-      const aValue = (a.lastPriceInfo!.dt === 'high' ? '+' : '-') + a.lastPriceInfo!.dp;
-      const bValue = (b.lastPriceInfo!.dt === 'high' ? '+' : '-') + b.lastPriceInfo!.dp;
+    //   const aValue = (a.lastPriceInfo!.dt === 'high' ? '+' : '-') + Math.abs(a.lastPriceInfo!.dp);
+    //   const bValue = (b.lastPriceInfo!.dt === 'high' ? '+' : '-') + Math.abs(b.lastPriceInfo!.dp);
 
-      const realAValue = aValue.startsWith('-') ? Number(aValue) : a.lastPriceInfo!.dp;
-      const realBValue = bValue.startsWith('-') ? Number(bValue) : b.lastPriceInfo!.dp;
+    //   const realAValue = aValue.startsWith('-') ? Number(aValue) : Math.abs(a.lastPriceInfo!.dp);
+    //   const realBValue = bValue.startsWith('-') ? Number(bValue) : Math.abs(b.lastPriceInfo!.dp);
       
-      if (realAValue > realBValue) return -1
-      else return 1
-    })
+    //   if (realAValue > realBValue) return -1
+    //   else return 1
+    // })
   }
 
 
 
 
   
-  setPriceListDescending () {
-    let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList2 = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? 1 : -1)
+  // setPriceListDescending () {
+  //   let descendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
+  //   this.currenTemptList2 = descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? 1 : -1)
+  // }
+
+
+  // setPriceListAscending () {
+  //   let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
+  //   this.currenTemptList2 = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? -1 : 1)
+  // }
+  setPriceListDescending (items: CurrencyItem[]) {
+    const descendingPriceList: CurrencyItem[] = [...items]
+    return descendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? 1 : -1)
   }
 
 
-  setPriceListAscending () {
-    let ascendingPriceList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList2 = ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? -1 : 1)
+  setPriceListAscending (items: CurrencyItem[]) {
+    const ascendingPriceList: CurrencyItem[] = [...items]
+    return ascendingPriceList.sort((a: CurrencyItem, b: CurrencyItem) => a.realPrice!! > b.realPrice!! ? -1 : 1)
   }
 
 
 
 
 
-  setTitleListDescending () {
-    let descendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList2 = descendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? -1 : 1)
+  // setTitleListDescending () {
+  //   let descendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
+  //   this.currenTemptList2 = descendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? -1 : 1)
+  // }
+
+  // setTitleListAscending () {
+  //   let ascendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
+  //   this.currenTemptList2 = ascendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? 1 : -1)
+  // }
+
+  
+  setTitleListDescending (items: CurrencyItem[]) {
+    const descendingTitleList: CurrencyItem[] = [...items]
+    return descendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title.localeCompare(b.title, 'fa-IR', { sensitivity: 'base', ignorePunctuation: true }) * -1)
   }
 
-  setTitleListAscending () {
-    let ascendingTitleList: CurrencyItem[] = [...this.currenTemptList!!]
-    this.currenTemptList2 = ascendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title > b.title ? 1 : -1)
+  setTitleListAscending (items: CurrencyItem[]) {
+    const ascendingTitleList: CurrencyItem[] = [...items]
+    return ascendingTitleList.sort((a: CurrencyItem, b: CurrencyItem) => a.title.localeCompare(b.title, 'fa-IR', { sensitivity: 'base', ignorePunctuation: true }))
   }
 
   resetSortingLists () {
-    this.titleSorting = SortingType.None;
-    this.priceSorting = SortingType.None;
-    this.change24hSorting = SortingType.None;
+    this.titleSorting.set(SortingType.None);
+    this.priceSorting.set(SortingType.None);
+    this.change24hSorting.set(SortingType.None);
   }
 
   ngOnInit () {

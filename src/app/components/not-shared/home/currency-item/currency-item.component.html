@@ -11,14 +11,14 @@
 
         <strong *ngIf="currencyItem?.groupName !== 'World_Market'" class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{showCurrencyId === 0 ? currencyItem?.tomanStringPrice : currencyItem?.dollarStringPrice }}</strong>
         <strong *ngIf="currencyItem?.groupName === 'World_Market'" class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{ currencyItem?.lastPriceInfo?.p }}</strong>
-        <div class="flex justify-center items-start gap-2 relative ">
+        <div class="flex justify-center items-center gap-2 relative ">
             
-            <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-start relative"> 
+            <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-center relative"> 
                 <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-45 speech-bubble">
                     <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} پوند</span>
                     <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
                 </div>
-                <i class="hover:cursor-pointer z-[8] bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2 relative"></i>
+                <i class="hover:cursor-pointer z-[8] mt-1 bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2"></i>
             </div>
             <p class="{{currencyItem?.groupName !== 'World_Market' ? 'visible' : 'invisible'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</p>
         </div>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="flex gap-0 md:gap-1.5 flex-row sm:flex-col md:flex-row">
-            <img loading="lazy" decoding="async" class="md:w-8 md:h-8 w-6 h-6 object-cover rounded-full mr-2 mt-1" src="{{currencyItem?.img}}" alt="{{currencyItem?.title}}">
+            <img draggable="false" loading="lazy" decoding="async" class="md:w-8 md:h-8 w-6 h-6 object-cover rounded-full mr-2 mt-1" src="{{currencyItem?.img}}" alt="{{currencyItem?.title}}">
         
             <div class="flex">
                 <span *ngIf="currencyItem?.isFav" class="w-6 h-7" (click)="removeFromFav($event)">

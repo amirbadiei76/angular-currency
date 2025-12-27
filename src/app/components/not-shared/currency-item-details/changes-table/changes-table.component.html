@@ -11,20 +11,20 @@
         </thead>
 
         <tbody class="w-full flex flex-col">
-            @if (historyData) {
+            @if (ranges().length > 0 && currentItem()) {
                 <tr class="w-full flex flex-1 border-b py-1 border-b-light-border2 dark:border-b-dark-border2">
-                    @if (item?.faGroupName === 'بازارهای ارزی') {
-                        <td class="table-item-base {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.lastPriceInfo?.dp}}%</td>
-                        <td class="table-item-base dark:text-light-text4 text-dark-text4">{{item?.lastPriceInfo?.p}}</td>
+                    @if (currentItem()?.faGroupName === 'بازارهای ارزی') {
+                        <td class="table-item-base {{(currentItem()?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currentItem()?.rialChangeState === 'low') ? '-' : '+'}}{{currentItem()?.lastPriceInfo?.dp}}%</td>
+                        <td class="table-item-base dark:text-light-text4 text-dark-text4">{{currentItem()?.lastPriceInfo?.p}}</td>
                     }
                     @else {
                         @if (currentUnit() === 0) {
-                            <td class="table-item-base {{(item?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.rialChangeState === 'low') ? '-' : '+'}}{{item?.rialChanges}}%</td>
-                            <td class="table-item-base dark:text-light-text4 text-dark-text4">{{item?.tomanStringPrice}}</td>
+                            <td class="table-item-base {{(currentItem()?.rialChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currentItem()?.rialChangeState === 'low') ? '-' : '+'}}{{currentItem()?.rialChanges}}%</td>
+                            <td class="table-item-base dark:text-light-text4 text-dark-text4">{{currentItem()?.tomanStringPrice}}</td>
                         }
                         @else {
-                            <td class="table-item-base {{(item?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(item?.dollarChangeState === 'low') ? '-' : '+'}}{{item?.dollarChanges}}%</td>
-                            <td class="table-item-base dark:text-light-text4 text-dark-text4">{{item?.dollarStringPrice}}</td>
+                            <td class="table-item-base {{(currentItem()?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(currentItem()?.dollarChangeState === 'low') ? '-' : '+'}}{{currentItem()?.dollarChanges}}%</td>
+                            <td class="table-item-base dark:text-light-text4 text-dark-text4">{{currentItem()?.dollarStringPrice}}</td>
                         }
                     }
                     <td class="table-item-base dark:text-white text-dark">امروز</td>

@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, input, Input, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, Input, signal, ViewChild } from '@angular/core';
 import { createChart, IChartApi, ISeriesApi, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries, LineStyle, PriceScaleMode } from 'lightweight-charts'
 import { CommonModule } from '@angular/common';
 import { CandleData, RawData, VolumeData } from '../../../../interfaces/chart.types';
@@ -7,7 +7,8 @@ import { dollar_unit, pound_unit, toman_unit } from '../../../../constants/Value
 import { commafy, dollarToToman, normalizeValue, poundToDollar, poundToToman, priceToNumber, rialToDollar, rialToToman, trimDecimal, valueToDollarChanges, valueToRialChanges } from '../../../../utils/CurrencyConverter';
 import { RequestArrayService } from '../../../../services/request-array.service';
 import { TooltipDirective } from '../../../../directives/tooltip.directive';
-import { fromEvent } from 'rxjs';
+import { from, fromEvent, map, shareReplay } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 type RangeKey = '7D' | '1M' | '3M' | '6M' | '1Y' | 'All';
 type IntervalKey = '1D' | '1W' | '1M';
@@ -32,8 +33,15 @@ export interface ChartState {
   styleUrl: './chart.component.css'
 })
 export class ChartComponent {
-  @Input() historyData?: RawData[];
-  @Input() item?: CurrencyItem;
+  requestService = inject(RequestArrayService)
+  // @Input() historyData?: RawData[];
+  // @Input() item?: CurrencyItem;
+  historyData = input<RawData[] | null>(null);
+  item = input<CurrencyItem | null>(null);
+
+  chartReady = signal(false);
+
+
   chartType = input(0)
   currentUnit = input(0);
   timeFramePanelOpened = signal(false)
@@ -46,6 +54,11 @@ export class ChartComponent {
   private volumeSeries: ISeriesApi<"Histogram"> | null = null;
   private lineSeries: ISeriesApi<'Line'> | null = null;
 
+  currentValue = toSignal(from(this.requestService.mainData!)
+  .pipe(
+    map((data) => data?.current),
+    shareReplay(1)
+  ))
   
   currentPrice = signal<string>('');
   priceChange = signal<string>('');
@@ -96,19 +109,39 @@ export class ChartComponent {
   private upColor = 'rgba(48, 164, 108, 0.3)';
   private downColor = 'rgba(255, 66, 69, 0.3)';
 
-  constructor(private requestService: RequestArrayService) {
+  constructor() {
     
+    const processedData = this.parseData(this.historyData() as RawData[]);
+    this.initChart(processedData);
+    this.lineSeries?.applyOptions({ visible: false })
+
     effect(() => {
-      const processedData = this.parseData(this.historyData as RawData[]);
+      const data = this.historyData();
+      const item = this.item();
+      const unit = this.currentUnit();
+      const chartType = this.chartType();
+      const ready = this.chartReady();
 
-      this.currentUnit()
+      const processed = this.parseData(data!);
 
-      this.candlestickSeries?.setData(processedData.candles as any[])
-      this.volumeSeries?.setData(processedData.volumes as any[])
-      this.lineSeries?.setData(processedData.lineVolumes as any[]);
+      this.candlestickSeries?.setData(processed.candles as any[])
+      this.volumeSeries?.setData(processed.volumes as any[])
+      this.lineSeries?.setData(processed.lineVolumes as any[]);
+
+      this.chart?.timeScale().fitContent();
+    });
+
+    // effect(() => {
+      // const processedData = this.parseData(this.historyData() as RawData[]);
+
+      // this.currentUnit()
+
+      // this.candlestickSeries?.setData(processedData.candles as any[])
+      // this.volumeSeries?.setData(processedData.volumes as any[])
+      // this.lineSeries?.setData(processedData.lineVolumes as any[]);
       
-      this.chart?.timeScale().fitContent()
-    })
+      // this.chart?.timeScale().fitContent()
+    // })
   }
 
   isPresetActive (p: Preset) {
@@ -120,9 +153,8 @@ export class ChartComponent {
   }
 
   ngOnChanges(): void {
-    if (this.historyData && this.chart === null) {
-      const processedData = this.parseData(this.historyData as RawData[]);
-      (this.chartType(), this.currentUnit())
+    if (this.historyData() && this.chart === null) {
+      const processedData = this.parseData(this.historyData() as RawData[]);
       this.initChart(processedData);
       this.lineSeries?.applyOptions({ visible: false })
     }
@@ -232,9 +264,9 @@ export class ChartComponent {
       const prev = i > 0 ? candles[i - 1] : null;
 
 
-      if (this.item?.faGroupName !== 'بازارهای ارزی') {
+      if (this.item()?.faGroupName !== 'بازارهای ارزی') {
         if (this.currentUnit() === 0) {
-          if (this.item?.unit === toman_unit) {
+          if (this.item()?.unit === toman_unit) {
             const close = rialToToman(current.p);
             const high = rialToToman(current.h);
             const low = rialToToman(current.l);
@@ -261,10 +293,10 @@ export class ChartComponent {
               color: '#00d890',
             });
           }
-          else if (this.item?.unit === dollar_unit) {
-            const close = dollarToToman(current.p, this.requestService.mainData?.current!);
-            const high = dollarToToman(current.h, this.requestService.mainData?.current!);
-            const low = dollarToToman(current.l, this.requestService.mainData?.current!);
+          else if (this.item()?.unit === dollar_unit) {
+            const close = dollarToToman(current.p, this.currentValue()!);
+            const high = dollarToToman(current.h, this.currentValue()!);
+            const low = dollarToToman(current.l, this.currentValue()!);
            
             const open = prev ? prev.close : low;
       
@@ -287,9 +319,9 @@ export class ChartComponent {
             });
           }
           else {
-            const close = poundToToman(current.p, this.requestService.mainData?.current!);
-            const high = poundToToman(current.h, this.requestService.mainData?.current!);
-            const low = poundToToman(current.l, this.requestService.mainData?.current!);
+            const close = poundToToman(current.p, this.currentValue()!);
+            const high = poundToToman(current.h, this.currentValue()!);
+            const low = poundToToman(current.l, this.currentValue()!);
            
             const open = prev ? prev.close : low;
       
@@ -313,10 +345,10 @@ export class ChartComponent {
           }
         }
         else {
-          if (this.item?.unit === toman_unit) {
-            const close = rialToDollar(current.p, this.requestService.mainData?.current!);
-            const high = rialToDollar(current.h, this.requestService.mainData?.current!);
-            const low = rialToDollar(current.l, this.requestService.mainData?.current!);
+          if (this.item()?.unit === toman_unit) {
+            const close = rialToDollar(current.p, this.currentValue()!);
+            const high = rialToDollar(current.h, this.currentValue()!);
+            const low = rialToDollar(current.l, this.currentValue()!);
            
             const open = prev ? prev.close : low;
       
@@ -338,7 +370,7 @@ export class ChartComponent {
               color: '#00d890',
             });
           }
-          else if (this.item?.unit === dollar_unit) {
+          else if (this.item()?.unit === dollar_unit) {
             const close = priceToNumber(current.p);
             const high = priceToNumber(current.h)
             const low = priceToNumber(current.l)
@@ -363,9 +395,9 @@ export class ChartComponent {
             });
           }
           else {
-            const close = poundToDollar(current.p, this.requestService.mainData?.current!);
-            const high = poundToDollar(current.h, this.requestService.mainData?.current!);
-            const low = poundToDollar(current.l, this.requestService.mainData?.current!);
+            const close = poundToDollar(current.p, this.currentValue()!);
+            const high = poundToDollar(current.h, this.currentValue()!);
+            const low = poundToDollar(current.l, this.currentValue()!);
            
             const open = prev ? prev.close : low;
       
@@ -501,8 +533,8 @@ export class ChartComponent {
       this.chart?.applyOptions({ width: newRect.width, height: newRect.height });
     });
     resizeObserver.observe(this.chartContainer.nativeElement);
-    const mainDollarValueChanes = this.requestService?.mainData?.current.price_dollar_rl.dp;
-    const mainPoundValueChanes = this.requestService?.mainData?.current.price_gbp.dp;
+    const mainDollarValueChanes = this.currentValue()!.price_dollar_rl.dp;
+    const mainPoundValueChanes = this.currentValue()!.price_gbp.dp;
 
     this.chart.subscribeCrosshairMove(param => {
       if (param.time) {
@@ -517,35 +549,35 @@ export class ChartComponent {
           this.volume.set(commafy(trimDecimal(currentVolume.value)))
 
           const change = ((price.close - price.open) / price.open) * 100;
-          if (this.item?.faGroupName !== 'بازارهای ارزی') {
+          if (this.item()?.faGroupName !== 'بازارهای ارزی') {
             if (this.currentUnit() === 0) {
-              if (this.item?.unit === toman_unit) {
+              if (this.item()?.unit === toman_unit) {
                 this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
                 this.isPositive.set(change >= 0);
               }
-              else if (this.item?.unit === dollar_unit) {
+              else if (this.item()?.unit === dollar_unit) {
                 const dollarItemRialChanges = valueToRialChanges(change, mainDollarValueChanes!)
                 this.priceChange.set(`(${dollarItemRialChanges >= 0 ? '+' : ''}${dollarItemRialChanges.toFixed(2)})%`);
                 this.isPositive.set(dollarItemRialChanges >= 0);
               }
-              else if (this.item?.unit === pound_unit) {
+              else if (this.item()?.unit === pound_unit) {
                 const poundItemRialChanges = valueToRialChanges(change, mainPoundValueChanes!)
                 this.priceChange.set(`(${poundItemRialChanges >= 0 ? '+' : ''}${poundItemRialChanges.toFixed(2)})%`);
                 this.isPositive.set(poundItemRialChanges >= 0);
               }
             }
             else if (this.currentUnit() === 1) {
-              if (this.item?.unit === toman_unit) {
+              if (this.item()?.unit === toman_unit) {
                 const rialItemDollarChanges = valueToDollarChanges(change, mainDollarValueChanes!)
                 this.priceChange.set(`(${rialItemDollarChanges >= 0 ? '+' : ''}${rialItemDollarChanges.toFixed(2)})%`);
                 this.isPositive.set(rialItemDollarChanges >= 0);
               }
-              else if (this.item?.unit === dollar_unit) {
+              else if (this.item()?.unit === dollar_unit) {
                 this.priceChange.set(`(${change >= 0 ? '+' : ''}${change.toFixed(2)})%`);
                 this.isPositive.set(change >= 0);
               }
-              else if (this.item?.unit === pound_unit) {
-                const poundAskChanges = (this.requestService.mainData?.current['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (this.requestService.mainData?.current['gbp-usd-ask'].dp!)
+              else if (this.item()?.unit === pound_unit) {
+                const poundAskChanges = (this.currentValue()!['gbp-usd-ask'].dt === 'low' ? -1 : 1) * (this.currentValue()!['gbp-usd-ask'].dp!)
                 const poundItemDollarChanges = valueToDollarChanges(change, poundAskChanges)
                 this.priceChange.set(`(${poundItemDollarChanges >= 0 ? '+' : ''}${poundItemDollarChanges.toFixed(2)})%`);
                 this.isPositive.set(poundItemDollarChanges >= 0);
@@ -578,6 +610,8 @@ export class ChartComponent {
     if (data.candles.length > 0) {
         this.updateHeader(data.candles[data.candles.length - 1], data.volumes[data.volumes.length - 1]);
     }
+
+    this.chartReady.set(true);
   }
 
   updateHeader(priceData: CandleData, volumeData: VolumeData) {

@@ -1,6 +1,6 @@
 import { Component, computed, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
-import { fromEvent } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, fromEvent, map } from 'rxjs';
 import { Meta } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
@@ -8,11 +8,18 @@ import { CurrencyItem } from '../../interfaces/data.types';
 import { caratToGram, commafy, gramToCarat, gramToMesghal, gramToOunce, gramToSut, mesghalToGram, mesghalToGramMoney, ounceToGram, priceToNumber, sutToGram, trimDecimal } from '../../utils/CurrencyConverter';
 import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
 import { ConverterItemSkeletonComponent } from '../../components/not-shared/converter/converter-item-skeleton/converter-item-skeleton.component';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
 
 interface CalculatorType {
   id: number,
   title: string
 }
+
+type RelatedItem = {
+  first: CurrencyItem;
+  second: CurrencyItem;
+};
 
 interface GoldTypes extends CalculatorType {
   weightUnit?: string
@@ -24,7 +31,7 @@ interface OunceTypes extends CalculatorType {
 
 @Component({
   selector: 'app-gold-calculator',
-  imports: [FormsModule, CommafyNumberDirective, ConverterItemComponent, ConverterItemSkeletonComponent],
+  imports: [FormsModule, CommonModule, CommafyNumberDirective, ConverterItemComponent],
   templateUrl: './gold-calculator.component.html',
   styleUrl: './gold-calculator.component.css'
 })
@@ -32,50 +39,45 @@ export class GoldCalculatorComponent {
   
   requestClass = inject(RequestArrayService)
 
-  goldValue = signal('')
-  weightValue = signal('1');
-  wageValue = signal('0');
-  taxValue = signal('10');
-  profitValue = signal('0');
-
-  profitType = signal(0)
-
-  totalGoldValue = computed(() => {
-    return commafy (
-      (priceToNumber(this.mainGoldValue()) + priceToNumber(this.totalWageValue()) + 
-      priceToNumber(this.totalTaxValue()) + priceToNumber(this.totalProfitValue())) || 0
-    )
-  })
-  mainGoldValue = computed(() => commafy(priceToNumber(this.weightValue() || '1') * priceToNumber(this.goldValue() || '0') || 0));
-  totalWageValue = computed(() => {
-    return (
-      commafy(((priceToNumber(this.wageValue())) * priceToNumber(this.mainGoldValue())) / 100 || 0)
-    )
-  })
-  totalTaxValue = computed(() => commafy(((priceToNumber(this.mainGoldValue()) * priceToNumber(this.taxValue())) / 100) || 0))
-  totalProfitValue = computed(() => {
-    return commafy(
-      (this.profitType() === 0 ?
-      ((priceToNumber(this.mainGoldValue()) * priceToNumber(this.profitValue())) / 100) :
-      priceToNumber(this.profitValue())) || 0
-    )
-  });
+  private goldValueSubject = new BehaviorSubject<string>('0');
+  goldValue$ = this.goldValueSubject.asObservable();
   
+  
+  private goldChangedByUserSubject = new BehaviorSubject<boolean>(false);
+  goldChangedByUser$ = this.goldChangedByUserSubject.asObservable();
+
+  private weightValueSubject = new BehaviorSubject<string>('1');
+  weightValue$ = this.weightValueSubject.asObservable();
+  
+  private wageValueSubject = new BehaviorSubject<string>('1');
+  wageValue$ = this.wageValueSubject.asObservable()
+
+  private taxValueSubject = new BehaviorSubject<string>('10');
+  taxValue$ = this.taxValueSubject.asObservable()
+
+  private profitValueSubject = new BehaviorSubject<string>('0');
+  profitValue$ = this.profitValueSubject.asObservable()
+
+  // private profitTypeSubject = new BehaviorSubject<number>(0);
+  profitType = signal(0)
 
   @ViewChild('typesBtn') typesBtn?: ElementRef<HTMLDivElement>
   @ViewChild('goldBtn') goldBtn?: ElementRef<HTMLDivElement>
   @ViewChild('ounceBtn') ounceBtn?: ElementRef<HTMLDivElement>
 
 
-  relatedItems = signal<CurrencyItem[]>([])
   currentGoldType = signal(0);
+  currentGoldType$ = toObservable(this.currentGoldType)
   currentGoldTypeDropdownOpen = signal(false);
   
   currentOunceType = signal(0);
+  currentOunceType$ = toObservable(this.currentOunceType)
   currentOunceTypeDropdownOpen = signal(false);
 
   calculatorType = signal(0);
+  calculatorType$ = toObservable(this.calculatorType)
   calculatorTypeDropdownOpen = signal(false)
+
   calculatorTypes: CalculatorType[] = [
     {
       id: 0,
@@ -149,156 +151,310 @@ export class GoldCalculatorComponent {
   ]
 
 
-  gram18Value?: CurrencyItem;
-  gram24Value?: CurrencyItem;
-  goldMiniValue?: CurrencyItem;
-  goldFuturesValue?: CurrencyItem;
-  goldMesghalValue?: CurrencyItem;
-  goldOunceValue?: CurrencyItem;
+  // gram18Value = signal<CurrencyItem | undefined>(undefined);
+  // gram24Value = signal<CurrencyItem | undefined>(undefined);
+  // goldMiniValue = signal<CurrencyItem | undefined>(undefined);
+  // goldFuturesValue = signal<CurrencyItem | undefined>(undefined);
+  // goldMesghalValue = signal<CurrencyItem | undefined>(undefined);
+  // goldOunceValue = signal<CurrencyItem | undefined>(undefined);
+
+  goldValues$ = this.requestClass.allItemsList.pipe(
+    map((items) => ({
+      gram18: items.find(i => i.id === '1000217'),
+      gram24: items.find(i => i.id === '1000219'),
+      mini: items.find(i => i.id === '1000220'),
+      futures: items.find(i => i.id === '1000227'),
+      mesghal: items.find(i => i.id === '1000223'),
+      ounce: items.find(i => i.id === '1000244'),
+    })),
+    distinctUntilChanged(
+      (a, b) => JSON.stringify(a) === JSON.stringify(b)
+    )
+  );
+
+  
+  relatedItems$ = combineLatest([
+    this.goldValues$,
+    this.calculatorType$,
+    this.currentGoldType$
+  ]).pipe(
+    map(([goldValue, calculatorType, goldType]) => {
+      if (calculatorType === 0) {
+        if (goldType === 0) {
+          return [goldValue.gram18, goldValue.gram24, goldValue.ounce]
+        }
+        else if (goldType === 1) {
+          return [goldValue.gram24, goldValue.ounce, goldValue.gram18]
+        }
+        else if (goldType === 2) {
+          return [goldValue.futures, goldValue.gram18, goldValue.mesghal]
+        }
+        else if (goldType === 3) {
+          return [goldValue.mini, goldValue.gram18, goldValue.futures]
+        }
+        else if (goldType === 4) {
+          return [goldValue.ounce, goldValue.gram24, goldValue.gram18]
+        }
+        else {
+          return [goldValue.mesghal, goldValue.futures, goldValue.gram18]
+        }
+      }
+      else {
+        return [goldValue.ounce, goldValue.gram18, goldValue.mesghal]
+      }
+    })
+  );
+
+  goldValueComputed$ = combineLatest([
+    this.goldValues$,
+    this.currentGoldType$,
+    this.goldChangedByUser$,
+    this.goldValue$
+  ]).pipe(
+    map(([goldValues, currentGoldType, changedByUser, userValue]) => {
+      if (changedByUser) {
+        return userValue;
+      }
+
+      switch (currentGoldType) {
+        case 0:
+          return goldValues.gram18?.tomanStringPrice;
+        case 1:
+          return goldValues.gram24?.tomanStringPrice;
+        case 2:
+          const meltedValue = mesghalToGramMoney(goldValues.futures?.tomanStringPrice!);
+          return commafy(trimDecimal(meltedValue, 0));
+        case 3:
+          return goldValues.mesghal?.tomanStringPrice;
+        case 4:
+          return goldValues.ounce?.tomanStringPrice;
+        default:
+          return goldValues.mesghal?.tomanStringPrice;
+      }
+    })
+  )
+
+  // mainGoldValue = computed(() => commafy(priceToNumber(this.weightValue() || '1') * priceToNumber(this.goldValue() || '0') || 0));
+  mainGoldValue$ = combineLatest([
+    this.goldValueComputed$,
+    this.weightValue$
+  ]).pipe(
+    map(([value, weightValue]) => {
+      return commafy(priceToNumber(weightValue || '1') * priceToNumber(value! || '0') || 0)
+    })
+  )
+  // totalWageValue = computed(() => {
+  //   return (
+  //     commafy(((priceToNumber(this.wageValue())) * priceToNumber(this.mainGoldValue())) / 100 || 0)
+  //   )
+  // })
+
+  totalWageValue$ = combineLatest([
+    this.mainGoldValue$,
+    this.wageValue$
+  ]).pipe(
+    map(([goldValue, wageValue]) => {
+      return commafy(((priceToNumber(wageValue) * priceToNumber(goldValue)) / 100) || 0)
+    })
+  )
+  // totalTaxValue = computed(() => commafy(((priceToNumber(this.mainGoldValue()) * priceToNumber(this.taxValue())) / 100) || 0))
+  totalTaxValue$ = combineLatest([
+    this.mainGoldValue$,
+    this.taxValue$
+  ]).pipe(
+    map(([goldValue, taxValue]) => {
+      return commafy(((priceToNumber(goldValue) * priceToNumber(taxValue)) / 100) || 0)
+    })
+  )
+
+  // totalProfitValue = computed(() => {
+  //   return commafy(
+  //     (this.profitType() === 0 ?
+  //     ((priceToNumber(this.mainGoldValue()) * priceToNumber(this.profitValue())) / 100) :
+  //     priceToNumber(this.profitValue())) || 0
+  //   )
+  // });
+
+  totalProfitValue$ = combineLatest([
+    this.mainGoldValue$,
+    this.profitValue$,
+  ]).pipe(
+    map(([value, profitValue]) => {
+      return commafy(
+        (this.profitType() === 0 ?
+        ((priceToNumber(value) * priceToNumber(profitValue)) / 100) :
+        priceToNumber(profitValue)) || 0
+      )
+    })
+  )
+
+  
+  // totalGoldValue = computed(() => {
+  //   return commafy (
+  //     (priceToNumber(this.mainGoldValue()) + priceToNumber(this.totalWageValue()) + 
+  //     priceToNumber(this.totalTaxValue()) + priceToNumber(this.totalProfitValue())) || 0
+  //   )
+  // })
+
+  
+  totalGoldValue$ = combineLatest([
+    this.mainGoldValue$,
+    this.totalWageValue$,
+    this.totalTaxValue$,
+    this.totalProfitValue$
+  ]).pipe(
+      map(([goldValue, wageValue, taxValue, profitValue]) => {
+        return commafy (
+        (priceToNumber(goldValue) + priceToNumber(wageValue) + 
+        priceToNumber(taxValue) + priceToNumber(profitValue)) || 0
+      )
+    })
+  )
+
   
 
   constructor (private meta: Meta) {
-    
 
-      this.initAllGoldValues();
+      // this.initAllGoldValues();
       this.initFirstGoldValue();
     
 
       effect(() => {
-        if (this.calculatorType() === 1) {
-        
-          this.calculateOunceTypes()
-        }
-        
-        
+        if (this.calculatorType() === 1) this.calculateOunceTypes()
       })
 
 
   }
 
-  initAllGoldValues () {
-    this.gram18Value = this.requestClass.allItemsList.find((item) => item.id == '1000217');
-    this.gram24Value = this.requestClass.allItemsList.find((item) => item.id == '1000219');
-    this.goldMiniValue = this.requestClass.allItemsList.find((item) => item.id == '1000220');
-    this.goldFuturesValue = this.requestClass.allItemsList.find((item) => item.id == '1000227');
-    this.goldMesghalValue = this.requestClass.allItemsList.find((item) => item.id == '1000223');
-    this.goldOunceValue = this.requestClass.allItemsList.find((item) => item.id == '1000244');
-  }
+  // initAllGoldValues () {
+  //   this.gram18Value = this.requestClass.allItemsList.find((item) => item.id == '1000217');
+  //   this.gram24Value = this.requestClass.allItemsList.find((item) => item.id == '1000219');
+  //   this.goldMiniValue = this.requestClass.allItemsList.find((item) => item.id == '1000220');
+  //   this.goldFuturesValue = this.requestClass.allItemsList.find((item) => item.id == '1000227');
+  //   this.goldMesghalValue = this.requestClass.allItemsList.find((item) => item.id == '1000223');
+  //   this.goldOunceValue = this.requestClass.allItemsList.find((item) => item.id == '1000244');
+  // }
 
   initFirstOunceValue () {
-    this.weightValue.set('1')
-    this.relatedItems?.set([this.goldOunceValue!, this.gram18Value!, this.goldMesghalValue!])
+    
+    this.weightValueSubject.next('1')
+    // this.relatedItems?.set([this.goldOunceValue()!, this.gram18Value()!, this.goldMesghalValue()!])
   }
 
   initFirstGoldValue () {
     this.currentGoldType.set(0)
-    this.goldValue.set(this.gram18Value?.tomanStringPrice! || ' ')
-    this.relatedItems?.set([this.gram18Value!, this.gram24Value!, this.goldOunceValue!])
-    this.profitValue.set('3')
-    this.weightValue.set('1')
-    this.wageValue.set('7')
-    this.taxValue.set('10')
+    // this.goldValue.set(this.gram18Value()!.tomanStringPrice! || ' ')
+    // this.relatedItems?.set([this.gram18Value()!, this.gram24Value()!, this.goldOunceValue()!])
+    this.profitValueSubject.next('3')
+    this.weightValueSubject.next('1')
+    this.wageValueSubject.next('7')
+    this.taxValueSubject.next('10')
     this.profitType.set(0)
   }
 
   calculateOunceTypes () {
-    const value = this.weightValue() || '0';
-    switch(this.currentOunceType()) {
-      // Gram
-      case 0:
-        const ounceValue = gramToOunce(value)
-        const mesghalValue = gramToMesghal(value)
-        const sutValue = gramToSut(value)
-        const caratValue = gramToCarat(value)
-        const currentGramTypes = [...this.ounceTypes]
-        currentGramTypes[1] = {...currentGramTypes[1], value: commafy(trimDecimal(ounceValue, 3))}
-        currentGramTypes[2] = {...currentGramTypes[2], value: commafy(trimDecimal(mesghalValue, 4))}
-        currentGramTypes[3] = {...currentGramTypes[3], value: commafy(trimDecimal(sutValue, 0))}
-        currentGramTypes[4] = {...currentGramTypes[4], value: commafy(trimDecimal(caratValue, 2))}
-        this.ounceTypes = currentGramTypes;
-        break;
-
-      // Ounce
-      case 1:
-        const ounceGramValue = ounceToGram(value)
-        const ounceMesghalValue = gramToMesghal(ounceGramValue + '')
-        const ounceSutValue = gramToSut(ounceGramValue + '')
-        const ounceCaratValue = gramToCarat(ounceGramValue + '')
-        const ounceCurrentTypes = [...this.ounceTypes]
-        ounceCurrentTypes[0] = {...ounceCurrentTypes[0], value: commafy(trimDecimal(ounceGramValue, 3))}
-        ounceCurrentTypes[2] = {...ounceCurrentTypes[2], value: commafy(trimDecimal(ounceMesghalValue, 4))}
-        ounceCurrentTypes[3] = {...ounceCurrentTypes[3], value: commafy(trimDecimal(ounceSutValue, 0))}
-        ounceCurrentTypes[4] = {...ounceCurrentTypes[4], value: commafy(trimDecimal(ounceCaratValue, 2))}
-        this.ounceTypes = ounceCurrentTypes;
-        break;
-      
-      // Mesghal
-      case 2:
-        const mesghalGramValue = mesghalToGram(value)
-        const mesghalOunceValue = gramToOunce(mesghalGramValue + '')
-        const mesghalSutValue = gramToSut(mesghalGramValue + '')
-        const mesghalCaratValue = gramToCarat(mesghalGramValue + '')
-        const mesghalCurrentTypes = [...this.ounceTypes]
-        mesghalCurrentTypes[0] = {...mesghalCurrentTypes[0], value: commafy(trimDecimal(mesghalGramValue, 3))}
-        mesghalCurrentTypes[1] = {...mesghalCurrentTypes[1], value: commafy(trimDecimal(mesghalOunceValue, 3))}
-        mesghalCurrentTypes[3] = {...mesghalCurrentTypes[3], value: commafy(trimDecimal(mesghalSutValue, 0))}
-        mesghalCurrentTypes[4] = {...mesghalCurrentTypes[4], value: commafy(trimDecimal(mesghalCaratValue, 2))}
-        this.ounceTypes = mesghalCurrentTypes;
-        break;
-
-      // Sut
-      case 3:
-        const sutGramValue = sutToGram(value)
-        const sutOunceValue = gramToOunce(sutGramValue + '')
-        const sutMesghalValue = gramToMesghal(sutGramValue + '')
-        const sutCaratValue = gramToCarat(sutGramValue + '')
-        const sutCurrentTypes = [...this.ounceTypes]
-        sutCurrentTypes[0] = {...sutCurrentTypes[0], value: commafy(trimDecimal(sutGramValue, 3))}
-        sutCurrentTypes[1] = {...sutCurrentTypes[1], value: commafy(trimDecimal(sutOunceValue, 3))}
-        sutCurrentTypes[2] = {...sutCurrentTypes[2], value: commafy(trimDecimal(sutMesghalValue, 4))}
-        sutCurrentTypes[4] = {...sutCurrentTypes[4], value: commafy(trimDecimal(sutCaratValue, 2))}
-        this.ounceTypes = sutCurrentTypes;
-        break;
-
-      // Carat
-      case 4:
-        const caratGramValue = caratToGram(value)
-        const caratOunceValue = gramToOunce(caratGramValue + '')
-        const caratMesghalValue = gramToMesghal(caratGramValue + '')
-        const caratSutValue = gramToSut(caratGramValue + '')
-        const currentOunceTypes = [...this.ounceTypes]
-        currentOunceTypes[0] = {...currentOunceTypes[0], value: commafy(trimDecimal(caratGramValue, 3))}
-        currentOunceTypes[1] = {...currentOunceTypes[1], value: commafy(trimDecimal(caratOunceValue, 3))}
-        currentOunceTypes[2] = {...currentOunceTypes[2], value: commafy(trimDecimal(caratMesghalValue, 4))}
-        currentOunceTypes[3] = {...currentOunceTypes[3], value: commafy(trimDecimal(caratSutValue, 0))}
-        this.ounceTypes = currentOunceTypes;
-        break;
-    }
+    // const value = this.weightValue() || '0';
+    this.weightValue$.subscribe((value) => {
+      switch(this.currentOunceType()) {
+        // Gram
+        case 0:
+          const ounceValue = gramToOunce(value)
+          const mesghalValue = gramToMesghal(value)
+          const sutValue = gramToSut(value)
+          const caratValue = gramToCarat(value)
+          const currentGramTypes = [...this.ounceTypes]
+          currentGramTypes[1] = {...currentGramTypes[1], value: commafy(trimDecimal(ounceValue, 3))}
+          currentGramTypes[2] = {...currentGramTypes[2], value: commafy(trimDecimal(mesghalValue, 4))}
+          currentGramTypes[3] = {...currentGramTypes[3], value: commafy(trimDecimal(sutValue, 0))}
+          currentGramTypes[4] = {...currentGramTypes[4], value: commafy(trimDecimal(caratValue, 2))}
+          this.ounceTypes = currentGramTypes;
+          break;
+  
+        // Ounce
+        case 1:
+          const ounceGramValue = ounceToGram(value)
+          const ounceMesghalValue = gramToMesghal(ounceGramValue + '')
+          const ounceSutValue = gramToSut(ounceGramValue + '')
+          const ounceCaratValue = gramToCarat(ounceGramValue + '')
+          const ounceCurrentTypes = [...this.ounceTypes]
+          ounceCurrentTypes[0] = {...ounceCurrentTypes[0], value: commafy(trimDecimal(ounceGramValue, 3))}
+          ounceCurrentTypes[2] = {...ounceCurrentTypes[2], value: commafy(trimDecimal(ounceMesghalValue, 4))}
+          ounceCurrentTypes[3] = {...ounceCurrentTypes[3], value: commafy(trimDecimal(ounceSutValue, 0))}
+          ounceCurrentTypes[4] = {...ounceCurrentTypes[4], value: commafy(trimDecimal(ounceCaratValue, 2))}
+          this.ounceTypes = ounceCurrentTypes;
+          break;
+        
+        // Mesghal
+        case 2:
+          const mesghalGramValue = mesghalToGram(value)
+          const mesghalOunceValue = gramToOunce(mesghalGramValue + '')
+          const mesghalSutValue = gramToSut(mesghalGramValue + '')
+          const mesghalCaratValue = gramToCarat(mesghalGramValue + '')
+          const mesghalCurrentTypes = [...this.ounceTypes]
+          mesghalCurrentTypes[0] = {...mesghalCurrentTypes[0], value: commafy(trimDecimal(mesghalGramValue, 3))}
+          mesghalCurrentTypes[1] = {...mesghalCurrentTypes[1], value: commafy(trimDecimal(mesghalOunceValue, 3))}
+          mesghalCurrentTypes[3] = {...mesghalCurrentTypes[3], value: commafy(trimDecimal(mesghalSutValue, 0))}
+          mesghalCurrentTypes[4] = {...mesghalCurrentTypes[4], value: commafy(trimDecimal(mesghalCaratValue, 2))}
+          this.ounceTypes = mesghalCurrentTypes;
+          break;
+  
+        // Sut
+        case 3:
+          const sutGramValue = sutToGram(value)
+          const sutOunceValue = gramToOunce(sutGramValue + '')
+          const sutMesghalValue = gramToMesghal(sutGramValue + '')
+          const sutCaratValue = gramToCarat(sutGramValue + '')
+          const sutCurrentTypes = [...this.ounceTypes]
+          sutCurrentTypes[0] = {...sutCurrentTypes[0], value: commafy(trimDecimal(sutGramValue, 3))}
+          sutCurrentTypes[1] = {...sutCurrentTypes[1], value: commafy(trimDecimal(sutOunceValue, 3))}
+          sutCurrentTypes[2] = {...sutCurrentTypes[2], value: commafy(trimDecimal(sutMesghalValue, 4))}
+          sutCurrentTypes[4] = {...sutCurrentTypes[4], value: commafy(trimDecimal(sutCaratValue, 2))}
+          this.ounceTypes = sutCurrentTypes;
+          break;
+  
+        // Carat
+        case 4:
+          const caratGramValue = caratToGram(value)
+          const caratOunceValue = gramToOunce(caratGramValue + '')
+          const caratMesghalValue = gramToMesghal(caratGramValue + '')
+          const caratSutValue = gramToSut(caratGramValue + '')
+          const currentOunceTypes = [...this.ounceTypes]
+          currentOunceTypes[0] = {...currentOunceTypes[0], value: commafy(trimDecimal(caratGramValue, 3))}
+          currentOunceTypes[1] = {...currentOunceTypes[1], value: commafy(trimDecimal(caratOunceValue, 3))}
+          currentOunceTypes[2] = {...currentOunceTypes[2], value: commafy(trimDecimal(caratMesghalValue, 4))}
+          currentOunceTypes[3] = {...currentOunceTypes[3], value: commafy(trimDecimal(caratSutValue, 0))}
+          this.ounceTypes = currentOunceTypes;
+          break;
+      }
+    })
   }
 
   onGoldInputChange (event: Event) {
     const goldValue = (event.target as HTMLInputElement).value;
-    this.goldValue.set(commafy(priceToNumber(goldValue)) || '0')
+    const goldValueString = commafy(priceToNumber(goldValue)) || '0';
+    
+    this.goldChangedByUserSubject.next(true);
+    this.goldValueSubject.next(goldValueString);
   }
 
   onWeightInputChange (event: Event) {
     const weightValue = (event.target as HTMLInputElement).value;
-    this.weightValue.set(commafy(priceToNumber(weightValue) || 0) || '0')
+    this.weightValueSubject.next(commafy(priceToNumber(weightValue) || 0) || '0')
   }
   
   onWageInputChange (event: Event) {
     const wageValue = (event.target as HTMLInputElement).value;
-    this.wageValue.set(commafy(priceToNumber(wageValue)) || '0')
+    this.wageValueSubject.next(commafy(priceToNumber(wageValue)) || '0')
   }
   
   onTaxInputChange (event: Event) {
     const taxValue = (event.target as HTMLInputElement).value;
-    this.taxValue.set(commafy(priceToNumber(taxValue)) || '0')
+    this.taxValueSubject.next(commafy(priceToNumber(taxValue)) || '0')
   }
   
   onProfitInputChange (event: Event) {
     const profitValue = (event.target as HTMLInputElement).value;
-    this.profitValue.set(commafy(priceToNumber(profitValue)) || '0')
+    this.profitValueSubject.next(commafy(priceToNumber(profitValue)) || '0')
   }
 
   ngOnInit () {
@@ -311,8 +467,9 @@ export class GoldCalculatorComponent {
   changeProfitType (value: number) {
     this.profitType.set(value)
 
-    if (this.profitType() === 0) this.profitValue.set('3')
-    else if (this.profitType() === 1) this.profitValue.set('0')
+    if (this.profitType() === 0) this.profitValueSubject.next('3')
+    else if (this.profitType() === 1) this.profitValueSubject.next('0')
+
   }
 
   
@@ -333,46 +490,42 @@ export class GoldCalculatorComponent {
     this.currentOunceType.set(item.id)
     this.toggleOunceTypeDropdown()
     
-    if (this.currentOunceType() === 3) this.weightValue.set('1,000')
-    else if (this.currentOunceType() === 4) this.weightValue.set('5')
-    else this.weightValue.set('1')
+    if (this.currentOunceType() === 3) this.weightValueSubject.next('1,000')
+    else if (this.currentOunceType() === 4) this.weightValueSubject.next('5')
+    else this.weightValueSubject.next('1')
   }
 
   selectGoldType(item: GoldTypes) {
     this.currentGoldType.set(item.id)
     this.toggleGoldTypeDropdown()
+    this.goldChangedByUserSubject.next(false);
 
-    if (this.currentGoldType() === 0) {
-      this.goldValue.set(this.gram18Value?.tomanStringPrice!)
-      this.relatedItems?.set([this.gram18Value!, this.gram24Value!, this.goldOunceValue!])
-      this.wageValue.set('7')
+    if (this.currentGoldType() === 0 || this.currentGoldType() === 1) {
+      // this.goldValue.set(this.gram18Value()?.tomanStringPrice!)
+      // this.relatedItems?.set([this.gram18Value()!, this.gram24Value()!, this.goldOunceValue()!])
+      this.wageValueSubject.next('7')
     }
-    else if (this.currentGoldType() === 1) {
-      this.goldValue.set(this.gram24Value?.tomanStringPrice!)
-      this.relatedItems?.set([this.gram24Value!, this.goldOunceValue!, this.gram18Value!])
-      this.wageValue.set('7')
+    else {
+      // const meltedValue = mesghalToGramMoney(this.goldFuturesValue()?.tomanStringPrice!)
+      // this.goldValue.set(commafy(trimDecimal(meltedValue, 0)))
+      // this.relatedItems?.set([this.goldFuturesValue()!, this.gram18Value()!, this.goldMesghalValue()!])
+      this.wageValueSubject.next('0')
     }
-    else if (this.currentGoldType() === 2) {
-      const meltedValue = mesghalToGramMoney(this.goldFuturesValue?.tomanStringPrice!)
-      this.goldValue.set(commafy(trimDecimal(meltedValue, 0)))
-      this.relatedItems?.set([this.goldFuturesValue!, this.gram18Value!, this.goldMesghalValue!])
-      this.wageValue.set('0')
-    }
-    else if (this.currentGoldType() === 3) {
-      this.goldValue.set(this.goldMiniValue?.tomanStringPrice!)
-      this.relatedItems?.set([this.goldMiniValue!, this.gram18Value!, this.goldFuturesValue!])
-      this.wageValue.set('0')
-    }
-    else if (this.currentGoldType() === 4) {
-      this.goldValue.set(this.goldOunceValue?.tomanStringPrice!)
-      this.relatedItems?.set([this.goldOunceValue!, this.gram24Value!, this.gram18Value!])
-      this.wageValue.set('0')
-    }
-    else if (this.currentGoldType() === 5) {
-      this.goldValue.set(this.goldMesghalValue?.tomanStringPrice!)
-      this.relatedItems?.set([this.goldMesghalValue!, this.goldFuturesValue!, this.gram18Value!])
-      this.wageValue.set('0')
-    }
+    // else if (this.currentGoldType() === 3) {
+    //   // this.goldValue.set(this.goldMiniValue()?.tomanStringPrice!)
+    //   // this.relatedItems?.set([this.goldMiniValue()!, this.gram18Value()!, this.goldFuturesValue()!])
+    //   this.wageValue.set('0')
+    // }
+    // else if (this.currentGoldType() === 4) {
+    //   // this.goldValue.set(this.goldOunceValue()?.tomanStringPrice!)
+    //   // this.relatedItems?.set([this.goldOunceValue()!, this.gram24Value()!, this.gram18Value()!])
+    //   this.wageValue.set('0')
+    // }
+    // else if (this.currentGoldType() === 5) {
+    //   // this.goldValue.set(this.goldMesghalValue()?.tomanStringPrice!)
+    //   // this.relatedItems?.set([this.goldMesghalValue()!, this.goldFuturesValue()!, this.gram18Value()!])
+    //   this.wageValue.set('0')
+    // }
   }
 
   selectCalculatorType(item: CalculatorType) {

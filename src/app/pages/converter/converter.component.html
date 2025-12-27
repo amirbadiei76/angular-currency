@@ -33,18 +33,20 @@
             <div class="flex flex-col-reverse md:flex-row w-full h-max gap-2 items-center justify-end">
               <!-- To -->
               <div #toBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
+                @if (dualList$ | async; as dual) {
                   <button
                     type="button"
-                    [disabled]="mainFromList().length === 0"
+                    [disabled]="dual.second.length === 0"
                     (click)="toggleToDropdown()"
                     class="dropdown-button-base h-[49.6px]
-                        {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : 'animate-none'}}"
+                        {{ dual.second.length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : 'animate-none'}}"
                   >
                     <i [class.rotate-180]="toDropdownOpen()" class="bi bi-chevron-down dropdown-arrow-base"></i>
-                    @if (mainFromList().length) {
-                      <app-search-item [item]="toItem()" />
-                    }
+                      @if (toItem$ | async; as to) {
+                        <app-search-item [item]="to" />
+                      }
                   </button>
+                }
                   @if (toDropdownOpen()) {
                     <div class="absolute overflow-hidden flex flex-col z-[2] max-h-64 pt-2.5 w-full rounded-lg text-dark-text3 dark:text-light-text3 border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
                       
@@ -54,16 +56,22 @@
                               <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                               <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                           </svg>
-                          <input type="text" (input)="filterToList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ mainToList()[1].faGroupName }}" >
+                          @if (toItem$ | async; as to) {
+                            <input type="text" (input)="filterToList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ to.faGroupName }}" >
+                          }
                       </div>
 
-                      <ul class="flex flex-col scroll-hide overflow-y-scroll">
-                        @for (currentItem of currentToList(); track currentItem.id) {
-                            @if (currentItem.id !== fromItem().id) {
-                              <li (click)="onSelectToItem(currentItem?.slugText!)" class="py-1.5 hover:cursor-pointer px-5 hover:bg-light-text3 hover:dark:bg-dark-border2">
-                                <app-search-item [item]="currentItem" />
-                              </li>
+                      <ul class="flex flex-col scroll-hide overflow-y-scroll z-[4]">
+                        @if (filteredToList$ | async; as toList) {
+                          @if (fromItem$ | async; as from) {
+                            @for (toItem of toList; track toItem.id) {
+                              @if (toItem.id !== from.id) {
+                                <li (click)="onSelectToItem(toItem?.slugText!)" class="py-1.5 z-[3] hover:cursor-pointer px-5 hover:bg-light-text3 hover:dark:bg-dark-border2">
+                                  <app-search-item class="z-[3]" [item]="toItem" />
+                                </li>
+                              }
                             }
+                          }
                         }
                       </ul>
                     </div>
@@ -84,18 +92,20 @@
               </div>
               <!-- From -->
               <div #fromBtn class="relative md:max-w-1/2 w-full 2xl:min-w-62 text-sm">
+                @if (dualList$ | async; as dual) {
                   <button
                       type="button"
-                      [disabled]="mainFromList().length === 0"
+                      [disabled]="dual.second.length === 0"
                       (click)="toggleFromeDropdown()"
                       class="dropdown-button-base h-[49.6px]
-                          {{ mainFromList().length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : 'animate-none'}}"
+                          {{ dual.second.length === 0 ? 'min-h-[49.6px] skeleton-base z-0' : 'animate-none'}}"
                   >
                     <i [class.rotate-180]="fromDropdownOpen()" class="bi text-xs bi-chevron-down transition-transform"></i>
-                    @if (mainFromList().length) {
-                      <app-search-item [item]="fromItem()" />
-                    }
+                      @if (fromItem$ | async; as from) {
+                        <app-search-item [item]="from" />
+                      }
                   </button>
+                }
                   @if (fromDropdownOpen()) {
                     <div class="absolute overflow-hidden flex flex-col z-[2] max-h-64 pt-2.5 w-full rounded-lg text-dark-text3 dark:text-light-text3 border border-light-text dark:border-dark-text bg-light-text dark:bg-dark-text">
                       <div class="relative w-full h-10 text-sm leading-10 px-5 mb-3">
@@ -103,16 +113,22 @@
                             viewBox="0 -0.24 28.423 28.423" class="absolute right-5 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
                             <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                             <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
-                        </svg>  
-                        <input type="text" (input)="filterFromList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ mainFromList()[1].faGroupName }}" >
+                        </svg> 
+                        @if (fromItem$ | async; as from) { 
+                          <input type="text" (input)="filterFromList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ from.faGroupName }}" >
+                        }
                       </div>
 
                       <ul class="flex flex-col scroll-hide overflow-y-scroll">
-                        @for (currentItem of currentFromList(); track currentItem.id) {
-                          @if (currentItem.id !== toItem().id) {
-                            <li (click)="onSelectFromItem(currentItem?.slugText!)" class="py-1.5 px-5 hover:cursor-pointer hover:bg-light-text3 hover:dark:bg-dark-border2">
-                              <app-search-item [item]="currentItem" />
-                            </li>
+                        @if (filteredFromList$ | async; as fromList) {
+                          @if (toItem$ | async; as to) {
+                            @for (fromItem of fromList; track fromItem.id) {
+                              @if (fromItem.id !== to.id) {
+                                <li (click)="onSelectFromItem(fromItem?.slugText!)" class="py-1.5 px-5 hover:cursor-pointer hover:bg-light-text3 hover:dark:bg-dark-border2">
+                                  <app-search-item [item]="fromItem" />
+                                </li>
+                              }
+                            }
                           }
                         }
                       </ul>
@@ -124,45 +140,51 @@
             <div class="w-full text-right">
               <p class="text-dark-text3 dark:text-light-text3 text-xs md:text-sm mb-3">مقدار مورد نظر را وارد کنید</p>
               <div class="relative w-full">
-                <p class="input-unit-base">{{fromItem().shortedName}}</p>
+                @if (fromItem$ | async; as from) {
+                  <p class="input-unit-base">{{from.shortedName}}</p>
+                }
                 <input maxlength="16" [value]="inputValue() || 1" (input)="onInputChange($event)" type="text" commafyNumber class="input-base rtl">
               </div>
             </div>
         </div>
-        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit min-h-[286.4px]">
+        <div class="flex flex-col flex-1 border border-light-border2 dark:border-dark-border2 p-2 md:p-4 rounded-lg leading-[180%] h-fit md:min-h-[286.4px]">
           <div class="w-full items-center justify-center rtl gap-1 flex xs:flex-row flex-col pb-2 md:py-3">
               <span class="flex items-center gap-1">
-                @if (mainFromList().length) {
+                @if (dualList$ | async; as dual) {
                   <p class="text-dark font-bold dark:text-light text-sm md:text-base">{{ inputValue() || 1 }}</p>
+                  <span class="font-bold text-xs md:text-sm skeleton-base z-[2] {{ dual.first.length ? 'hidden' : 'block' }}" >item value</span>
                 }
-                <span class="font-bold ext-sm md:text-base skeleton-base z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
-                @if (mainFromList().length) {
-                  <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ fromItem().shortedName }}</p>
+                @if (fromItem$ | async; as from) {
+                  <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ from.shortedName }}</p>
                 }
+                <p class="text-dark-text dark:text-light-text text-xs md:text-sm">برابر است با:&nbsp;</p>
               </span>
-              <p class="text-dark-text dark:text-light-text text-xs md:text-sm">برابر است با&nbsp;</p>
               <span class="flex items-center gap-1">
-                @if (mainFromList().length) {
-                  <p class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ convertedValue() }}</p>
+                @if (dualList$ | async; as dual) {
+                  <p class="text-dark font-bold dark:text-light text-sm md:text-base" >{{ calculateOutput$ | async }}</p>
+                  <span class="font-bold text-xs md:text-sm skeleton-base z-[2] {{ dual.first.length ? 'hidden' : 'block' }}" >item value</span>
                 }
-                <span class="font-bold ext-sm md:text-base skeleton-base z-[2] {{ mainFromList().length ? 'hidden' : 'block' }}" >item value</span>
-                @if (mainFromList().length) {
-                  <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ toItem().shortedName }}</p>
+                @if (toItem$ | async; as to) {
+                  <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">{{ to.shortedName }}</p>
                 }
               </span>
           </div>
           <hr class="border border-light-text4 dark:border-dark-text2">
-          <span class="grid grid-cols-12 w-full rtl py-1 md:py-2 mb-2">
+          <span class="grid justify-between grid-cols-12 w-full rtl py-1 md:py-2 mb-2">
             <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-4">عنوان</p>
             <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-4 md:col-span-3">قیمت تومانی</p>
             <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-3">قیمت دلاری</p>
           </span>
-          @if (mainFromList().length) {
-            <app-converter-item class="w-full mb-1" [currencyItem]="fromItem()" />
-            <app-converter-item class="w-full" [currencyItem]="toItem()" />
+          @if (fromItem$ | async; as fromItem) {
+            <app-converter-item class="w-full mb-1" [currencyItem]="fromItem" />
           }
-          <app-converter-item-skeleton class="w-full mb-1 z-[3] {{ mainFromList().length ? 'hidden' : 'block' }}" />
-          <app-converter-item-skeleton class="w-full z-[3] {{ mainFromList().length ? 'hidden' : 'block' }}" />
+          @if (toItem$ | async; as toItem) {
+            <app-converter-item class="w-full" [currencyItem]="toItem" />
+          }
+          @if (dualList$ | async; as dual) {
+            <app-converter-item-skeleton class="w-full mb-1 z-[3] {{ dual.first.length ? 'hidden' : 'block' }}" />
+            <app-converter-item-skeleton class="w-full z-[3] {{ dual.first.length ? 'hidden' : 'block' }}" />
+          }
         </div>
     </div>
 </main>

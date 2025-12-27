@@ -25,7 +25,8 @@ export class ItemInfoComponent {
     addToFav(event: MouseEvent) {
       event.stopPropagation();
       this.notificationService.show('با موفقیت به دیده بان اضافه شد')
-      this.requestArray?.addToFavorite(this.item!)
+      console.log(typeof this.item)
+      // this.requestArray?.addToFavorite(this.item!)
     }
   
     removeFromFav(event: MouseEvent) {

@@ -5,6 +5,7 @@ import { StarIconComponent } from '../../../shared/star-icon/star-icon.component
 import { RequestArrayService } from '../../../../services/request-array.service';
 import { toman_unit } from '../../../../constants/Values';
 import { Router, RouterModule } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 
 @Component({

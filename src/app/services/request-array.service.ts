@@ -3,7 +3,7 @@ import { CurrenciesService } from './currencies.service';
 import { Currencies, CurrencyItem, Current } from '../interfaces/data.types';
 import { base_metal_title, BASE_METALS_PREFIX, COIN_PREFIX, coin_title, COMMODITY_PREFIX, commodity_title, CRYPTO_PREFIX, crypto_title, currency_title, dollar_unit, filter_agricultural_products, filter_animal_products, filter_coin_blubber, filter_coin_cash, filter_coin_exchange, filter_coin_retail, filter_crop_yields, filter_cryptocurrency, filter_etf, filter_global_base_metals, filter_global_ounces, filter_gold, filter_gold_vs_other, filter_main_currencies, filter_melted, filter_mesghal, filter_other_coins, filter_other_currencies, filter_pair_currencies, filter_silver, filter_us_base_metals, GOLD_PREFIX, gold_title, MAIN_CURRENCY_PREFIX, pound_unit, precious_metal_title, PRECIOUS_METALS_PREFIX, toman_unit, WORLD_MARKET_PREFIX, world_title } from '../constants/Values';
 import { commafy, priceToNumber, trimDecimal, valueToDollarChanges, valueToRialChanges } from '../utils/CurrencyConverter';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, from, map, Observable, Subject, timer } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class RequestArrayService {
 
     private mainDataSubject? = new BehaviorSubject<Currencies | undefined>(undefined);
     private allItemListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private mainCurrencyListSubject = new BehaviorSubject<CurrencyItem[]>([]);
     private cryptoListSubject = new BehaviorSubject<CurrencyItem[]>([]);
     private worldMarketListSubject = new BehaviorSubject<CurrencyItem[]>([]);
     private coinListSubject = new BehaviorSubject<CurrencyItem[]>([]);
@@ -20,27 +21,29 @@ export class RequestArrayService {
     private preciousMetalListSubject = new BehaviorSubject<CurrencyItem[]>([]);
     private baseMetalListSubject = new BehaviorSubject<CurrencyItem[]>([]);
     private commodityListSubject = new BehaviorSubject<CurrencyItem[]>([]);
-  
-    mainData?: Currencies;
-    allItemsList: CurrencyItem[] = [];
-    mainCurrencyList: CurrencyItem[] = [];
-    cryptoList: CurrencyItem[] = [];
-    worldMarketList: CurrencyItem[] = [];
-    coinList: CurrencyItem[] = [];
-    goldList: CurrencyItem[] = [];
-    preciousMetalList: CurrencyItem[] = [];
-    baseMetalList: CurrencyItem[] = [];
-    commodityList: CurrencyItem[] = [];
+
+    private favListSubject = new BehaviorSubject<CurrencyItem[]>([]);
+    private favIdsSubject = new BehaviorSubject<string[]>([]);
+
+    mainData? = this.mainDataSubject?.asObservable();
+    allItemsList = this.allItemListSubject.asObservable();
+    mainCurrencyList = this.mainCurrencyListSubject.asObservable();
+    cryptoList = this.cryptoListSubject.asObservable();
+    worldMarketList = this.worldMarketListSubject.asObservable();
+    coinList = this.coinListSubject.asObservable();
+    goldList = this.goldListSubject.asObservable();
+    preciousMetalList = this.preciousMetalListSubject.asObservable();
+    baseMetalList = this.baseMetalListSubject.asObservable();
+    commodityList = this.commodityListSubject.asObservable();
 
 
-    favIds: string[] = []
-    favList: CurrencyItem[] = [];
-
-    currentState = '+';
-    currentItem = '';
+    favIds = this.favIdsSubject.asObservable();
+    favList = this.favListSubject.asObservable();
 
     private ws?: WebSocket;
     prices$ = new BehaviorSubject<any>(null);
+
+    private heartbeatTimer?: number;
 
   constructor(private currencyService: CurrenciesService, @Inject(PLATFORM_ID) private platformId: Object) {
     this.setupMainData();
@@ -70,7 +73,8 @@ export class RequestArrayService {
         if (msg.type === 'update') {
             const data: Currencies = msg.payload;
             
-            this.mainData = data;
+            // this.mainData = data;
+            this.mainDataSubject?.next(data);
             console.log(data)
             this.setupAllCurrentData(data.current)
         }
@@ -80,8 +84,6 @@ export class RequestArrayService {
     }
     
   }
-
-    private heartbeatTimer?: number;
 
     startHeartbeat() {
         this.heartbeatTimer = window.setInterval(() => {
@@ -104,21 +106,31 @@ export class RequestArrayService {
 
   addToFavorite(item: CurrencyItem) {
     if (window.navigator.onLine) {
-        this.currentState = '+';
-        this.currentItem = item.title;
         if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
             item.isFav = true;
-            this.favList.push(item)
-            this.favIds.push(item.id)
+            const currentFavList = this.favListSubject.getValue();
+            const currentFavIds = this.favIdsSubject.getValue();
+
+            const updatedFavList = [...currentFavList, item];
+            const updatedFavIds = [...currentFavIds, item.id];
+
+            this.favListSubject.next(updatedFavList);
+            this.favIdsSubject.next(updatedFavIds);
             
-            let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
+            let items = JSON.parse(localStorage.getItem('fav') ?? '[]') as string[]
             items.push(item.id)
             localStorage.setItem('fav', JSON.stringify(items))
         } else {
             item.isFav = true;
-            this.favIds.push(item.id)
-            this.favList.push(item)
-            localStorage.setItem('fav', JSON.stringify(this.favIds))
+            const currentFavList = this.favListSubject.getValue();
+            const currentFavIds = this.favIdsSubject.getValue();
+
+            const updatedFavList = [...currentFavList, item];
+            const updatedFavIds = [...currentFavIds, item.id];
+
+            this.favListSubject.next(updatedFavList);
+            this.favIdsSubject.next(updatedFavIds);
+            localStorage.setItem('fav', JSON.stringify(updatedFavIds))
         }
     }
   }
@@ -128,7 +140,7 @@ export class RequestArrayService {
     const itemChanges = (item.lastPriceInfo?.dt === 'low' ? -1 : 1) * (item.lastPriceInfo?.dp)!
     if (item.unit === toman_unit) {
         item.rialChangeState = item.lastPriceInfo?.dt
-        item.rialChanges = item.lastPriceInfo?.dp + '';
+        item.rialChanges = Math.abs(item.lastPriceInfo?.dp!) + '';
         let itemDollarChanges = valueToDollarChanges(itemChanges, dollarChanges);
         item.dollarChangeState = itemDollarChanges >= 0 ? 'high' : 'low';
         itemDollarChanges = trimDecimal(itemDollarChanges)
@@ -136,7 +148,7 @@ export class RequestArrayService {
     }
     else if (item.unit === dollar_unit) {
         item.dollarChangeState = item.lastPriceInfo?.dt
-        item.dollarChanges = item.lastPriceInfo?.dp + '';
+        item.dollarChanges = Number(item.lastPriceInfo?.dp) + '';
         let itemRialChanges = valueToRialChanges(itemChanges, dollarChanges);
         item.rialChangeState = itemRialChanges >= 0 ? 'high' : 'low';
         itemRialChanges = trimDecimal(itemRialChanges)
@@ -160,40 +172,73 @@ export class RequestArrayService {
 
   getFavorites() {
     if (typeof window !== 'undefined') {
-        const items: string[] | undefined = JSON.parse(localStorage.getItem('fav') as string)
+        const items: string[] | undefined = JSON.parse(localStorage.getItem('fav') as string ?? '[]')
+        const allItemList = this.allItemListSubject.getValue();
         const favItems: CurrencyItem[] = []
         if (items) {
             for (const favId of items!) {
-                for (const item of this.allItemsList) {
+                for (const item of allItemList) {
                     if (item.id === favId) favItems.push(item)
                 }
             }
+            // from(items)
+            // .pipe(
+            //     map((allItems) =>
+            //         allItems.filter((item: CurrencyItem) => items.includes(item.id))
+            //     )
+            // )
+            // .subscribe((favItems) => {
+            //     this.favListSubject.next(favItems);
+            // });
+            // combineLatest([
+            //     this.allItemsList,
+            //     items
+            // ]).pipe(
+            //     map(([allItems]) =>
+            //       allItems.filter(item => items.includes(item.id))
+            //     )
+            // ).subscribe((currentFav) => {
+            //     favItems = currentFav
+            // })
+            // items.forEach((favItem) => {
+            //     this.allItemsList.subscribe((items) => {
+            //         favItems = items.filter((item) => item.id == favItem)
+            //         console.log(items)
+            //     })
+            // })
         }
-        this.favList = favItems;
+        this.favListSubject.next(favItems);
     }
   }
 
   removeFromFavorite(id: string) {
     if (window.navigator.onLine) {
-        let itemToRemove: CurrencyItem | undefined = this.allItemsList.find(item => item.id === id)
-        this.currentState = '-';
-        this.currentItem = itemToRemove!.title;
+        const allItemValues = this.allItemListSubject.getValue();
+        const currentFavIds = this.favIdsSubject.getValue();
+        const currentFavList = this.favListSubject.getValue();
+        let itemToRemove: CurrencyItem | undefined = allItemValues.find(item => item.id === id)
 
         if (typeof window !== 'undefined' && itemToRemove !== undefined) {
             let items: string[] = JSON.parse(localStorage.getItem('fav') as string)
-            this.favIds = items;
+            this.favIdsSubject.next(items);
 
             itemToRemove.isFav = false;
-            this.favList = this.favList.filter(item => item.id !== id)
-            this.favIds = this.favIds.filter(itemId => itemId !== id)
-            localStorage.setItem('fav', JSON.stringify(this.favIds))
+            const updatedFavList = currentFavList.filter(item => item.id !== id)
+            const updatedFavIds = currentFavIds.filter(itemId => itemId !== id)
+
+            this.favIdsSubject.next(updatedFavIds)
+            this.favListSubject.next(updatedFavList)
+            // this.favList = this.favList.filter(item => item.id !== id)
+            // this.favIds = this.favIds.filter(itemId => itemId !== id)
+            localStorage.setItem('fav', JSON.stringify(updatedFavIds))
         }
     }
   }
   
-  calculateOtherCurrenccyPrices(list: CurrencyItem[], current: Current, faGroupName: string) {
+  calculateOtherCurrenccyPrices(list: BehaviorSubject<CurrencyItem[]>, current: Current, faGroupName: string) {
+    const currentList = list.getValue();
 
-    list.forEach(item => {
+    currentList.forEach(item => {
         const priceValue = priceToNumber(item?.lastPriceInfo?.p!);
         // convert all to rial for real price
         if (item.unit === dollar_unit) {
@@ -240,6 +285,7 @@ export class RequestArrayService {
         // fix 24h changes problem
         if (item.lastPriceInfo?.dt === 'low' && item.lastPriceInfo?.dp == 0) item.lastPriceInfo.dt = 'high'
     })
+    list.next(currentList)
   }
 
   setupMainData() {
@@ -249,7 +295,8 @@ export class RequestArrayService {
 
     this.currencyService.getAllCurrencies()
     .subscribe((data: Currencies) => {
-      this.mainData = data;
+    //   this.mainData = data;
+        this.mainDataSubject?.next(data)
       
       this.setupAllCurrentData(data.current);
     })
@@ -257,28 +304,28 @@ export class RequestArrayService {
 
   setupAllCurrentData (current: Current) {
     this.setupMainCurrenciesList(current)
-      this.calculateOtherCurrenccyPrices(this.mainCurrencyList, current, currency_title)
+      this.calculateOtherCurrenccyPrices(this.mainCurrencyListSubject, current, currency_title)
 
       this.setupCryptoList(current)
-      this.calculateOtherCurrenccyPrices(this.cryptoList, current, crypto_title)
+      this.calculateOtherCurrenccyPrices(this.cryptoListSubject, current, crypto_title)
 
       this.setupWorldMarketList(current)
-      this.calculateOtherCurrenccyPrices(this.worldMarketList, current, world_title)
+      this.calculateOtherCurrenccyPrices(this.worldMarketListSubject, current, world_title)
 
       this.setupCoinList(current)
-      this.calculateOtherCurrenccyPrices(this.coinList, current, coin_title)
+      this.calculateOtherCurrenccyPrices(this.coinListSubject, current, coin_title)
 
       this.setupGoldList(current)
-      this.calculateOtherCurrenccyPrices(this.goldList, current, gold_title)
+      this.calculateOtherCurrenccyPrices(this.goldListSubject, current, gold_title)
 
       this.setupPreciousMetals(current)
-      this.calculateOtherCurrenccyPrices(this.preciousMetalList, current, precious_metal_title)
+      this.calculateOtherCurrenccyPrices(this.preciousMetalListSubject, current, precious_metal_title)
 
       this.setupBaseMetals(current)
-      this.calculateOtherCurrenccyPrices(this.baseMetalList, current, base_metal_title)
+      this.calculateOtherCurrenccyPrices(this.baseMetalListSubject, current, base_metal_title)
 
       this.setupCommodityMarket(current)
-      this.calculateOtherCurrenccyPrices(this.commodityList, current, commodity_title)
+      this.calculateOtherCurrenccyPrices(this.commodityListSubject, current, commodity_title)
 
       this.setupAllItemsList()
       this.getFavorites()
@@ -286,10 +333,10 @@ export class RequestArrayService {
 
 
   private setupMainCurrenciesList(current: Current) {
-    this.mainCurrencyList = []
+    const mainCurrencyList: CurrencyItem[] = []
     
     // Main
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000000",
         historyCallInfo: this.currencyService.getDollarRlHistoryInfo(),
         lastPriceInfo: current.price_dollar_rl,
@@ -300,7 +347,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/us.svg',
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000001",
         historyCallInfo: this.currencyService.getEuroRlHistoryInfo(),
         lastPriceInfo: current.price_eur,
@@ -311,7 +358,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/eu.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000002",
         historyCallInfo: this.currencyService.getAedRlHistoryInfo(),
         lastPriceInfo: current.price_aed,
@@ -322,7 +369,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ae.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000003",
         historyCallInfo: this.currencyService.getGbpRlHistoryInfo(),
         lastPriceInfo: current.price_gbp,
@@ -333,7 +380,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/gb.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000004",
         historyCallInfo: this.currencyService.getTryRlHistoryInfo(),
         lastPriceInfo: current.price_try,
@@ -344,7 +391,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/tr.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000005",
         historyCallInfo: this.currencyService.getChfRlHistoryInfo(),
         lastPriceInfo: current.price_chf,
@@ -355,7 +402,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ch.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000006",
         historyCallInfo: this.currencyService.getCnyRlHistoryInfo(),
         lastPriceInfo: current.price_cny,
@@ -366,7 +413,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cn.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000007",
         historyCallInfo: this.currencyService.getJpyRlHistoryInfo(),
         lastPriceInfo: current.price_jpy,
@@ -377,7 +424,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/jp.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000008",
         historyCallInfo: this.currencyService.getKrwRlHistoryInfo(),
         lastPriceInfo: current.price_krw,
@@ -388,7 +435,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/kr.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000009",
         historyCallInfo: this.currencyService.getCadRlHistoryInfo(),
         lastPriceInfo: current.price_cad,
@@ -399,7 +446,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ca.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000010",
         historyCallInfo: this.currencyService.getAudRlHistoryInfo(),
         lastPriceInfo: current.price_aud,
@@ -410,7 +457,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/au.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000011",
         historyCallInfo: this.currencyService.getNzdRlHistoryInfo(),
         lastPriceInfo: current.price_nzd,
@@ -421,7 +468,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/nz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000012",
         historyCallInfo: this.currencyService.getSgdRlHistoryInfo(),
         lastPriceInfo: current.price_sgd,
@@ -432,7 +479,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sg.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000013",
         historyCallInfo: this.currencyService.getInrRlHistoryInfo(),
         lastPriceInfo: current.price_inr,
@@ -443,7 +490,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/in.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000014",
         historyCallInfo: this.currencyService.getPkrRlHistoryInfo(),
         lastPriceInfo: current.price_pkr,
@@ -454,7 +501,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/pk.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000015",
         historyCallInfo: this.currencyService.getIqdRlHistoryInfo(),
         lastPriceInfo: current.price_iqd,
@@ -465,7 +512,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/iq.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000016",
         historyCallInfo: this.currencyService.getSypRlHistoryInfo(),
         lastPriceInfo: current.price_syp,
@@ -476,7 +523,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sy.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000017",
         historyCallInfo: this.currencyService.getAfnRlHistoryInfo(),
         lastPriceInfo: current.price_afn,
@@ -487,7 +534,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/af.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000018",
         historyCallInfo: this.currencyService.getDkkRlHistoryInfo(),
         lastPriceInfo: current.price_dkk,
@@ -498,7 +545,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/dk.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000019",
         historyCallInfo: this.currencyService.getSekRlHistoryInfo(),
         lastPriceInfo: current.price_sek,
@@ -509,7 +556,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/se.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000020",
         historyCallInfo: this.currencyService.getNokRlHistoryInfo(),
         lastPriceInfo: current.price_nok,
@@ -520,7 +567,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/no.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000021",
         historyCallInfo: this.currencyService.getSarRlHistoryInfo(),
         lastPriceInfo: current.price_sar,
@@ -531,7 +578,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sa.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000022",
         historyCallInfo: this.currencyService.getQarRlHistoryInfo(),
         lastPriceInfo: current.price_qar,
@@ -542,7 +589,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/qa.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000023",
         historyCallInfo: this.currencyService.getOmrRlHistoryInfo(),
         lastPriceInfo: current.price_omr,
@@ -553,7 +600,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/om.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000024",
         historyCallInfo: this.currencyService.getKwdRlHistoryInfo(),
         lastPriceInfo: current.price_kwd,
@@ -564,7 +611,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/kw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000025",
         historyCallInfo: this.currencyService.getBhdRlHistoryInfo(),
         lastPriceInfo: current.price_bhd,
@@ -575,7 +622,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bh.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000026",
         historyCallInfo: this.currencyService.getMyrRlHistoryInfo(),
         lastPriceInfo: current.price_myr,
@@ -586,7 +633,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/my.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000027",
         historyCallInfo: this.currencyService.getThbRlHistoryInfo(),
         lastPriceInfo: current.price_thb,
@@ -597,7 +644,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/th.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000028",
         historyCallInfo: this.currencyService.getHkdRlHistoryInfo(),
         lastPriceInfo: current.price_hkd,
@@ -608,7 +655,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/hk.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000029",
         historyCallInfo: this.currencyService.getRubRlHistoryInfo(),
         lastPriceInfo: current.price_rub,
@@ -619,7 +666,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ru.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000030",
         historyCallInfo: this.currencyService.getAznRlHistoryInfo(),
         lastPriceInfo: current.price_azn,
@@ -630,7 +677,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/az.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000031",
         historyCallInfo: this.currencyService.getAmdRlHistoryInfo(),
         lastPriceInfo: current.price_amd,
@@ -641,7 +688,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/am.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000032",
         historyCallInfo: this.currencyService.getGelRlHistoryInfo(),
         lastPriceInfo: current.price_gel,
@@ -652,7 +699,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ge.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000033",
         historyCallInfo: this.currencyService.getKgsRlHistoryInfo(),
         lastPriceInfo: current.price_kgs,
@@ -663,7 +710,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/kg.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000034",
         historyCallInfo: this.currencyService.getTjsRlHistoryInfo(),
         lastPriceInfo: current.price_tjs,
@@ -674,7 +721,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/tj.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000035",
         historyCallInfo: this.currencyService.getTmtRlHistoryInfo(),
         lastPriceInfo: current.price_tmt,
@@ -689,7 +736,7 @@ export class RequestArrayService {
 
     // Other
 
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000036",
         historyCallInfo: this.currencyService.getAllRlHistoryInfo(),
         lastPriceInfo: current.price_all,
@@ -700,7 +747,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/al.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000037",
         historyCallInfo: this.currencyService.getBbdRlHistoryInfo(),
         lastPriceInfo: current.price_bbd,
@@ -711,7 +758,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bb.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000038",
         historyCallInfo: this.currencyService.getBdtRlHistoryInfo(),
         lastPriceInfo: current.price_bdt,
@@ -722,7 +769,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bd.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000039",
         historyCallInfo: this.currencyService.getBgnRlHistoryInfo(),
         lastPriceInfo: current.price_bgn,
@@ -733,7 +780,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bg.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000040",
         historyCallInfo: this.currencyService.getBifRlHistoryInfo(),
         lastPriceInfo: current.price_bif,
@@ -744,7 +791,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bi.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000041",
         historyCallInfo: this.currencyService.getBndRlHistoryInfo(),
         lastPriceInfo: current.price_bnd,
@@ -755,7 +802,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bn.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000042",
         historyCallInfo: this.currencyService.getBsdRlHistoryInfo(),
         lastPriceInfo: current.price_bsd,
@@ -766,7 +813,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bs.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000043",
         historyCallInfo: this.currencyService.getBwpRlHistoryInfo(),
         lastPriceInfo: current.price_bwp,
@@ -777,7 +824,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000044",
         historyCallInfo: this.currencyService.getBynRlHistoryInfo(),
         lastPriceInfo: current.price_byn,
@@ -788,7 +835,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/by.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000045",
         historyCallInfo: this.currencyService.getBzdRlHistoryInfo(),
         lastPriceInfo: current.price_bzd,
@@ -799,7 +846,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000046",
         historyCallInfo: this.currencyService.getCupRlHistoryInfo(),
         lastPriceInfo: current.price_cup,
@@ -810,7 +857,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cu.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000047",
         historyCallInfo: this.currencyService.getCzkRlHistoryInfo(),
         lastPriceInfo: current.price_czk,
@@ -821,7 +868,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000048",
         historyCallInfo: this.currencyService.getDjfRlHistoryInfo(),
         lastPriceInfo: current.price_djf,
@@ -832,7 +879,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/dj.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000049",
         historyCallInfo: this.currencyService.getDopRlHistoryInfo(),
         lastPriceInfo: current.price_dop,
@@ -843,7 +890,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/do.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000050",
         historyCallInfo: this.currencyService.getDzdRlHistoryInfo(),
         lastPriceInfo: current.price_dzd,
@@ -854,7 +901,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/dz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000051",
         historyCallInfo: this.currencyService.getEtbRlHistoryInfo(),
         lastPriceInfo: current.price_etb,
@@ -865,7 +912,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/et.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000052",
         historyCallInfo: this.currencyService.getGnfRlHistoryInfo(),
         lastPriceInfo: current.price_gnf,
@@ -876,7 +923,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/gn.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000053",
         historyCallInfo: this.currencyService.getGtqRlHistoryInfo(),
         lastPriceInfo: current.price_gtq,
@@ -887,7 +934,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/gt.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000054",
         historyCallInfo: this.currencyService.getGydRlHistoryInfo(),
         lastPriceInfo: current.price_gyd,
@@ -898,7 +945,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/gy.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000055",
         historyCallInfo: this.currencyService.getHnlRlHistoryInfo(),
         lastPriceInfo: current.price_hnl,
@@ -909,7 +956,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/hn.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000056",
         historyCallInfo: this.currencyService.getHrkRlHistoryInfo(),
         lastPriceInfo: current.price_hrk,
@@ -920,7 +967,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/hr.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000057",
         historyCallInfo: this.currencyService.getHtgRlHistoryInfo(),
         lastPriceInfo: current.price_htg,
@@ -931,7 +978,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ht.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000058",
         historyCallInfo: this.currencyService.getIskRlHistoryInfo(),
         lastPriceInfo: current.price_isk,
@@ -942,7 +989,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/is.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000059",
         historyCallInfo: this.currencyService.getJmdRlHistoryInfo(),
         lastPriceInfo: current.price_jmd,
@@ -953,7 +1000,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/jm.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000060",
         historyCallInfo: this.currencyService.getKesRlHistoryInfo(),
         lastPriceInfo: current.price_kes,
@@ -964,7 +1011,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ke.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000061",
         historyCallInfo: this.currencyService.getKhrRlHistoryInfo(),
         lastPriceInfo: current.price_khr,
@@ -975,7 +1022,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/kh.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000062",
         historyCallInfo: this.currencyService.getKmfRlHistoryInfo(),
         lastPriceInfo: current.price_kmf,
@@ -986,7 +1033,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/km.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000063",
         historyCallInfo: this.currencyService.getKztRlHistoryInfo(),
         lastPriceInfo: current.price_kzt,
@@ -997,7 +1044,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/kz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000064",
         historyCallInfo: this.currencyService.getLakRlHistoryInfo(),
         lastPriceInfo: current.price_lak,
@@ -1008,7 +1055,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/la.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000065",
         historyCallInfo: this.currencyService.getLbpRlHistoryInfo(),
         lastPriceInfo: current.price_lbp,
@@ -1019,7 +1066,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/lb.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000066",
         historyCallInfo: this.currencyService.getLkrRlHistoryInfo(),
         lastPriceInfo: current.price_lkr,
@@ -1030,7 +1077,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/lk.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000067",
         historyCallInfo: this.currencyService.getLrdRlHistoryInfo(),
         lastPriceInfo: current.price_lrd,
@@ -1041,7 +1088,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/lr.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000068",
         historyCallInfo: this.currencyService.getLslRlHistoryInfo(),
         lastPriceInfo: current.price_lsl,
@@ -1052,7 +1099,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ls.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000069",
         historyCallInfo: this.currencyService.getLydRlHistoryInfo(),
         lastPriceInfo: current.price_lyd,
@@ -1063,7 +1110,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ly.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000070",
         historyCallInfo: this.currencyService.getMadRlHistoryInfo(),
         lastPriceInfo: current.price_mad,
@@ -1074,7 +1121,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ma.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000071",
         historyCallInfo: this.currencyService.getMgaRlHistoryInfo(),
         lastPriceInfo: current.price_mga,
@@ -1085,7 +1132,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mg.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000072",
         historyCallInfo: this.currencyService.getMkdRlHistoryInfo(),
         lastPriceInfo: current.price_mkd,
@@ -1096,7 +1143,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mk.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000073",
         historyCallInfo: this.currencyService.getMmkRlHistoryInfo(),
         lastPriceInfo: current.price_mmk,
@@ -1107,7 +1154,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mm.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000074",
         historyCallInfo: this.currencyService.getMopRlHistoryInfo(),
         lastPriceInfo: current.price_mop,
@@ -1118,7 +1165,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mo.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000075",
         historyCallInfo: this.currencyService.getMurRlHistoryInfo(),
         lastPriceInfo: current.price_mur,
@@ -1129,7 +1176,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mu.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000076",
         historyCallInfo: this.currencyService.getMvrRlHistoryInfo(),
         lastPriceInfo: current.price_mvr,
@@ -1140,7 +1187,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mv.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000077",
         historyCallInfo: this.currencyService.getMwkRlHistoryInfo(),
         lastPriceInfo: current.price_mwk,
@@ -1151,7 +1198,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000078",
         historyCallInfo: this.currencyService.getMznRlHistoryInfo(),
         lastPriceInfo: current.price_mzn,
@@ -1162,7 +1209,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000079",
         historyCallInfo: this.currencyService.getNadRlHistoryInfo(),
         lastPriceInfo: current.price_nad,
@@ -1173,7 +1220,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/na.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000080",
         historyCallInfo: this.currencyService.getNgnRlHistoryInfo(),
         lastPriceInfo: current.price_ngn,
@@ -1184,7 +1231,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ng.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000081",
         historyCallInfo: this.currencyService.getNprRlHistoryInfo(),
         lastPriceInfo: current.price_npr,
@@ -1195,7 +1242,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/np.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000082",
         historyCallInfo: this.currencyService.getPabRlHistoryInfo(),
         lastPriceInfo: current.price_pab,
@@ -1206,7 +1253,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/pa.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000083",
         historyCallInfo: this.currencyService.getPgkRlHistoryInfo(),
         lastPriceInfo: current.price_pgk,
@@ -1217,7 +1264,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/pg.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000084",
         historyCallInfo: this.currencyService.getPhpRlHistoryInfo(),
         lastPriceInfo: current.price_php,
@@ -1228,7 +1275,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ph.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000085",
         historyCallInfo: this.currencyService.getRonRlHistoryInfo(),
         lastPriceInfo: current.price_ron,
@@ -1239,7 +1286,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ro.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000086",
         historyCallInfo: this.currencyService.getRsdRlHistoryInfo(),
         lastPriceInfo: current.price_rsd,
@@ -1250,7 +1297,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/rs.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000087",
         historyCallInfo: this.currencyService.getRwfRlHistoryInfo(),
         lastPriceInfo: current.price_rwf,
@@ -1261,7 +1308,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/rw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000088",
         historyCallInfo: this.currencyService.getScrRlHistoryInfo(),
         lastPriceInfo: current.price_scr,
@@ -1272,7 +1319,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sc.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000089",
         historyCallInfo: this.currencyService.getSdgRlHistoryInfo(),
         lastPriceInfo: current.price_sdg,
@@ -1283,7 +1330,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sd.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000090",
         historyCallInfo: this.currencyService.getShpRlHistoryInfo(),
         lastPriceInfo: current.price_shp,
@@ -1294,7 +1341,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sh.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000091",
         historyCallInfo: this.currencyService.getSosRlHistoryInfo(),
         lastPriceInfo: current.price_sos,
@@ -1305,7 +1352,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/so.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000092",
         historyCallInfo: this.currencyService.getSvcRlHistoryInfo(),
         lastPriceInfo: current.price_svc,
@@ -1316,7 +1363,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sv.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000093",
         historyCallInfo: this.currencyService.getSzlRlHistoryInfo(),
         lastPriceInfo: current.price_szl,
@@ -1327,7 +1374,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000094",
         historyCallInfo: this.currencyService.getTndRlHistoryInfo(),
         lastPriceInfo: current.price_tnd,
@@ -1338,7 +1385,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/tn.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000095",
         historyCallInfo: this.currencyService.getTtdRlHistoryInfo(),
         lastPriceInfo: current.price_ttd,
@@ -1349,7 +1396,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/tt.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000096",
         historyCallInfo: this.currencyService.getTzsRlHistoryInfo(),
         lastPriceInfo: current.price_tzs,
@@ -1360,7 +1407,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/tz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000097",
         historyCallInfo: this.currencyService.getUgxRlHistoryInfo(),
         lastPriceInfo: current.price_ugx,
@@ -1371,7 +1418,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ug.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000098",
         historyCallInfo: this.currencyService.getYerRlHistoryInfo(),
         lastPriceInfo: current.price_yer,
@@ -1382,7 +1429,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ye.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000099",
         historyCallInfo: this.currencyService.getZmwRlHistoryInfo(),
         lastPriceInfo: current.price_zmw,
@@ -1393,7 +1440,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/zm.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000100",
         historyCallInfo: this.currencyService.getGhsRlHistoryInfo(),
         lastPriceInfo: current.price_ghs,
@@ -1404,7 +1451,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/gh.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000101",
         historyCallInfo: this.currencyService.getPenRlHistoryInfo(),
         lastPriceInfo: current.price_pen,
@@ -1415,7 +1462,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/pe.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000102",
         historyCallInfo: this.currencyService.getClpRlHistoryInfo(),
         lastPriceInfo: current.price_clp,
@@ -1426,7 +1473,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cl.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000103",
         historyCallInfo: this.currencyService.getEgpRlHistoryInfo(),
         lastPriceInfo: current.price_egp,
@@ -1437,7 +1484,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/eg.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000104",
         historyCallInfo: this.currencyService.getMxnRlHistoryInfo(),
         lastPriceInfo: current.price_mxn,
@@ -1448,7 +1495,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mx.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000105",
         historyCallInfo: this.currencyService.getJodRlHistoryInfo(),
         lastPriceInfo: current.price_jod,
@@ -1459,7 +1506,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/jo.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000106",
         historyCallInfo: this.currencyService.getBrlRlHistoryInfo(),
         lastPriceInfo: current.price_brl,
@@ -1470,7 +1517,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/br.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000107",
         historyCallInfo: this.currencyService.getUyuRlHistoryInfo(),
         lastPriceInfo: current.price_uyu,
@@ -1481,7 +1528,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/uy.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000108",
         historyCallInfo: this.currencyService.getCopRlHistoryInfo(),
         lastPriceInfo: current.price_cop,
@@ -1492,7 +1539,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/co.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000109",
         historyCallInfo: this.currencyService.getPlnRlHistoryInfo(),
         lastPriceInfo: current.price_pln,
@@ -1503,7 +1550,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/pl.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000110",
         historyCallInfo: this.currencyService.getArsRlHistoryInfo(),
         lastPriceInfo: current.price_ars,
@@ -1514,7 +1561,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ar.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000111",
         historyCallInfo: this.currencyService.getKydRlHistoryInfo(),
         lastPriceInfo: current.price_kyd,
@@ -1525,7 +1572,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ky.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000112",
         historyCallInfo: this.currencyService.getHufRlHistoryInfo(),
         lastPriceInfo: current.price_huf,
@@ -1536,7 +1583,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/hu.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000113",
         historyCallInfo: this.currencyService.getPygRlHistoryInfo(),
         lastPriceInfo: current.price_pyg,
@@ -1547,7 +1594,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/py.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000114",
         historyCallInfo: this.currencyService.getUahRlHistoryInfo(),
         lastPriceInfo: current.price_uah,
@@ -1558,7 +1605,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ua.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000115",
         historyCallInfo: this.currencyService.getZarRlHistoryInfo(),
         lastPriceInfo: current.price_zar,
@@ -1569,7 +1616,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/za.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000116",
         historyCallInfo: this.currencyService.getNioRlHistoryInfo(),
         lastPriceInfo: current.price_nio,
@@ -1580,7 +1627,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ni.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000117",
         historyCallInfo: this.currencyService.getFjdRlHistoryInfo(),
         lastPriceInfo: current.price_fjd,
@@ -1591,7 +1638,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/fj.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000118",
         historyCallInfo: this.currencyService.getTwdRlHistoryInfo(),
         lastPriceInfo: current.price_twd,
@@ -1602,7 +1649,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/tw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000119",
         historyCallInfo: this.currencyService.getUzsRlHistoryInfo(),
         lastPriceInfo: current.price_uzs,
@@ -1613,7 +1660,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/uz.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000120",
         historyCallInfo: this.currencyService.getIdrRlHistoryInfo(),
         lastPriceInfo: current.price_idr,
@@ -1624,7 +1671,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/id.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000121",
         historyCallInfo: this.currencyService.getXofRlHistoryInfo(),
         lastPriceInfo: current.price_xof,
@@ -1635,7 +1682,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/za.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000122",
         historyCallInfo: this.currencyService.getXpfRlHistoryInfo(),
         lastPriceInfo: current.price_xpf,
@@ -1646,7 +1693,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/pf.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000123",
         historyCallInfo: this.currencyService.getVndRlHistoryInfo(),
         lastPriceInfo: current.price_vnd,
@@ -1657,7 +1704,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/vn.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000124",
         historyCallInfo: this.currencyService.getGmdRlHistoryInfo(),
         lastPriceInfo: current.price_gmd,
@@ -1668,7 +1715,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/gm.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000125",
         historyCallInfo: this.currencyService.getXafRlHistoryInfo(),
         lastPriceInfo: current.price_xaf,
@@ -1679,7 +1726,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cf.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000126",
         historyCallInfo: this.currencyService.getVuvRlHistoryInfo(),
         lastPriceInfo: current.price_vuv,
@@ -1690,7 +1737,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/vu.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000127",
         historyCallInfo: this.currencyService.getMroRlHistoryInfo(),
         lastPriceInfo: current.price_mro,
@@ -1701,7 +1748,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/mr.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000128",
         historyCallInfo: this.currencyService.getAngRlHistoryInfo(),
         lastPriceInfo: current.price_ang,
@@ -1712,7 +1759,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ang.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000129",
         historyCallInfo: this.currencyService.getStdRlHistoryInfo(),
         lastPriceInfo: current.price_std,
@@ -1723,7 +1770,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/st.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000130",
         historyCallInfo: this.currencyService.getXcdRlHistoryInfo(),
         lastPriceInfo: current.price_xcd,
@@ -1734,7 +1781,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/zw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000131",
         historyCallInfo: this.currencyService.getBamRlHistoryInfo(),
         lastPriceInfo: current.price_bam,
@@ -1745,7 +1792,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ba.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000132",
         historyCallInfo: this.currencyService.getBtnRlHistoryInfo(),
         lastPriceInfo: current.price_btn,
@@ -1756,7 +1803,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bt.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000133",
         historyCallInfo: this.currencyService.getCdfRlHistoryInfo(),
         lastPriceInfo: current.price_cdf,
@@ -1767,7 +1814,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cd.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000134",
         historyCallInfo: this.currencyService.getCrcRlHistoryInfo(),
         lastPriceInfo: current.price_crc,
@@ -1778,7 +1825,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cr.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000135",
         historyCallInfo: this.currencyService.getCveRlHistoryInfo(),
         lastPriceInfo: current.price_cve,
@@ -1789,7 +1836,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/cv.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000136",
         historyCallInfo: this.currencyService.getBmdRlHistoryInfo(),
         lastPriceInfo: current.price_bmd,
@@ -1800,7 +1847,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/bm.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000137",
         historyCallInfo: this.currencyService.getAwgRlHistoryInfo(),
         lastPriceInfo: current.price_awg,
@@ -1811,7 +1858,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/aw.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000138",
         historyCallInfo: this.currencyService.getSllRlHistoryInfo(),
         lastPriceInfo: current.price_sll,
@@ -1822,7 +1869,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/sl.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000139",
         historyCallInfo: this.currencyService.getVefRlHistoryInfo(),
         lastPriceInfo: current.price_vef,
@@ -1833,7 +1880,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/country-flags/ve.svg'
     });
-    this.mainCurrencyList.push({
+    mainCurrencyList.push({
         id: "1000140",
         historyCallInfo: this.currencyService.getCypRlHistoryInfo(),
         lastPriceInfo: current.price_cyp,
@@ -1845,12 +1892,14 @@ export class RequestArrayService {
         img: '/assets/images/country-flags/cy.svg'
     });
 
+    this.mainCurrencyListSubject.next(mainCurrencyList)
+
   }
 
   private setupCryptoList(current: Current) {
-    this.cryptoList = []
+    const cryptoList = []
     
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000141",
         historyCallInfo: this.currencyService.getCryptoBtcHistoryInfo(),
         lastPriceInfo: current["crypto-bitcoin"],
@@ -1861,7 +1910,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/btc.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000142",
         historyCallInfo: this.currencyService.getCryptoEthHistoryInfo(),
         lastPriceInfo: current["crypto-ethereum"],
@@ -1872,7 +1921,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/eth.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000143",
         historyCallInfo: this.currencyService.getCryptoTetherHistoryInfo(),
         lastPriceInfo: current["crypto-tether"],
@@ -1883,7 +1932,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/usdt.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000144",
         historyCallInfo: this.currencyService.getCryptoBinanceCoinHistoryInfo(),
         lastPriceInfo: current["crypto-binance-coin"],
@@ -1894,7 +1943,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/bnb.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000145",
         historyCallInfo: this.currencyService.getCryptoSolanaHistoryInfo(),
         lastPriceInfo: current["crypto-solana"],
@@ -1905,7 +1954,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/sol.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000146",
         historyCallInfo: this.currencyService.getCryptoUSDCoinHistoryInfo(),
         lastPriceInfo: current["crypto-usd-coin"],
@@ -1916,7 +1965,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/usdc.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000147",
         historyCallInfo: this.currencyService.getCryptoRippleHistoryInfo(),
         lastPriceInfo: current["crypto-ripple"],
@@ -1927,7 +1976,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/xrp.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000148",
         historyCallInfo: this.currencyService.getCryptoCardanoHistoryInfo(),
         lastPriceInfo: current["crypto-cardano"],
@@ -1938,7 +1987,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/ada.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000149",
         historyCallInfo: this.currencyService.getCryptoDogecoinHistoryInfo(),
         lastPriceInfo: current["crypto-dogecoin"],
@@ -1949,7 +1998,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/doge.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000150",
         historyCallInfo: this.currencyService.getCryptoAvalancheHistoryInfo(),
         lastPriceInfo: current["crypto-avalanche"],
@@ -1960,7 +2009,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/avax.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000151",
         historyCallInfo: this.currencyService.getCryptoShibaInuHistoryInfo(),
         lastPriceInfo: current["crypto-shiba-inu"],
@@ -1971,7 +2020,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/shiba_inu2.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000152",
         historyCallInfo: this.currencyService.getCryptoPolkadotHistoryInfo(),
         lastPriceInfo: current["crypto-polkadot"],
@@ -1982,7 +2031,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/dot.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000153",
         historyCallInfo: this.currencyService.getCryptoTronHistoryInfo(),
         lastPriceInfo: current["crypto-tron"],
@@ -1993,7 +2042,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/trx.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000154",
         historyCallInfo: this.currencyService.getCryptoBchHistoryInfo(),
         lastPriceInfo: current["crypto-bitcoin-cash"],
@@ -2004,7 +2053,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/bch.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000155",
         historyCallInfo: this.currencyService.getCryptoUniHistoryInfo(),
         lastPriceInfo: current["crypto-uniswap"],
@@ -2015,7 +2064,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/uni.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000156",
         historyCallInfo: this.currencyService.getCryptoLtcHistoryInfo(),
         lastPriceInfo: current["crypto-litecoin"],
@@ -2026,7 +2075,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/ltc.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000157",
         historyCallInfo: this.currencyService.getCryptoFilHistoryInfo(),
         lastPriceInfo: current["crypto-filecoin"],
@@ -2037,7 +2086,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/fil.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000158",
         historyCallInfo: this.currencyService.getCryptoAtomHistoryInfo(),
         lastPriceInfo: current["crypto-cosmos"],
@@ -2048,7 +2097,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/atom.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000159",
         historyCallInfo: this.currencyService.getCryptoClassicEthHistoryInfo(),
         lastPriceInfo: current["crypto-ethereum-classic"],
@@ -2059,7 +2108,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/etc.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000160",
         historyCallInfo: this.currencyService.getCryptoStellarHistoryInfo(),
         lastPriceInfo: current["crypto-stellar"],
@@ -2070,7 +2119,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/xlm.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000161",
         historyCallInfo: this.currencyService.getCryptoFantomHistoryInfo(),
         lastPriceInfo: current["crypto-fantom"],
@@ -2081,7 +2130,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/ftm.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000162",
         historyCallInfo: this.currencyService.getCryptoElrondHistoryInfo(),
         lastPriceInfo: current["crypto-elrond"],
@@ -2092,7 +2141,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/egld.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000163",
         historyCallInfo: this.currencyService.getCryptoMakerHistoryInfo(),
         lastPriceInfo: current["crypto-maker"],
@@ -2103,7 +2152,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/mkr.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000164",
         historyCallInfo: this.currencyService.getCryptoEOSHistoryInfo(),
         lastPriceInfo: current["crypto-eos"],
@@ -2114,7 +2163,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/eos.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000165",
         historyCallInfo: this.currencyService.getCryptoBittorrentHistoryInfo(),
         lastPriceInfo: current["crypto-bittorrent"],
@@ -2125,7 +2174,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/btt.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000166",
         historyCallInfo: this.currencyService.getCryptoFlowHistoryInfo(),
         lastPriceInfo: current["crypto-flow"],
@@ -2136,7 +2185,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/flow.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000167",
         historyCallInfo: this.currencyService.getCryptoGalaHistoryInfo(),
         lastPriceInfo: current["crypto-gala"],
@@ -2147,7 +2196,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/gala.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000168",
         historyCallInfo: this.currencyService.getCryptoSandboxHistoryInfo(),
         lastPriceInfo: current["crypto-sandbox"],
@@ -2158,7 +2207,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/sand.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000169",
         historyCallInfo: this.currencyService.getCryptoPancakeSwapHistoryInfo(),
         lastPriceInfo: current["crypto-pancakeswap"],
@@ -2169,7 +2218,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/cakeswap.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000170",
         historyCallInfo: this.currencyService.getCryptoDashHistoryInfo(),
         lastPriceInfo: current["crypto-dash"],
@@ -2180,7 +2229,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/dash.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000171",
         historyCallInfo: this.currencyService.getCryptoMoneroHistoryInfo(),
         lastPriceInfo: current["crypto-monero"],
@@ -2191,7 +2240,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/xmr.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000172",
         historyCallInfo: this.currencyService.getCryptoChainlinkHistoryInfo(),
         lastPriceInfo: current["crypto-chainlink"],
@@ -2202,7 +2251,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/link.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000173",
         historyCallInfo: this.currencyService.getCryptoCashaaHistoryInfo(),
         lastPriceInfo: current["crypto-cashaa"],
@@ -2213,7 +2262,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/cashaa.webp'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000174",
         historyCallInfo: this.currencyService.getCryptoTezosHistoryInfo(),
         lastPriceInfo: current["crypto-tezos"],
@@ -2224,7 +2273,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/xtz.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000175",
         historyCallInfo: this.currencyService.getCryptoLoopringHistoryInfo(),
         lastPriceInfo: current["crypto-loopring-irc"],
@@ -2235,7 +2284,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/lrc.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000176",
         historyCallInfo: this.currencyService.getCryptoDecredHistoryInfo(),
         lastPriceInfo: current["crypto-decred"],
@@ -2246,7 +2295,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/dcr.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000177",
         historyCallInfo: this.currencyService.getCryptoWavesHistoryInfo(),
         lastPriceInfo: current["crypto-waves"],
@@ -2257,7 +2306,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/waves.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000178",
         historyCallInfo: this.currencyService.getCryptoZcashHistoryInfo(),
         lastPriceInfo: current["crypto-zcash"],
@@ -2268,7 +2317,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/zec.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000179",
         historyCallInfo: this.currencyService.getCryptoNEMHistoryInfo(),
         lastPriceInfo: current["crypto-nem"],
@@ -2279,7 +2328,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/crypto-icons/link.svg'
     });
-    this.cryptoList.push({
+    cryptoList.push({
         id: "1000180",
         historyCallInfo: this.currencyService.getCryptoNeoHistoryInfo(),
         lastPriceInfo: current["crypto-neo"],
@@ -2291,13 +2340,14 @@ export class RequestArrayService {
         img: '/assets/images/crypto-icons/neo.svg'
     });
 
+    this.cryptoListSubject.next(cryptoList)
   }
 
   private setupWorldMarketList(current: Current) {
 
-    this.worldMarketList = []
+    const worldMarketList = []
 
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000181",
         historyCallInfo: this.currencyService.getEurUsdAskHistoryInfo(),
         lastPriceInfo: current["eur-usd-ask"],
@@ -2307,7 +2357,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/eu-usd.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000182",
         historyCallInfo: this.currencyService.getGbpUsdAskHistoryInfo(),
         lastPriceInfo: current["gbp-usd-ask"],
@@ -2317,7 +2367,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/gb-us.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000183",
         historyCallInfo: this.currencyService.getUsdJpyAskHistoryInfo(),
         lastPriceInfo: current["gbp-usd-ask"],
@@ -2327,7 +2377,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-jp.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000184",
         historyCallInfo: this.currencyService.getUsdChfAskHistoryInfo(),
         lastPriceInfo: current["usd-chf-ask"],
@@ -2337,7 +2387,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-ch.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000185",
         historyCallInfo: this.currencyService.getAudUsdAskHistoryInfo(),
         lastPriceInfo: current["aud-usd-ask"],
@@ -2347,7 +2397,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/au-us.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000186",
         historyCallInfo: this.currencyService.getUsdCadAskHistoryInfo(),
         lastPriceInfo: current["usd-cad-ask"],
@@ -2357,7 +2407,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-ca.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000187",
         historyCallInfo: this.currencyService.getUsdNzdAskHistoryInfo(),
         lastPriceInfo: current["usd-nzd-ask"],
@@ -2367,7 +2417,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-nz.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000188",
         historyCallInfo: this.currencyService.getUsdTryAskHistoryInfo(),
         lastPriceInfo: current["usd-try-ask"],
@@ -2377,7 +2427,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-tr.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000189",
         historyCallInfo: this.currencyService.getUsdSekAskHistoryInfo(),
         lastPriceInfo: current["usd-sek-ask"],
@@ -2387,7 +2437,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-se.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000190",
         historyCallInfo: this.currencyService.getUsdSarAskHistoryInfo(),
         lastPriceInfo: current["usd-sar-ask"],
@@ -2397,7 +2447,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-sa.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000191",
         historyCallInfo: this.currencyService.getUsdKrwAskHistoryInfo(),
         lastPriceInfo: current["usd-krw-ask"],
@@ -2407,7 +2457,7 @@ export class RequestArrayService {
         groupName: WORLD_MARKET_PREFIX,
         img: '/assets/images/ask-flags/us-kr.webp'
     });
-    this.worldMarketList.push({
+    worldMarketList.push({
         id: "1000192",
         historyCallInfo: this.currencyService.getUsdCnyAskHistoryInfo(),
         lastPriceInfo: current["usd-cny-ask"],
@@ -2418,13 +2468,14 @@ export class RequestArrayService {
         img: '/assets/images/ask-flags/us-cn.webp'
     });
 
+    this.worldMarketListSubject.next(worldMarketList)
   }
 
   private setupCoinList(current: Current) {
-    this.coinList = []
+    const coinList = []
 
     // coins
-    this.coinList.push({
+    coinList.push({
         id: "1000193",
         historyCallInfo: this.currencyService.getImamiCoinHistoryInfo(),
         lastPriceInfo: current.sekee,
@@ -2435,7 +2486,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000194",
         historyCallInfo: this.currencyService.getBaharCoinHistoryInfo(),
         lastPriceInfo: current.sekeb,
@@ -2446,7 +2497,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000195",
         historyCallInfo: this.currencyService.getHalfCoinHistoryInfo(),
         lastPriceInfo: current.nim,
@@ -2457,7 +2508,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000196",
         historyCallInfo: this.currencyService.getQuarterCoinHistoryInfo(),
         lastPriceInfo: current.rob,
@@ -2468,7 +2519,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000197",
         historyCallInfo: this.currencyService.getGramCoinHistoryInfo(),
         lastPriceInfo: current.gerami,
@@ -2482,7 +2533,7 @@ export class RequestArrayService {
 
     
     // retail
-    this.coinList.push({
+    coinList.push({
         id: "1000198",
         historyCallInfo: this.currencyService.getRetailImamiCoinHistoryInfo(),
         lastPriceInfo: current.retail_sekee,
@@ -2493,7 +2544,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000199",
         historyCallInfo: this.currencyService.getRetailBaharCoinHistoryInfo(),
         lastPriceInfo: current.retail_sekeb,
@@ -2504,7 +2555,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000200",
         historyCallInfo: this.currencyService.getRetailHalfCoinHistoryInfo(),
         lastPriceInfo: current.retail_nim,
@@ -2515,7 +2566,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000201",
         historyCallInfo: this.currencyService.getRetailQuarterCoinHistoryInfo(),
         lastPriceInfo: current.retail_rob,
@@ -2526,7 +2577,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000202",
         historyCallInfo: this.currencyService.getRetailGramCoinHistoryInfo(),
         lastPriceInfo: current.retail_gerami,
@@ -2540,7 +2591,7 @@ export class RequestArrayService {
 
 
     // blubber
-    this.coinList.push({
+    coinList.push({
         id: "1000203",
         historyCallInfo: this.currencyService.getCoinBlubberHistoryInfo(),
         lastPriceInfo: current.coin_blubber,
@@ -2551,7 +2602,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000204",
         historyCallInfo: this.currencyService.getBaharCoinBlubberHistoryInfo(),
         lastPriceInfo: current.sekeb_blubber,
@@ -2562,7 +2613,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000205",
         historyCallInfo: this.currencyService.getHalfCoinBlubberHistoryInfo(),
         lastPriceInfo: current.nim_blubber,
@@ -2573,7 +2624,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000206",
         historyCallInfo: this.currencyService.getQuarterCoinBlubberHistoryInfo(),
         lastPriceInfo: current.rob_blubber,
@@ -2584,7 +2635,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000207",
         historyCallInfo: this.currencyService.getTrueValueOfCoinHistoryInfo(),
         lastPriceInfo: current.sekee_real,
@@ -2598,7 +2649,7 @@ export class RequestArrayService {
 
 
     // exchange
-    this.coinList.push({
+    coinList.push({
         id: "1000208",
         historyCallInfo: this.currencyService.getGc19CoinHistoryInfo(),
         lastPriceInfo: current.gc19,
@@ -2609,7 +2660,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000209",
         historyCallInfo: this.currencyService.getGc14CoinHistoryInfo(),
         lastPriceInfo: current.gc14,
@@ -2620,7 +2671,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000210",
         historyCallInfo: this.currencyService.getGc15CoinHistoryInfo(),
         lastPriceInfo: current.gc15,
@@ -2631,7 +2682,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000211",
         historyCallInfo: this.currencyService.getGc18CoinHistoryInfo(),
         lastPriceInfo: current.gc18,
@@ -2642,7 +2693,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000212",
         historyCallInfo: this.currencyService.getGc17CoinHistoryInfo(),
         lastPriceInfo: current.gc17,
@@ -2653,7 +2704,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000213",
         historyCallInfo: this.currencyService.getGc16CoinHistoryInfo(),
         lastPriceInfo: current.gc16,
@@ -2667,7 +2718,7 @@ export class RequestArrayService {
 
 
     // other
-    this.coinList.push({
+    coinList.push({
         id: "1000214",
         historyCallInfo: this.currencyService.getSekeeDownCoinHistoryInfo(),
         lastPriceInfo: current.sekee_down,
@@ -2678,7 +2729,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000215",
         historyCallInfo: this.currencyService.getNimDownCoinHistoryInfo(),
         lastPriceInfo: current.nim_down,
@@ -2689,7 +2740,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/sekee.webp'
     });
-    this.coinList.push({
+    coinList.push({
         id: "1000216",
         historyCallInfo: this.currencyService.getRobDownCoinHistoryInfo(),
         lastPriceInfo: current.rob_down,
@@ -2701,13 +2752,14 @@ export class RequestArrayService {
         img: '/assets/images/coins/sekee.webp'
     });
 
+    this.coinListSubject.next(coinList)
   }
 
   private setupGoldList(current: Current) {
-    this.goldList = []
+    const goldList = []
 
     //  gold
-    this.goldList.push({
+    goldList.push({
         id: "1000217",
         historyCallInfo: this.currencyService.getGeram18HistoryInfo(),
         lastPriceInfo: current.geram18,
@@ -2718,7 +2770,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/ingots2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000218",
         historyCallInfo: this.currencyService.getGold740kHistoryInfo(),
         lastPriceInfo: current.gold_740k,
@@ -2729,7 +2781,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/ingots2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000219",
         historyCallInfo: this.currencyService.getGeram24HistoryInfo(),
         lastPriceInfo: current.geram24,
@@ -2740,7 +2792,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/ingots2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000220",
         historyCallInfo: this.currencyService.getGoldMiniSizeHistoryInfo(),
         lastPriceInfo: current.gold_mini_size,
@@ -2754,7 +2806,7 @@ export class RequestArrayService {
 
 
     //  silver
-    this.goldList.push({
+    goldList.push({
         id: "1000221",
         historyCallInfo: this.currencyService.getSilver925HistoryInfo(),
         lastPriceInfo: current.silver_925,
@@ -2765,7 +2817,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/silver2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000222",
         historyCallInfo: this.currencyService.getSilver999HistoryInfo(),
         lastPriceInfo: current.silver_999,
@@ -2779,7 +2831,7 @@ export class RequestArrayService {
 
 
     //  mesghal
-    this.goldList.push({
+    goldList.push({
         id: "1000223",
         historyCallInfo: this.currencyService.getMesghalHistoryInfo(),
         lastPriceInfo: current.mesghal,
@@ -2790,7 +2842,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/bar2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000224",
         historyCallInfo: this.currencyService.getGold17HistoryInfo(),
         lastPriceInfo: current.gold_17,
@@ -2801,7 +2853,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/bar2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000225",
         historyCallInfo: this.currencyService.getGold17TransferHistoryInfo(),
         lastPriceInfo: current.gold_17_transfer,
@@ -2812,7 +2864,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/bar2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000226",
         historyCallInfo: this.currencyService.getGold17CoinHistoryInfo(),
         lastPriceInfo: current.gold_17_coin,
@@ -2826,7 +2878,7 @@ export class RequestArrayService {
 
 
     //  melted
-    this.goldList.push({
+    goldList.push({
         id: "1000227",
         historyCallInfo: this.currencyService.getGoldFuturesHistoryInfo(),
         lastPriceInfo: current.gold_futures,
@@ -2837,7 +2889,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/bar2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000228",
         historyCallInfo: this.currencyService.getGoldMeltedWholesaleHistoryInfo(),
         lastPriceInfo: current.gold_melted_wholesale,
@@ -2848,7 +2900,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/bar2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000229",
         historyCallInfo: this.currencyService.getGoldMeltedUnderKiloHistoryInfo(),
         lastPriceInfo: current.gold_world_futures,
@@ -2863,7 +2915,7 @@ export class RequestArrayService {
 
 
     //  etf
-    this.goldList.push({
+    goldList.push({
         id: "1000230",
         historyCallInfo: this.currencyService.getGoldGc3HistoryInfo(),
         lastPriceInfo: current.gc3,
@@ -2874,7 +2926,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    // this.goldList.push({
+    // goldList.push({
     //     id: "1000231",
     //     historyCallInfo: this.currencyService.getGoldGc1HistoryInfo(),
     //     lastPriceInfo: current.gc1,
@@ -2885,7 +2937,7 @@ export class RequestArrayService {
     //     unit: toman_unit,
     //     img: '/assets/images/coins/treasure-chest2.webp'
     // });
-    this.goldList.push({
+    goldList.push({
         id: "1000231",
         historyCallInfo: this.currencyService.getGoldGc67HistoryInfo(),
         lastPriceInfo: current.gc67,
@@ -2896,7 +2948,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000232",
         historyCallInfo: this.currencyService.getGoldGc11HistoryInfo(),
         lastPriceInfo: current.gc11,
@@ -2907,7 +2959,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000233",
         historyCallInfo: this.currencyService.getGoldGc10HistoryInfo(),
         lastPriceInfo: current.gc10,
@@ -2918,7 +2970,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000234",
         historyCallInfo: this.currencyService.getGoldGc22HistoryInfo(),
         lastPriceInfo: current.gc22,
@@ -2929,7 +2981,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000235",
         historyCallInfo: this.currencyService.getGoldGc21HistoryInfo(),
         lastPriceInfo: current.gc21,
@@ -2940,7 +2992,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000236",
         historyCallInfo: this.currencyService.getGoldGc20HistoryInfo(),
         lastPriceInfo: current.gc20,
@@ -2951,7 +3003,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000237",
         historyCallInfo: this.currencyService.getGoldGc12HistoryInfo(),
         lastPriceInfo: current.gc12,
@@ -2962,7 +3014,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000238",
         historyCallInfo: this.currencyService.getGoldGc34HistoryInfo(),
         lastPriceInfo: current.gc34,
@@ -2973,7 +3025,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000239",
         historyCallInfo: this.currencyService.getGoldGc35HistoryInfo(),
         lastPriceInfo: current.gc35,
@@ -2984,7 +3036,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000240",
         historyCallInfo: this.currencyService.getGoldGc36HistoryInfo(),
         lastPriceInfo: current.gc36,
@@ -2995,7 +3047,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000241",
         historyCallInfo: this.currencyService.getGoldGc37HistoryInfo(),
         lastPriceInfo: current.gc37,
@@ -3006,7 +3058,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000242",
         historyCallInfo: this.currencyService.getGoldGc38HistoryInfo(),
         lastPriceInfo: current.gc38,
@@ -3017,7 +3069,7 @@ export class RequestArrayService {
         unit: toman_unit,
         img: '/assets/images/coins/treasure-chest2.webp'
     });
-    this.goldList.push({
+    goldList.push({
         id: "1000243",
         historyCallInfo: this.currencyService.getGoldGc39HistoryInfo(),
         lastPriceInfo: current.gc39,
@@ -3029,13 +3081,15 @@ export class RequestArrayService {
         img: '/assets/images/coins/treasure-chest2.webp'
     });
 
+    this.goldListSubject.next(goldList)
+
   }
 
   private setupPreciousMetals(current: Current) {
-    this.preciousMetalList = []
+    const preciousMetalList = []
 
     //  global ounces
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000244",
         historyCallInfo: this.currencyService.getGlobalGoldOnsHistoryInfo(),
         lastPriceInfo: current.ons,
@@ -3046,7 +3100,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/gold.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000245",
         historyCallInfo: this.currencyService.getGlobalSilverOnsHistoryInfo(),
         lastPriceInfo: current.silver,
@@ -3057,7 +3111,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/silver.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000246",
         historyCallInfo: this.currencyService.getGlobalPlatinumOnsHistoryInfo(),
         lastPriceInfo: current.platinum,
@@ -3068,7 +3122,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/platinum.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000247",
         historyCallInfo: this.currencyService.getGlobalPalladiumOnsHistoryInfo(),
         lastPriceInfo: current.palladium,
@@ -3082,7 +3136,7 @@ export class RequestArrayService {
 
 
     // gold vs other
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000248",
         historyCallInfo: this.currencyService.getGlobalRatioSilverHistoryInfo(),
         lastPriceInfo: current.ratio_silver,
@@ -3093,7 +3147,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/coin-vs2.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000249",
         historyCallInfo: this.currencyService.getGlobalRatioPlatinumHistoryInfo(),
         lastPriceInfo: current.ratio_platinum,
@@ -3104,7 +3158,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/coin-vs2.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000250",
         historyCallInfo: this.currencyService.getGlobalRatioPalladiumHistoryInfo(),
         lastPriceInfo: current.ratio_palladium,
@@ -3115,7 +3169,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/coin-vs2.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000251",
         historyCallInfo: this.currencyService.getGlobalRatioCrudeoilHistoryInfo(),
         lastPriceInfo: current.ratio_crudeoil,
@@ -3126,7 +3180,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/coin-vs2.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000252",
         historyCallInfo: this.currencyService.getGlobalRatioDowJonesHistoryInfo(),
         lastPriceInfo: current.ratio_dija,
@@ -3137,7 +3191,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/coin-vs2.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000253",
         historyCallInfo: this.currencyService.getGlobalRatioSP500HistoryInfo(),
         lastPriceInfo: current.ratio_sp500,
@@ -3148,7 +3202,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/coins/coin-vs2.webp'
     });
-    this.preciousMetalList.push({
+    preciousMetalList.push({
         id: "1000254",
         historyCallInfo: this.currencyService.getGlobalRatioHUIHistoryInfo(),
         lastPriceInfo: current.ratio_hui,
@@ -3160,13 +3214,14 @@ export class RequestArrayService {
         img: '/assets/images/coins/coin-vs2.webp'
     });
 
+    this.preciousMetalListSubject.next(preciousMetalList)
   }
 
   private setupBaseMetals(current: Current) {
-    this.baseMetalList = []
+    const baseMetalList = []
 
     // global base
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000255",
         historyCallInfo: this.currencyService.getBaseGlobalUSCopperHistoryInfo(),
         lastPriceInfo: current.base_global_copper2,
@@ -3177,7 +3232,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/copper2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000256",
         historyCallInfo: this.currencyService.getBaseGlobalGBCopperHistoryInfo(),
         lastPriceInfo: current.base_global_copper,
@@ -3188,7 +3243,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/copper2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000257",
         historyCallInfo: this.currencyService.getBaseGlobalTinHistoryInfo(),
         lastPriceInfo: current.base_global_tin,
@@ -3199,7 +3254,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/tin2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000258",
         historyCallInfo: this.currencyService.getBaseGlobalNickelHistoryInfo(),
         lastPriceInfo: current.base_global_nickel,
@@ -3210,7 +3265,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/nickel2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000259",
         historyCallInfo: this.currencyService.getBaseGlobalLeadHistoryInfo(),
         lastPriceInfo: current.base_global_lead,
@@ -3221,7 +3276,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/lead2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000260",
         historyCallInfo: this.currencyService.getBaseGlobalZincHistoryInfo(),
         lastPriceInfo: current.base_global_zinc,
@@ -3236,7 +3291,7 @@ export class RequestArrayService {
 
 
     // us base
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000261",
         historyCallInfo: this.currencyService.getBaseAluminumHistoryInfo(),
         lastPriceInfo: current["base-us-aluminum"],
@@ -3247,7 +3302,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/aluminium2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000262",
         historyCallInfo: this.currencyService.getBaseUraniumHistoryInfo(),
         lastPriceInfo: current["base-us-uranium"],
@@ -3258,7 +3313,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/uranium2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000263",
         historyCallInfo: this.currencyService.getBaseSteelCoilHistoryInfo(),
         lastPriceInfo: current["base-us-steel-coil"],
@@ -3269,7 +3324,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/iron2.webp'
     });
-    this.baseMetalList.push({
+    baseMetalList.push({
         id: "1000264",
         historyCallInfo: this.currencyService.getBaseIronOreHistoryInfo(),
         lastPriceInfo: current["base-us-iron-ore"],
@@ -3280,13 +3335,15 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/metals/iron2.webp'
     });
+
+    this.baseMetalListSubject.next(baseMetalList)
   }
 
   private setupCommodityMarket(current: Current) {
-    this.commodityList = []
+    const commodityList = []
 
     // agricultural
-    this.commodityList.push({
+    commodityList.push({
         id: "1000265",
         historyCallInfo: this.currencyService.getCommodityUSWheatHistoryInfo(),
         lastPriceInfo: current.commodity_us_wheat,
@@ -3297,7 +3354,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/wheat2.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000266",
         historyCallInfo: this.currencyService.getCommodityLondonWheatHistoryInfo(),
         lastPriceInfo: current.commodity_london_wheat,
@@ -3308,7 +3365,7 @@ export class RequestArrayService {
         unit: pound_unit,
         img: '/assets/images/commodity/wheat2.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000267",
         historyCallInfo: this.currencyService.getCommodityCornHistoryInfo(),
         lastPriceInfo: current.commodity_us_corn,
@@ -3319,7 +3376,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/corn.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000268",
         historyCallInfo: this.currencyService.getCommodityOatsHistoryInfo(),
         lastPriceInfo: current.commodity_oats,
@@ -3330,7 +3387,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/oat.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000269",
         historyCallInfo: this.currencyService.getCommodityRoughRiceHistoryInfo(),
         lastPriceInfo: current.commodity_rough_rice,
@@ -3341,7 +3398,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/rice-bowl.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000270",
         historyCallInfo: this.currencyService.getCommoditySoybeansHistoryInfo(),
         lastPriceInfo: current.commodity_us_soybeans,
@@ -3352,7 +3409,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/soybean.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000271",
         historyCallInfo: this.currencyService.getCommoditySoybeanMealHistoryInfo(),
         lastPriceInfo: current.commodity_us_soybean_meal,
@@ -3363,7 +3420,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/soybean-meal.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000272",
         historyCallInfo: this.currencyService.getCommoditySoybeanOilHistoryInfo(),
         lastPriceInfo: current.commodity_us_soybean_oil,
@@ -3378,7 +3435,7 @@ export class RequestArrayService {
 
 
     // crop yields
-    this.commodityList.push({
+    commodityList.push({
         id: "1000273",
         historyCallInfo: this.currencyService.getCommodityUSSugarHistoryInfo(),
         lastPriceInfo: current.commodity_us_sugar_no11,
@@ -3389,7 +3446,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/sugar.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000274",
         historyCallInfo: this.currencyService.getCommodityLondonSugarHistoryInfo(),
         lastPriceInfo: current.commodity_london_sugar,
@@ -3400,7 +3457,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/sugar.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000275",
         historyCallInfo: this.currencyService.getCommodityUSCoffeeHistoryInfo(),
         lastPriceInfo: current.commodity_us_coffee_c,
@@ -3411,7 +3468,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/coffee-seed.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000276",
         historyCallInfo: this.currencyService.getCommodityLondonCoffeeHistoryInfo(),
         lastPriceInfo: current.commodity_london_coffee,
@@ -3422,7 +3479,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/coffee-seed.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000277",
         historyCallInfo: this.currencyService.getCommodityUSCocoaHistoryInfo(),
         lastPriceInfo: current.commodity_us_cocoa,
@@ -3433,7 +3490,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/cocoa.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000278",
         historyCallInfo: this.currencyService.getCommodityLondonCocoaHistoryInfo(),
         lastPriceInfo: current.commodity_london_cocoa,
@@ -3444,7 +3501,7 @@ export class RequestArrayService {
         unit: pound_unit,
         img: '/assets/images/commodity/cocoa.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000279",
         historyCallInfo: this.currencyService.getCommodityLumberHistoryInfo(),
         lastPriceInfo: current.commodity_lumber,
@@ -3455,7 +3512,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/wood.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000280",
         historyCallInfo: this.currencyService.getCommodityCottonHistoryInfo(),
         lastPriceInfo: current.commodity_us_cotton_no_2,
@@ -3466,7 +3523,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/cotton.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000281",
         historyCallInfo: this.currencyService.getCommodityOrangeJuiceHistoryInfo(),
         lastPriceInfo: current['parsermarket@e02e1367cd06401c3d77b114847cca05'],
@@ -3480,7 +3537,7 @@ export class RequestArrayService {
 
 
     // animal
-    this.commodityList.push({
+    commodityList.push({
         id: "1000282",
         historyCallInfo: this.currencyService.getCommodityLiveCattleHistoryInfo(),
         lastPriceInfo: current.commodity_live_cattle,
@@ -3491,7 +3548,7 @@ export class RequestArrayService {
         unit: dollar_unit,
         img: '/assets/images/commodity/meat.webp'
     });
-    this.commodityList.push({
+    commodityList.push({
         id: "1000283",
         historyCallInfo: this.currencyService.getCommodityFeedCattleHistoryInfo(),
         lastPriceInfo: current.commodity_feed_cattle,
@@ -3503,26 +3560,46 @@ export class RequestArrayService {
         img: '/assets/images/commodity/cattle.webp'
     });
 
+    this.commodityListSubject.next(commodityList)
   }
 
   private setupAllItemsList () {
-    this.allItemsList = this.allItemsList
-    .concat(this.mainCurrencyList).concat(this.cryptoList)
-    .concat(this.worldMarketList).concat(this.coinList)
-    .concat(this.goldList).concat(this.preciousMetalList)
-    .concat(this.baseMetalList).concat(this.commodityList)
+    // this.allItemsList = this.allItemsList
+    // .concat(mainCurrencyList).concat(this.cryptoList)
+    // .concat(this.worldMarketList).concat(this.coinList)
+    // .concat(this.goldList).concat(this.preciousMetalList)
+    // .concat(this.baseMetalList).concat(this.commodityList)
+    const currentMainCurrencyList = this.mainCurrencyListSubject.getValue();
+    const currentcryptoList = this.cryptoListSubject.getValue();
+    const currentworldMarketList = this.worldMarketListSubject.getValue();
+    const currentcoinList = this.coinListSubject.getValue();
+    const currentgoldList = this.goldListSubject.getValue();
+    const currentpreciousMetalList = this.preciousMetalListSubject.getValue();
+    const currentbaseMetalList = this.baseMetalListSubject.getValue();
+    const currentcommodityList = this.commodityListSubject.getValue();
+    
+    const allItemsList: CurrencyItem[] = [...currentMainCurrencyList, ...currentcryptoList, 
+        ...currentworldMarketList, ...currentcoinList, ...currentgoldList, ...currentpreciousMetalList,
+    ...currentbaseMetalList, ...currentcommodityList];
+    // allItemsList.concat(currentMainCurrencyList).concat(currentcryptoList)
+    // .concat(currentworldMarketList).concat(currentcoinList)
+    // .concat(currentgoldList).concat(currentpreciousMetalList)
+    // .concat(currentbaseMetalList).concat(currentcommodityList)
+    
+    
 
     if (typeof window !== 'undefined' && localStorage.getItem('fav')) {
-        let favItems = JSON.parse(localStorage.getItem('fav') as string) as string[]
-        this.allItemsList.forEach(item => {
+        let favItems = JSON.parse(localStorage.getItem('fav') as string || '[]') as string[]
+        allItemsList.forEach((item) => {
             if (favItems.indexOf(item.id, 0) >= 0) item.isFav = true;
             else item.isFav = false
         })
     } else {
-        this.allItemsList.forEach(item => {
+        allItemsList.forEach(item => {
             item.isFav = false
         })
     }
+    this.allItemListSubject.next(allItemsList)
   }
 
 

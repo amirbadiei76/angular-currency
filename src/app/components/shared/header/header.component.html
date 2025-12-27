@@ -34,11 +34,7 @@
         }
 
     </div>
-    <div class="h-full flex items-center gap-10">
-        
-        <button (click)="openMenu()" class="menu-buttons-base block md:hidden">
-            <i class="bi bi-list"></i>
-        </button>
+    <div class="h-full flex items-center gap-4 md:gap-10">
         <nav class="md:flex hidden">
             <ol class="flex flex-row-reverse gap-6">
                 <li>
@@ -77,11 +73,15 @@
                 </li>
             </ol>
         </nav>
-        <div class="hidden md:flex items-center h-full gap-2">
+        <div routerLink="/" class="flex items-center h-full gap-2 cursor-pointer">
             <h1 class="text-green-btn text-lg tracking-wide">ارزیاب</h1>
             <div class="h-full w-auto py-4.5 ">
-                <img class="h-full object-cover w-full" loading="lazy" decoding="async" src="assets/images/arzyab_main.png" alt="logo">
+                <img draggable="false" class="h-full object-cover w-full" loading="lazy" decoding="async" src="assets/images/arzyab_main.png" alt="logo">
             </div>
         </div>
+        
+        <button (click)="openMenu()" class="menu-buttons-base block md:hidden">
+            <i class="bi bi-list"></i>
+        </button>
     </div>
 </header>

@@ -74,17 +74,18 @@
                         </div>
                     </div>
                     <div class="relative w-full">
-                        <p class="input-unit-base {{ !gram18Value ? 'invisible' : 'visible' }}">تومان</p>
-                        <input
-                            [disabled]="!gram18Value"
-                            maxlength="19"
-                            placeholder="0"
-                            [value]="goldValue()"
-                            (input)="onGoldInputChange($event)"
-                            type="text"
-                            commafyNumber
-                            class="input-base rtl {{ !gram18Value ? 'skeleton-base' : 'animate-none' }}"
-                        >
+                        @if (goldValueComputed$ | async; as goldValue) {
+                            <p class="input-unit-base">تومان</p>
+                            <input
+                                maxlength="19"
+                                placeholder="0"
+                                [value]="goldValue"
+                                (input)="onGoldInputChange($event)"
+                                type="text"
+                                commafyNumber
+                                class="input-base rtl"
+                            >
+                        }
                     </div>
                 </div>
                 <div class="w-full flex flex-row-reverse gap-4">
@@ -93,7 +94,9 @@
                         <p class="dropdown-title-base">وزن</p>
                         <div class="relative w-full">
                             <p class="input-unit-base">{{ goldTypes[currentGoldType()].weightUnit }}</p>
-                            <input maxlength="16" placeholder="0" (input)="onWeightInputChange($event)" [value]="weightValue()" type="text" commafyNumber class="input-base rtl">
+                            @if (weightValue$ | async; as weightValue) {
+                                <input maxlength="16" placeholder="0" (input)="onWeightInputChange($event)" [value]="weightValue" type="text" commafyNumber class="input-base rtl">
+                            }
                         </div>
                     </div>
                     <!-- Wage Input -->
@@ -109,7 +112,9 @@
                         </div>
                         <div class="relative w-full">
                             <p class="input-unit-base">درصد</p>
-                            <input maxlength="16" placeholder="0" [value]="wageValue()" (input)="onWageInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                            @if (wageValue$ | async; as wageValue) {
+                                <input maxlength="16" placeholder="0" [value]="wageValue" (input)="onWageInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                            }
                         </div>
                     </div>
                 </div>
@@ -126,7 +131,9 @@
                     </div>
                     <div class="relative w-full">
                         <p class="input-unit-base">درصد</p>
-                        <input maxlength="16" placeholder="0" [value]="taxValue()" (input)="onTaxInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        @if (taxValue$ | async; as taxValue) {
+                            <input maxlength="16" placeholder="0" [value]="taxValue" (input)="onTaxInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        }
                     </div>
                 </div>
                 <!-- Profit Input -->
@@ -142,7 +149,9 @@
                     </div>
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ profitType() === 0 ? 'درصد' : 'تومان' }}</p>
-                        <input maxlength="16" placeholder="0" [value]="profitValue()" (input)="onProfitInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        @if (profitValue$ | async; as profitValue) {
+                            <input maxlength="16" placeholder="0" [value]="profitValue" (input)="onProfitInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        }
                     </div>
                 </div>
                 <div class="flex justify-start gap-4 w-full">
@@ -187,7 +196,9 @@
                     <p class="dropdown-title-base">وزن</p>
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ ounceTypes[currentOunceType()].title }}</p>
-                        <input maxlength="16" placeholder="0" [value]="weightValue()" commafyNumber (input)="onWeightInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        @if (weightValue$ | async; as weightValue) {
+                            <input maxlength="16" placeholder="0" [value]="weightValue" commafyNumber (input)="onWeightInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                        }
                     </div>
                 </div>
             }
@@ -198,48 +209,50 @@
                 @if (calculatorType() === 0) {
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text font-bold text-sm md:text-base gap-2 mb-1">
                         قیمت نهایی:&nbsp;
-                        @if (gram18Value) {
-                            <p class="text-dark dark:text-light">{{ totalGoldValue() }}</p>
+                        @if (totalGoldValue$ | async; as totalGoldValue) {
+                            <p class="text-dark dark:text-light">{{ totalGoldValue }}</p>
                             <p class="text-dark-text4 dark:text-light-text4">تومان</p>
                         }
-                        <span class="skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">قیمت نهایی</span>
+                        <!-- <span class="skeleton-base {{ gram18Value() ? 'hidden' : 'block' }}">قیمت نهایی</span> -->
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         قیمت طلا:&nbsp;
-                        @if (gram18Value) {
-                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ mainGoldValue() }}</p>
+                        @if (mainGoldValue$ | async; as mainGoldValue) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ mainGoldValue }}</p>
                             <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
                         }
-                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">قیمت طلا</span>
+                        <!-- <span class="text-xs md:text-sm skeleton-base {{ gram18Value() ? 'hidden' : 'block' }}">قیمت طلا</span> -->
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         اجرت:&nbsp;
-                        @if (gram18Value) {
-                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalWageValue() }}</p>
+                        @if (totalWageValue$ | async; as totalWageValue) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalWageValue }}</p>
                             <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
                         }
-                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">اجرت طلا</span>
+                        <!-- <span class="text-xs md:text-sm skeleton-base {{ gram18Value() ? 'hidden' : 'block' }}">اجرت طلا</span> -->
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         مالیات:&nbsp;
-                        @if (gram18Value) {
-                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalTaxValue() }}</p>
+                        @if (totalTaxValue$ | async; as totalTaxValue) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalTaxValue }}</p>
                             <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
                         }
-                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">مالیات طلا</span>
+                        <!-- <span class="text-xs md:text-sm skeleton-base {{ gram18Value() ? 'hidden' : 'block' }}">مالیات طلا</span> -->
                     </span>
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
                         سود فروشنده:&nbsp;
-                        @if (gram18Value) {
-                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalProfitValue() }}</p>
+                        @if (totalProfitValue$ | async; as totalProfitValue) {
+                            <p class="text-dark font-bold dark:text-light text-xs md:text-sm">{{ totalProfitValue }}</p>
                             <p class="text-dark-text4 dark:text-light-text4 text-xs md:text-sm">تومان</p>
                         }
-                        <span class="text-xs md:text-sm skeleton-base {{ gram18Value ? 'hidden' : 'block' }}">سود فروشنده</span>
+                        <!-- <span class="text-xs md:text-sm skeleton-base {{ gram18Value() ? 'hidden' : 'block' }}">سود فروشنده</span> -->
                     </span>
                 }
                 @else {
                     <span class="w-full flex justify-start text-dark-text dark:text-light-text text-sm md:text-base gap-2 mb-1">
-                        <p class="text-dark font-bold dark:text-light">{{ weightValue() }}</p>
+                        @if (weightValue$ | async; as weightValue) {
+                            <p class="text-dark font-bold dark:text-light">{{ weightValue }}</p>
+                        }
                         <p class="text-dark-text4 font-bold dark:text-light-text4">{{ ounceTypes[currentOunceType()].title }}</p>
                         برابر است با:
                     </span>
@@ -261,14 +274,14 @@
                 <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-4 md:col-span-3">قیمت تومانی</p>
                 <p class="text-dark-text2 dark:text-light-text2 text-xs leaading-[180%] col-span-3">قیمت دلاری</p>
             </span>
-            @if (gram18Value) {
-                @for (item of relatedItems(); track item?.id ?? $index) {
-                    <app-converter-item class="w-full z-[1] {{ $index != 2 ? 'mb-1' : 'mb-0' }}" [currencyItem]="item!" />
+            @if (relatedItems$ | async; as relatedList) {
+                @for (item of relatedList; track $index) {
+                    <app-converter-item class="w-full z-[1] {{ $index != 2 ? 'mb-1' : 'mb-0' }}" [currencyItem]="item" />
                 }
             }
-            <app-converter-item-skeleton class="w-full mb-1 z-[4] {{ gram18Value ? 'hidden' : 'block' }}" />
-            <app-converter-item-skeleton class="w-full mb-1 z-[4] {{ gram18Value ? 'hidden' : 'block' }}" />
-            <app-converter-item-skeleton class="w-full z-[4] {{ gram18Value ? 'hidden' : 'block' }}" />
+            <!-- <app-converter-item-skeleton class="w-full mb-1 z-[4] {{ gram18Value() ? 'hidden' : 'block' }}" /> -->
+            <!-- <app-converter-item-skeleton class="w-full mb-1 z-[4] {{ gram18Value() ? 'hidden' : 'block' }}" /> -->
+            <!-- <app-converter-item-skeleton class="w-full z-[4] {{ gram18Value() ? 'hidden' : 'block' }}" /> -->
         </div>
             
     </div>

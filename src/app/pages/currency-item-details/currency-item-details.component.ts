@@ -124,8 +124,7 @@ export class CurrencyItemDetailsComponent {
       }
 
       return item.historyCallInfo.pipe(
-        retry({ count: Infinity }),
-        map((data) => [...data])
+        retry({ count: Infinity })
       );
     }),
     shareReplay(1)

@@ -45,6 +45,7 @@ export class ChartComponent {
   chartType = input(0)
   currentUnit = input(0);
   timeFramePanelOpened = signal(false)
+  presetChanged = signal(false)
 
   @ViewChild('chartContainer') chartContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('toggleFrameBtn') toggleFrameBtn!: ElementRef<HTMLDivElement>;
@@ -113,6 +114,10 @@ export class ChartComponent {
     
     const processedData = this.parseData(this.historyData() as RawData[]);
     this.initChart(processedData);
+
+    this.candlestickSeries?.setData(processedData.candles as any[])
+    this.volumeSeries?.setData(processedData.volumes as any[])
+    this.lineSeries?.setData(processedData.lineVolumes as any[]);
     this.lineSeries?.applyOptions({ visible: false })
 
     effect(() => {
@@ -128,7 +133,7 @@ export class ChartComponent {
       this.volumeSeries?.setData(processed.volumes as any[])
       this.lineSeries?.setData(processed.lineVolumes as any[]);
 
-      this.chart?.timeScale().fitContent();
+      if (this.presetChanged()) this.chart?.timeScale().fitContent();
     });
 
     // effect(() => {
@@ -152,8 +157,8 @@ export class ChartComponent {
     this.timeFramePanelOpened.update((opened) => !opened)
   }
 
-  ngOnChanges(): void {
-    if (this.historyData() && this.chart === null) {
+  ngOnChanges() {
+    if (this.historyData() && !this.chart) {
       const processedData = this.parseData(this.historyData() as RawData[]);
       this.initChart(processedData);
       this.lineSeries?.applyOptions({ visible: false })
@@ -232,6 +237,7 @@ export class ChartComponent {
       range: p.range,
       interval: p.interval
     });
+    if (!this.presetChanged()) this.presetChanged.set(true)
     this.toggleTimeFrame()
   }
   
@@ -240,6 +246,7 @@ export class ChartComponent {
       range: 'All',
       interval: '1D'
     });
+    if (!this.presetChanged()) this.presetChanged.set(true)
     if (this.timeFramePanelOpened()) this.toggleTimeFrame()
   }
 
@@ -611,7 +618,6 @@ export class ChartComponent {
         this.updateHeader(data.candles[data.candles.length - 1], data.volumes[data.volumes.length - 1]);
     }
 
-    this.chartReady.set(true);
   }
 
   updateHeader(priceData: CandleData, volumeData: VolumeData) {
@@ -631,6 +637,7 @@ export class ChartComponent {
   }
 
   ngAfterViewInit () {
+
     if (typeof window !== 'undefined') {
       fromEvent(window, 'resize')
       .subscribe((event) => {
@@ -639,6 +646,10 @@ export class ChartComponent {
     }
 
     if (typeof document !== 'undefined') {
+      const processedData = this.parseData(this.historyData() as RawData[]);
+      this.initChart(processedData);
+      this.lineSeries?.applyOptions({ visible: false })
+      this.chartReady.set(true);
       
       fromEvent(document, 'click')
       .subscribe((event) => {

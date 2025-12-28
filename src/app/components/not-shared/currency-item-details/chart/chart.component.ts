@@ -156,6 +156,7 @@ export class ChartComponent {
   toggleTimeFrame () {
     this.timeFramePanelOpened.update((opened) => !opened)
   }
+  
 
   ngOnChanges() {
     if (this.historyData() && !this.chart) {

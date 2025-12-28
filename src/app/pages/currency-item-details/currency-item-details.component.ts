@@ -19,12 +19,12 @@ import { ItemInfoSkeletonComponent } from '../../components/not-shared/currency-
 import { PercentProgressComponent } from '../../components/not-shared/currency-item-details/percent-progress/percent-progress.component';
 import { PercentProgressSkeletonComponent } from '../../components/not-shared/currency-item-details/percent-progress-skeleton/percent-progress-skeleton.component';
 import { NotFoundBoxComponent } from '../../components/shared/not-found-box/not-found-box.component';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-currency-item-details',
-  imports: [BreadcrumbComponent, FormsModule, CommonModule, ItemInfoComponent, PercentProgressComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
+  imports: [BreadcrumbComponent, FormsModule, CommonModule, ItemInfoComponent, NotFoundBoxComponent, PercentProgressComponent, SearchItemComponent, ChangesTableComponent, CurrencyOverviewComponent, ChartComponent],
   templateUrl: './currency-item-details.component.html',
   styleUrl: './currency-item-details.component.css'
 })
@@ -33,6 +33,8 @@ export class CurrencyItemDetailsComponent {
   requestArray = inject(RequestArrayService)
   meta = inject(Meta)
   pageTitle = inject(Title)
+
+  canShowItem = signal(true);
 
   textToFilter = signal('');
   textToFilter$ = toObservable(this.textToFilter)
@@ -53,7 +55,6 @@ export class CurrencyItemDetailsComponent {
         map(items => items.find(item => item.slugText === title) ?? null)
       )
     ),
-    filter(Boolean),
     shareReplay(1)
   );
 
@@ -79,6 +80,7 @@ export class CurrencyItemDetailsComponent {
 
 
   itemFaGroupName$ = this.currencyItem$.pipe(
+    filter((item): item is CurrencyItem => item !== null),
     map((item) => item.faGroupName)
   )
 
@@ -105,6 +107,7 @@ export class CurrencyItemDetailsComponent {
   );
 
   breadCrumbItems$ = this.currencyItem$.pipe(
+    filter((item): item is CurrencyItem => item !== null),
     map((item) => {
       return [
           {
@@ -118,6 +121,7 @@ export class CurrencyItemDetailsComponent {
   );
 
   chartHistory$ = this.currencyItem$.pipe(
+    filter((item): item is CurrencyItem => item !== null),
     switchMap(item => {
       if (!item.historyCallInfo) {
         return of<RawData[]>([]);
@@ -134,7 +138,9 @@ export class CurrencyItemDetailsComponent {
 
 
   priceInfo$ = combineLatest([
-    this.currencyItem$,
+    this.currencyItem$.pipe(
+      filter((item): item is CurrencyItem => item !== null)
+    ),
     this.currentValue,
     this.currentSupportCurrencyId$
   ]).pipe(
@@ -242,20 +248,11 @@ export class CurrencyItemDetailsComponent {
         percent: `${(percent * 100).toFixed(2)}%`
       };
     }),
-    filter(Boolean),
     shareReplay(1)
   );
-
-
-  
-  // currentMaxPrice = signal('');
-  // currentMinPrice = signal('');
-  // currentPercentMinMax = signal('0%')
   
   historyData?: RawData[];
   currentChartType = signal(0);
-
-  canShowItem = signal(true);
 
   @ViewChild('itemList') itemList?: ElementRef<HTMLDivElement>;
   @ViewChild('inputContainer') inputContainer?: ElementRef;
@@ -269,6 +266,11 @@ export class CurrencyItemDetailsComponent {
     // effect(() => {
     //   this.initializeCurrencyInfo(this.currentSupportCurrencyId())
     // })
+    this.currencyItem$
+    .pipe(takeUntilDestroyed())
+    .subscribe(item => {
+      this.canShowItem.set(!!item);
+    });
   }
   
 
@@ -504,7 +506,7 @@ export class CurrencyItemDetailsComponent {
       //   content: `قیمت لحظه‌ای ${this.currencyItem!()?.title} همراه با نمودار، تغییرات و اطلاعات بازار در ارزیاب.`
       // });
     this.currencyItem$
-      .pipe(take(1))
+      .pipe(filter((item): item is CurrencyItem => item !== null), take(1))
       .subscribe(item => {
         // this.pageTitle.setTitle(`ارزیاب | قیمت ${item.title}`);
         if (item.faGroupName === 'بازارهای ارزی') {

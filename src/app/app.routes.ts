@@ -1,4 +1,4 @@
-import { defaultUrlMatcher, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', loadComponent: () => import('../app/pages/home/home.component').then((home) => home.HomeComponent), title: 'ارزیاب | مرجع قیمت بازارها' },

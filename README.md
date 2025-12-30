@@ -1,59 +1,126 @@
-# AngularCurrency
+# Arzyab
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+**Arzyab** is a real-time market price tracking web application built with **Angular 19** and **Tailwind CSS**.  
+It provides up-to-date prices, charts, and detailed insights across multiple financial markets, including currencies, gold, cryptocurrencies, metals, and commodities.
 
-## Development server
+🔗 **Live Website:** https://arzyab.vercel.app/
 
-To start a local development server, run:
+---
+
+## Overview
+
+Arzyab is designed as a **personal portfolio project** and a **reference implementation** for developers interested in building modern, data-driven financial applications with Angular.
+
+The application consumes **public market APIs** and updates data **in real time**, offering users an interactive and responsive experience across desktop and mobile devices.
+
+---
+
+## Key Features
+
+### 📊 Market Coverage
+- Currency markets
+- Gold and precious metals
+- Coins market
+- Cryptocurrencies
+- Base metals
+- Commodities
+
+
+### ⚡ Real-Time Data Updates
+- Market data is updated live based on API changes
+- A custom Node.js service (deployed separately) listens for changes in source data and pushes updates to the frontend
+- No manual refresh required
+
+
+### 💱 Price Converters
+- Currency to currency conversion
+- Cryptocurrency to cryptocurrency conversion
+- Cryptocurrency to fiat currency conversion
+- All conversions reflect live market rates
+
+
+### 🧮 Gold Calculator
+- Gold price calculation (18K, 24K, melted gold)
+- Gold unit conversions:
+  - Gram ↔ Mithqal
+  - Gram ↔ Carat
+  - Carat ↔ Sot
+  - Sot ↔ Mithqal
+- Calculations update dynamically based on live prices
+
+
+### 📈 Asset Detail Pages
+Each asset (currency, gold, crypto, etc.) has a dedicated detail page including:
+
+- Live price and daily change
+- **Market snapshot** (at-a-glance status)
+- Top 5 gainers and top 5 losers
+- Interactive charts:
+  - Line chart
+  - Candlestick chart
+  - Multiple time ranges
+  - Grouped candlestick intervals
+- Historical price table
+- Installable PWA (Add to Home Screen)
+- Shareable price link
+
+
+### 🎨 UI & UX
+- Fully responsive design
+- Clean and minimal UI using Tailwind CSS
+- Optimized for both desktop and mobile users
+
+---
+
+## Tech Stack
+
+- **Frontend:** Angular 19
+- **Styling:** Tailwind CSS
+- **Rendering:** Angular Universal (SSR enabled)
+- **Data Sources:**
+  - Public API: https://call1.tgju.org/ajax.json
+  - PriceDB reference: https://github.com/margani/pricedb
+- **Backend (optional):**
+  - Custom Node.js service for real-time updates (not yet published)
+
+---
+
+## Installation & Development
 
 ```bash
+npm install
 ng serve
 ```
+The application will be available at ```http://localhost:4200```.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Project Status
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Actively developed
+- Used as a personal project and portfolio showcase
+- Backend real-time service may be published in the future
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Contributing
 
-```bash
-ng generate --help
-```
+Contributions are welcome.\
+\
+UI/UX Designed by:\
+Amir Tehrani – https://github.com/Amir-Trax
+\
+\
+If you have suggestions, improvements, or bug fixes, feel free to open a pull request.
 
-## Building
+---
+## Disclaimer
 
-To build the project run:
+Arzyab displays market data for informational purposes only.
+Prices are sourced from public APIs and may not reflect exact market trading values.
 
-```bash
-ng build
-```
+---
+## License
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+License has not been finalized yet.
+This project is intended for learning, experimentation, and frontend code reuse.

@@ -22,7 +22,7 @@ enum SortingType {
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CurrencyItemComponent, NgIf, StarIconComponent, EmptyItemComponent, CommonModule],
+  imports: [CurrencyItemComponent, NgIf, StarIconComponent, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

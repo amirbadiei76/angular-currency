@@ -7,7 +7,6 @@ import { CommafyNumberDirective } from '../../directives/commafy-number.directiv
 import { CurrencyItem } from '../../interfaces/data.types';
 import { caratToGram, commafy, gramToCarat, gramToMesghal, gramToOunce, gramToSut, mesghalToGram, mesghalToGramMoney, ounceToGram, priceToNumber, sutToGram, trimDecimal } from '../../utils/CurrencyConverter';
 import { ConverterItemComponent } from '../../components/not-shared/converter/converter-item/converter-item.component';
-import { ConverterItemSkeletonComponent } from '../../components/not-shared/converter/converter-item-skeleton/converter-item-skeleton.component';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 
@@ -58,7 +57,6 @@ export class GoldCalculatorComponent {
   private profitValueSubject = new BehaviorSubject<string>('0');
   profitValue$ = this.profitValueSubject.asObservable()
 
-  // private profitTypeSubject = new BehaviorSubject<number>(0);
   profitType = signal(0)
 
   @ViewChild('typesBtn') typesBtn?: ElementRef<HTMLDivElement>
@@ -150,14 +148,6 @@ export class GoldCalculatorComponent {
     },
   ]
 
-
-  // gram18Value = signal<CurrencyItem | undefined>(undefined);
-  // gram24Value = signal<CurrencyItem | undefined>(undefined);
-  // goldMiniValue = signal<CurrencyItem | undefined>(undefined);
-  // goldFuturesValue = signal<CurrencyItem | undefined>(undefined);
-  // goldMesghalValue = signal<CurrencyItem | undefined>(undefined);
-  // goldOunceValue = signal<CurrencyItem | undefined>(undefined);
-
   goldValues$ = this.requestClass.allItemsList.pipe(
     map((items) => ({
       gram18: items.find(i => i.id === '1000217'),
@@ -234,7 +224,6 @@ export class GoldCalculatorComponent {
     })
   )
 
-  // mainGoldValue = computed(() => commafy(priceToNumber(this.weightValue() || '1') * priceToNumber(this.goldValue() || '0') || 0));
   mainGoldValue$ = combineLatest([
     this.goldValueComputed$,
     this.weightValue$
@@ -243,11 +232,6 @@ export class GoldCalculatorComponent {
       return commafy(priceToNumber(weightValue || '1') * priceToNumber(value! || '0') || 0)
     })
   )
-  // totalWageValue = computed(() => {
-  //   return (
-  //     commafy(((priceToNumber(this.wageValue())) * priceToNumber(this.mainGoldValue())) / 100 || 0)
-  //   )
-  // })
 
   totalWageValue$ = combineLatest([
     this.mainGoldValue$,
@@ -257,7 +241,7 @@ export class GoldCalculatorComponent {
       return commafy(((priceToNumber(wageValue) * priceToNumber(goldValue)) / 100) || 0)
     })
   )
-  // totalTaxValue = computed(() => commafy(((priceToNumber(this.mainGoldValue()) * priceToNumber(this.taxValue())) / 100) || 0))
+  
   totalTaxValue$ = combineLatest([
     this.mainGoldValue$,
     this.taxValue$
@@ -266,14 +250,6 @@ export class GoldCalculatorComponent {
       return commafy(((priceToNumber(goldValue) * priceToNumber(taxValue)) / 100) || 0)
     })
   )
-
-  // totalProfitValue = computed(() => {
-  //   return commafy(
-  //     (this.profitType() === 0 ?
-  //     ((priceToNumber(this.mainGoldValue()) * priceToNumber(this.profitValue())) / 100) :
-  //     priceToNumber(this.profitValue())) || 0
-  //   )
-  // });
 
   totalProfitValue$ = combineLatest([
     this.mainGoldValue$,
@@ -287,14 +263,6 @@ export class GoldCalculatorComponent {
       )
     })
   )
-
-  
-  // totalGoldValue = computed(() => {
-  //   return commafy (
-  //     (priceToNumber(this.mainGoldValue()) + priceToNumber(this.totalWageValue()) + 
-  //     priceToNumber(this.totalTaxValue()) + priceToNumber(this.totalProfitValue())) || 0
-  //   )
-  // })
 
   
   totalGoldValue$ = combineLatest([
@@ -314,8 +282,6 @@ export class GoldCalculatorComponent {
   
 
   constructor (private meta: Meta) {
-
-      // this.initAllGoldValues();
       this.initFirstGoldValue();
     
 
@@ -325,26 +291,13 @@ export class GoldCalculatorComponent {
 
 
   }
-
-  // initAllGoldValues () {
-  //   this.gram18Value = this.requestClass.allItemsList.find((item) => item.id == '1000217');
-  //   this.gram24Value = this.requestClass.allItemsList.find((item) => item.id == '1000219');
-  //   this.goldMiniValue = this.requestClass.allItemsList.find((item) => item.id == '1000220');
-  //   this.goldFuturesValue = this.requestClass.allItemsList.find((item) => item.id == '1000227');
-  //   this.goldMesghalValue = this.requestClass.allItemsList.find((item) => item.id == '1000223');
-  //   this.goldOunceValue = this.requestClass.allItemsList.find((item) => item.id == '1000244');
-  // }
-
   initFirstOunceValue () {
     
     this.weightValueSubject.next('1')
-    // this.relatedItems?.set([this.goldOunceValue()!, this.gram18Value()!, this.goldMesghalValue()!])
   }
 
   initFirstGoldValue () {
     this.currentGoldType.set(0)
-    // this.goldValue.set(this.gram18Value()!.tomanStringPrice! || ' ')
-    // this.relatedItems?.set([this.gram18Value()!, this.gram24Value()!, this.goldOunceValue()!])
     this.profitValueSubject.next('3')
     this.weightValueSubject.next('1')
     this.wageValueSubject.next('7')
@@ -353,7 +306,6 @@ export class GoldCalculatorComponent {
   }
 
   calculateOunceTypes () {
-    // const value = this.weightValue() || '0';
     this.weightValue$.subscribe((value) => {
       switch(this.currentOunceType()) {
         // Gram
@@ -501,31 +453,11 @@ export class GoldCalculatorComponent {
     this.goldChangedByUserSubject.next(false);
 
     if (this.currentGoldType() === 0 || this.currentGoldType() === 1) {
-      // this.goldValue.set(this.gram18Value()?.tomanStringPrice!)
-      // this.relatedItems?.set([this.gram18Value()!, this.gram24Value()!, this.goldOunceValue()!])
       this.wageValueSubject.next('7')
     }
     else {
-      // const meltedValue = mesghalToGramMoney(this.goldFuturesValue()?.tomanStringPrice!)
-      // this.goldValue.set(commafy(trimDecimal(meltedValue, 0)))
-      // this.relatedItems?.set([this.goldFuturesValue()!, this.gram18Value()!, this.goldMesghalValue()!])
       this.wageValueSubject.next('0')
     }
-    // else if (this.currentGoldType() === 3) {
-    //   // this.goldValue.set(this.goldMiniValue()?.tomanStringPrice!)
-    //   // this.relatedItems?.set([this.goldMiniValue()!, this.gram18Value()!, this.goldFuturesValue()!])
-    //   this.wageValue.set('0')
-    // }
-    // else if (this.currentGoldType() === 4) {
-    //   // this.goldValue.set(this.goldOunceValue()?.tomanStringPrice!)
-    //   // this.relatedItems?.set([this.goldOunceValue()!, this.gram24Value()!, this.gram18Value()!])
-    //   this.wageValue.set('0')
-    // }
-    // else if (this.currentGoldType() === 5) {
-    //   // this.goldValue.set(this.goldMesghalValue()?.tomanStringPrice!)
-    //   // this.relatedItems?.set([this.goldMesghalValue()!, this.goldFuturesValue()!, this.gram18Value()!])
-    //   this.wageValue.set('0')
-    // }
   }
 
   selectCalculatorType(item: CalculatorType) {

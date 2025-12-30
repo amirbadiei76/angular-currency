@@ -1,8 +1,8 @@
-import { Component, effect, ElementRef, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { RequestArrayService } from '../../services/request-array.service';
 import { CurrencyItem } from '../../interfaces/data.types';
 import { Meta } from '@angular/platform-browser';
-import { CRYPTO_PREFIX, crypto_title, currency_title, filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
+import { currency_title, filter_main_currencies, MAIN_CURRENCY_PREFIX } from '../../constants/Values';
 import { SearchItemComponent } from '../../components/shared/search-item/search-item.component';
 import { FormsModule } from '@angular/forms';
 import { CommafyNumberDirective } from '../../directives/commafy-number.directive';
@@ -91,8 +91,6 @@ export class ConverterComponent {
     shareReplay(1)
   );
 
-  // mainCurrencyList = toSignal(this.requestArray?.mainCurrencyList);
-  // cryptoList = toSignal(this.requestArray?.cryptoList);
 
   private dualCategoryStreamMap: Record<
     number,
@@ -287,23 +285,10 @@ export class ConverterComponent {
   
   constructor(private meta: Meta) {
     this.syncFromTo$.subscribe();
-    // this.calculateOutput$.subscribe();
 
     if (typeof window !== 'undefined') {      
       window.scrollTo(0, 0)
     }
-
-    // this.dualList$.subscribe((items) => console.log(items))
-    
-    // effect(() => {
-      // if (this.fromDropdownOpen() || this.toDropdownOpen()) this.initLists(currencyType)
-      
-      // this.requestArray.mainData?.subscribe((items) => {
-      //   this.initRialChanges()
-      // })
-      
-      // this.calculateOutput(this.inputValue() || '1')
-    // })
 
   }
 
@@ -312,45 +297,10 @@ export class ConverterComponent {
       name: 'description',
       content: `مبدل ارز ارزیاب؛ تبدیل سریع و دقیق ارزهای معتبر با نرخ به‌روز بازار.`
     });
-
-    // if (this.mainCurrencyList()) {
-      // this.initLists(0)
-      // this.initRialChanges();
-      // this.initFirstValues();
-      // this.calculateOutput('1');
-    // }
   }
 
-  // reconcileSelection(list: CurrencyItem[], previous?: CurrencyItem): CurrencyItem | undefined {
-  //   const found = previous ? list.find(item => item.id === previous.id) : undefined;
-  //   return found ?? list[0];
-    //   if (!previous) {
-    //     return list[0];
-    //   }
-  
-    //   const found = list.find(item => item.id === previous.id);
-    // return found ?? list[0];
-  // }
-  
-
-  // initRialChanges () {
-  //   const dollarChanges = (this.currentValue()?.price_dollar_rl?.dt === 'low' ? -1 : 1) * (this.currentValue()?.price_dollar_rl?.dp!);
-  //   const dollarValue = priceToNumber(this.currentValue()?.price_dollar_rl?.p!);
-  //   const mainDollarValue = (1/dollarValue).toFixed(8)
-  //   const dollarChangeState = valueToDollarChanges(0, dollarChanges);
-    
-  //   this.irItem.dollarChangeState = dollarChangeState >= 0 ? 'high' : 'low';
-  //   this.irItem.dollarChanges = trimDecimal(Math.abs(dollarChangeState)) + '';
-  //   this.irItem.dollarStringPrice = mainDollarValue;
-  // }
 
   ngAfterViewInit () {
-    // if (this.mainCurrencyList()) {
-      // this.initLists(0)
-      // this.initRialChanges();
-      // this.initFirstValues();
-      // this.calculateOutput('1');
-    // }
     if (typeof document !== 'undefined') {
       fromEvent<MouseEvent>(document, 'click')
       .subscribe((event) => {
@@ -367,87 +317,16 @@ export class ConverterComponent {
     }
   }
 
-  // initFirstValues () {
-  //   this.fromItemSubject.next(this.mainFromList()[this.currencyType() !== 2 ? 1 : 1])
-  //   this.toItemSubject.next(this.mainToList()[this.currencyType() !== 2 ? 0 : 1])
-  // }
-
   selectCurrencyTypeDropdown (item: ICurrencySelect) {
     this.currencyType.set(item.id)
-    // this.initLists(item.id)
-    // this.initFirstValues()
-    // this.dualList$.subscribe();
     this.syncFromTo$.subscribe();
     this.toggleCurrencyTypeDropdown()
   }
 
-  // initLists (currentId: number) {
-  //   switch (currentId) {
-  //     case 0:
-  //       const newCurrencyList = [this.irItem, ...this.mainCurrencyList()!];
-  //       this.mainFromList.set(newCurrencyList)
-  //       this.mainToList.set(newCurrencyList)
-  //       this.currentFromList.set(newCurrencyList)
-  //       this.currentToList.set(newCurrencyList)
-  //       break;
-  //     case 1:
-  //       const cryptoList = [...this.cryptoList()!]
-  //       this.mainFromList.set(cryptoList)
-  //       this.mainToList.set(cryptoList)
-  //       this.currentFromList.set(cryptoList)
-  //       this.currentToList.set(cryptoList)
-  //       break;
-  //     case 2:
-  //       const newCurrencies = [this.irItem, ...this.mainCurrencyList()!];
-  //       const cryptoItems = [...this.cryptoList()!]
-  //       this.mainFromList.set(cryptoItems)
-  //       this.currentFromList.set(cryptoItems)
-  //       this.mainToList.set(newCurrencies)
-  //       this.currentToList.set(newCurrencies)
-  //       break;
-  //   }
-    
-  // }
-
-
-
   onInputChange (event: Event) {
     const value = (event.target as HTMLInputElement).value || '1';
-    // this.inputValue.set(commafy(priceToNumber(value) || 1))
     this.inputValueSubject.next(commafy(priceToNumber(value) || 1))
-    // this.calculateOutput(value)
   }
-
-  // calculateOutput (value: string) {
-  //   const currentValue = priceToNumber(value) || 1;
-  //   const fromRealValue = this.fromItem()?.realPrice || 1;
-  //   const toRealValue = this.toItem()?.realPrice || 1;
-  //   if (this.currencyType() === 0) {
-  //     const outputValue = currentValue * (fromRealValue! / toRealValue!);
-  //     if (this.toItem()?.shortedName === 'IRT') {
-  //       this.convertedValue.set(commafy(outputValue / 10))
-  //     }
-  //     else if (this.fromItem()?.shortedName === 'IRT') {
-  //       this.convertedValue.set(commafyString((outputValue / 10).toFixed(9)))
-  //     }
-  //     else {
-  //       this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))
-  //     }
-  //   }
-  //   else if (this.currencyType() === 1) {
-  //     const outputValue = currentValue * (fromRealValue! / toRealValue!);
-  //     this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))
-  //   }
-  //   else if (this.currencyType() === 2) {
-  //     const outputValue = currentValue * (fromRealValue! / toRealValue!);
-  //     if (this.toItem()?.shortedName === 'IRT') {
-  //       this.convertedValue.set(commafy(outputValue / 10))
-  //     }
-  //     else {
-  //       this.convertedValue.set(commafy(trimDecimal(outputValue, 4)))
-  //     }
-  //   }
-  // }
 
   toggleCurrencyTypeDropdown () {
     this.currencyDropdownOpen.update((opend) => !opend)
@@ -475,9 +354,7 @@ export class ConverterComponent {
       this.fromItemSubject.next(items.first.find((item) => item.slugText == slug))
     })
     this.resetSearchInputs();
-    // this.fromItemSubject.next(this.currentFromList().find((item) => item.slugText == slug)!)
     this.toggleFromeDropdown();
-    // this.initLists(this.currencyType())
   }
 
   
@@ -486,9 +363,7 @@ export class ConverterComponent {
       this.toItemSubject.next(items.second.find((item) => item.slugText == slug))
     })
     this.resetSearchInputs();
-    // this.toItemSubject.next(this.currentToList().find((item) => item.slugText == slug)!)
     this.toggleToDropdown();
-    // this.initLists(this.currencyType())
   }
 
   resetSearchInputs () { 
@@ -497,22 +372,12 @@ export class ConverterComponent {
   }
 
   filterFromList(event: Event) {
-    // const listToFilter = [...this.mainFromList()]
     const textToFilter = (event.target as HTMLInputElement).value.toLowerCase();
     this.fromTextToFilter.set(textToFilter)
-    // if (textToFilter !== null) {
-    //   const filteredFromItems = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
-    //   this.currentFromList.set(filteredFromItems)
-    // }
   }
   
   filterToList(event: Event) {
-    // const listToFilter = [...this.mainToList()]
     const textToFilter = (event.target as HTMLInputElement).value.toLowerCase();
     this.toTextToFilter.set(textToFilter)
-    // if (textToFilter !== null) {
-    //   const filteredFromItems = listToFilter.filter(item => item.title.toLowerCase().includes(textToFilter) || item.shortedName?.toLowerCase().includes(textToFilter))
-    //   this.currentToList.set(filteredFromItems)
-    // }
   }
 }

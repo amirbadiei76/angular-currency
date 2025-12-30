@@ -121,8 +121,8 @@ export class ConverterComponent {
       this.requestArray.cryptoList
     ]).pipe(
       map(([mainList, cryptoList]) => ({
-        first: mainList,
-        second: cryptoList
+        first: cryptoList,
+        second: mainList
       }))
     )
   };

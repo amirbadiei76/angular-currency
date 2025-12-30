@@ -67,13 +67,10 @@ export class RequestArrayService {
 
     // Handle incoming messages
     this.ws.onmessage = (message) => {
-        console.log(message.data)
         const msg = JSON.parse(message.data) as ({type: string} & {payload: Currencies});
 
         if (msg.type === 'update') {
             const data: Currencies = msg.payload;
-            
-            // this.mainData = data;
             this.mainDataSubject?.next(data);
             console.log(data)
             this.setupAllCurrentData(data.current)
@@ -181,31 +178,6 @@ export class RequestArrayService {
                     if (item.id === favId) favItems.push(item)
                 }
             }
-            // from(items)
-            // .pipe(
-            //     map((allItems) =>
-            //         allItems.filter((item: CurrencyItem) => items.includes(item.id))
-            //     )
-            // )
-            // .subscribe((favItems) => {
-            //     this.favListSubject.next(favItems);
-            // });
-            // combineLatest([
-            //     this.allItemsList,
-            //     items
-            // ]).pipe(
-            //     map(([allItems]) =>
-            //       allItems.filter(item => items.includes(item.id))
-            //     )
-            // ).subscribe((currentFav) => {
-            //     favItems = currentFav
-            // })
-            // items.forEach((favItem) => {
-            //     this.allItemsList.subscribe((items) => {
-            //         favItems = items.filter((item) => item.id == favItem)
-            //         console.log(items)
-            //     })
-            // })
         }
         this.favListSubject.next(favItems);
     }

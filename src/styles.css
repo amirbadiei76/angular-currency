@@ -184,7 +184,7 @@
 }
 
 @utility menu-item-base {
-    @apply gap-2 flex h-full active:text-light-green-text active:dark:text-dark-green-text flex-nowrap text-nowrap text-sm text-dark-text dark:text-light-text not-active:hover:text-green-btn not-active:dark:hover:text-popup-border-green-light duration-300 ease-in-out
+    @apply gap-2 flex h-full active:text-light-green-text active:dark:text-dark-green-text flex-nowrap text-nowrap text-sm text-dark-text dark:text-light-text md:hover:text-green-btn md:dark:hover:text-popup-border-green-light duration-300 ease-in-out
 }
 
 @utility menu-buttons-base {

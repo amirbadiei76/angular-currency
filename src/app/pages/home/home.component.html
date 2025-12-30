@@ -136,17 +136,5 @@
                 </div>
             }
         }
-        @if (currentTempList$ | async; as list) {
-            @if (list?.length === 0 && currentCategory() !== 'دیده بان') {
-                <div
-                    class="order-5"
-                >
-                    <empty-item />
-                    <empty-item />
-                    <empty-item />
-                    <empty-item />
-                </div>
-            }
-        }
     </div>
 </main>

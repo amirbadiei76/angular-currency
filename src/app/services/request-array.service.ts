@@ -54,40 +54,33 @@ export class RequestArrayService {
 
     this.ws = new WebSocket(`wss://price-board.liara.run`);
 
-    // Handle socket events
     this.ws.onopen = (event) => {
-        console.log("Websocket connection Opened");
+        // console.log("Websocket connection Opened");
         this.startHeartbeat()
     };
 
     this.ws.onclose = (event) => {
         this.stopHeartbeat()!;
-        console.log("Websocket connection closed");
+        // console.log("Websocket connection closed");
     };
 
-    // Handle incoming messages
     this.ws.onmessage = (message) => {
         const msg = JSON.parse(message.data) as ({type: string} & {payload: Currencies});
 
         if (msg.type === 'update') {
             const data: Currencies = msg.payload;
             this.mainDataSubject?.next(data);
-            console.log(data)
             this.setupAllCurrentData(data.current)
         }
-        else if (msg.type === 'pong') {
-            console.log('pong recieved..')
-        }
+        else if (msg.type === 'pong') {}
     }
     
   }
 
     startHeartbeat() {
         this.heartbeatTimer = window.setInterval(() => {
-            console.log(this.ws?.readyState)
             if (this.ws?.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({ type: 'ping' }));
-                console.log('Heartbeat sent: ' + new Date())
             }
         }, 20000);
     }

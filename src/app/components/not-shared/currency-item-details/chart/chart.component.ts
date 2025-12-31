@@ -34,8 +34,6 @@ export interface ChartState {
 })
 export class ChartComponent {
   requestService = inject(RequestArrayService)
-  // @Input() historyData?: RawData[];
-  // @Input() item?: CurrencyItem;
   historyData = input<RawData[] | null>(null);
   item = input<CurrencyItem | null>(null);
 
@@ -135,22 +133,8 @@ export class ChartComponent {
       this.volumeSeries?.setData(processed.volumes as any[])
       this.lineSeries?.setData(processed.lineVolumes as any[]);
 
-      console.log('effect: ' + this.chart)
-
       if (this.presetChanged()) this.chart?.timeScale().fitContent();
     });
-
-    // effect(() => {
-      // const processedData = this.parseData(this.historyData() as RawData[]);
-
-      // this.currentUnit()
-
-      // this.candlestickSeries?.setData(processedData.candles as any[])
-      // this.volumeSeries?.setData(processedData.volumes as any[])
-      // this.lineSeries?.setData(processedData.lineVolumes as any[]);
-      
-      // this.chart?.timeScale().fitContent()
-    // })
   }
 
   isPresetActive (p: Preset) {

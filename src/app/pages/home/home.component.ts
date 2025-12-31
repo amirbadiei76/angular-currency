@@ -307,7 +307,7 @@ export class HomeComponent {
     element?.scrollTo({ left: 0, behavior: 'smooth' })
   }
 
-  moveCategoryHighlight(element: HTMLElement, title: string): void {
+  moveCategoryHighlight(element: HTMLElement): void {
     if (!this.categoryHighlightLine || !this.scrollViewCategory) return;
 
     const highlight = this.categoryHighlightLine.nativeElement;
@@ -336,9 +336,8 @@ export class HomeComponent {
         '[data-active-category="true"]'
       ) as HTMLElement | null;
 
-      console.log(activeEl)
       if (activeEl) {
-        this.moveCategoryHighlight(activeEl, this.currentCategory());
+        this.moveCategoryHighlight(activeEl);
       }
     });
   }
@@ -349,7 +348,7 @@ export class HomeComponent {
     this.currentCategory.set(title)
     this.lastHomeState.setCategory(title)
     if (element) {
-      this.moveCategoryHighlight(element, title);
+      this.moveCategoryHighlight(element);
     }
 
 

@@ -152,6 +152,9 @@ export class HomeComponent {
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>; 
   @ViewChild('scrollViewSubCategory') scrollViewSubCategory?: ElementRef<HTMLDivElement>;
   @ViewChild('scrollViewCategory') scrollViewCategory?: ElementRef<HTMLDivElement>;
+  @ViewChild('categoryHighlightLine') categoryHighlightLine?: ElementRef<HTMLDivElement>;
+  @ViewChild('categoryContainer') categoryContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild('tabElement') tabElement?: ElementRef<HTMLElement>;
 
   showRightSubCategoryArrow: WritableSignal<Boolean> = signal(true);
   showLeftSubCategoryArrow: WritableSignal<Boolean> = signal(true);
@@ -278,6 +281,7 @@ export class HomeComponent {
   categoryLeft () {
     const element = this.scrollViewCategory?.nativeElement;
     element?.scrollBy({ behavior: 'smooth', left: -this.scrollAmount })
+    this.syncHighlightAfterScroll()
   }
   
   
@@ -289,6 +293,7 @@ export class HomeComponent {
   categoryRight () {
     const element = this.scrollViewCategory?.nativeElement;
     element?.scrollBy({ behavior: 'smooth', left: this.scrollAmount })
+    this.syncHighlightAfterScroll();
   }
   
   subCategoryRight () {
@@ -301,10 +306,51 @@ export class HomeComponent {
     element?.scrollTo({ left: 0, behavior: 'smooth' })
   }
 
+  moveCategoryHighlight(element: HTMLElement, title: string): void {
+    if (!this.categoryHighlightLine || !this.scrollViewCategory) return;
 
-  setCurrentCategory (title: string = currency_title, subCategory: string = filter_overview) {
+    const highlight = this.categoryHighlightLine.nativeElement;
+    const container = this.scrollViewCategory.nativeElement;
+
+    if (highlight.classList.contains('sm:-translate-x-23')) highlight.classList.remove('sm:-translate-x-23')
+    if (highlight.classList.contains('-translate-x-20.25')) highlight.classList.remove('-translate-x-20.25')
+
+    const elRect = element.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const elementCenter = elRect.left + elRect.width / 2;
+    const containerRight = containerRect.right;
+
+    const translateX =
+      containerRight
+      - elementCenter
+      - highlight.offsetWidth / 2;
+      
+    highlight.style.transform = `translateX(-${translateX}px)`;
+  }
+
+  syncHighlightAfterScroll(): void {
+    requestAnimationFrame(() => {
+      const activeEl = document.querySelector(
+        '[data-active-category="true"]'
+      ) as HTMLElement | null;
+
+      console.log(activeEl)
+      if (activeEl) {
+        this.moveCategoryHighlight(activeEl, this.currentCategory());
+      }
+    });
+  }
+
+
+
+  setCurrentCategory (title: string = currency_title, subCategory: string = filter_overview, element: HTMLDivElement | undefined = undefined) {
     this.currentCategory.set(title)
     this.lastHomeState.setCategory(title)
+    if (element) {
+      this.moveCategoryHighlight(element, title);
+    }
+
 
     switch(title) {
       case favories_title:
@@ -501,6 +547,7 @@ export class HomeComponent {
         takeUntil(this.destroySubject)
       )
       .subscribe((width: number) => {
+        this.syncHighlightAfterScroll()
         if (width <= 624) {
           this.change24hText.set('24h')
         }
@@ -561,6 +608,7 @@ export class HomeComponent {
 
   onScrollCategoryEventHandler() {
     this.checkCategoryScrollPosition()
+    this.syncHighlightAfterScroll()
   }
 
   checkSubCategoryScrollPosition () {
@@ -574,8 +622,8 @@ export class HomeComponent {
     const currentScroll = Math.abs(scrollLeft)
 
     this.subCategoryScrollValue.set(scrollLeft);
-    this.showRightSubCategoryArrow.set(currentScroll > 5)
-    this.showLeftSubCategoryArrow.set(currentScroll < (maxScroll - 5))
+    this.showRightSubCategoryArrow.set(currentScroll > 1)
+    this.showLeftSubCategoryArrow.set(currentScroll < (maxScroll - 1))
   }
 
   
@@ -590,7 +638,7 @@ export class HomeComponent {
     const currentScroll = Math.abs(scrollLeft)
 
     this.categoryScrollValue.set(scrollLeft);
-    this.showRightCategoryArrow.set(currentScroll > 5)
-    this.showLeftCategoryArrow.set(currentScroll < (maxScroll - 5))
+    this.showRightCategoryArrow.set(currentScroll > 1)
+    this.showLeftCategoryArrow.set(currentScroll < (maxScroll - 1))
   }
 }

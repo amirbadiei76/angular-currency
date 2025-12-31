@@ -3,24 +3,24 @@
     <div class="mx-0 sm:mx-auto sm:max-w-256 sm:w-full px-0 sm:px-28 md:px-36">
         <div class="order-2 relative sm:order-1 px-4 sm:px-0 overflow-hidden flex justify-end bg-light2 dark:bg-dark2 border-b border-b-light-text2 dark:border-b-dark-text2">        
             <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
-                <div class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">
+                <div #categoryContainer class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">
                     @for (item of categories; track item.title) {
-                        <div class="inline-block text-center align-middle ml-[0.7rem] sm:ml-4">
+                        <div #tabElement class="inline-block text-center align-middle ml-[0.7rem] sm:ml-4">
                             <div class="flex flex-col justify-center items-center relative">
                                 <span
-                                    (click)="setCurrentCategory(item.title)"
-                                    class="py-4 {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center {{ item.title === 'دیده بان' ? 'gap-2.5' : '' }}">
+                                    [attr.data-active-category]="item.title === currentCategory()"
+                                    (click)="setCurrentCategory(item.title, 'همه', tabElement)"
+                                    class="py-4  {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center {{ item.title === 'دیده بان' ? 'gap-2.5' : '' }}">
                                     <div class="{{item.title === 'دیده بان' ? 'w-4 h-4' : ''}}">
                                         <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
                                     </div>
                                     {{item.title}}
                                 </span>
-                                <div
-                                    class="bg-green-btn h-0.5 w-8 duration-300 transition {{ item.title === currentCategory() ? 'opacity-100' : 'opacity-0' }}"></div>
                             </div>
                         </div>
                     }
                 </div>
+                <div #categoryHighlightLine class="absolute -translate-x-20.25 sm:-translate-x-23 bottom-0 bg-green-btn h-0.5 w-8 duration-300 ease-in-out"></div>
             </div>
             
             <div #rightCategoryArrow [class.hidden]="!showRightCategoryArrow()" id="rightCategoryArrow" class="absolute h-[110%] flex justify-end right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10 border-b border-b-light dark:border-b-dark">

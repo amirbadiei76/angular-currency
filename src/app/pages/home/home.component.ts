@@ -30,6 +30,7 @@ export class HomeComponent {
   reqestClass? = inject(RequestArrayService);
   lastHomeState = inject(HomeStateService);
   notificationService = inject(NotificationService);
+  showhome = signal(false)
 
   categories = [
     {
@@ -256,6 +257,10 @@ export class HomeComponent {
   constructor(private title: Title, private meta: Meta) {
     this.setCurrentCategory(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory);
 
+    setTimeout(() => {
+      this.showhome.set(true)
+    }, 1000);
+
     if (typeof window !== 'undefined') {      
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
@@ -275,6 +280,7 @@ export class HomeComponent {
       this.checkSubCategoryScrollPosition();
       this.checkCategoryScrollPosition();
     })
+
   }
 
 

@@ -30,9 +30,14 @@
 
     --light-border: #a7a9a8;
     --dark-border: #292a2a;
+
+    /* --test-light: #fcfcfd; */
     
     --light-border2: #d8d8d8;
     --dark-border2: #333;
+    
+    --light-border3: #eff0f3;
+    --dark-border3: #222222;
 
     --light-hover: #f1f5f4;
     --dark-hover: #1b1b1b;
@@ -116,6 +121,9 @@
     
     --color-light-border2: var(--light-border2);
     --color-dark-border2: var(--dark-border2);
+    
+    --color-light-border3: var(--light-border3);
+    --color-dark-border3: var(--dark-border3);
 
     --color-light-hover: var(--light-hover);
     --color-dark-hover: var(--dark-hover);

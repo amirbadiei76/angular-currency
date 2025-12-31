@@ -1,7 +1,7 @@
-<main class="w-full min-h-[var(--screen-height)] bg-light dark:bg-dark flex flex-col flex-1 pt-16 pb-6">
+<main class="w-full min-h-[var(--screen-height)] bg-light2 dark:bg-dark2 flex flex-col flex-1 pt-16 pb-6">
     
     <div class="mx-0 sm:mx-auto sm:max-w-256 sm:w-full px-0 sm:px-28 md:px-36">
-        <div class="order-2 relative sm:order-1 px-4 sm:px-0 overflow-hidden flex justify-end bg-light dark:bg-dark border-b border-b-light-text2 dark:border-b-dark-text2">        
+        <div class="order-2 relative sm:order-1 px-4 sm:px-0 overflow-hidden flex justify-end bg-light2 dark:bg-dark2 border-b border-b-light-text2 dark:border-b-dark-text2">        
             <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
                 <div class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">
                     @for (item of categories; track item.title) {
@@ -36,7 +36,7 @@
             </div>
         </div>
     
-        <div class="order-1 sm:order-2 flex px-4 sm:px-0 gap-4 {{ canShowSupportedCurrencyToggle() ? 'justify-between' : 'justify-end' }} py-2 sm:py-4 items-start bg-light dark:bg-dark border-b border-b-light-text3 dark:border-b-dark-text3">
+        <div class="order-1 sm:order-2 flex px-4 sm:px-0 gap-4 {{ canShowSupportedCurrencyToggle() ? 'justify-between' : 'justify-end' }} py-2 sm:py-4 items-start bg-light2 dark:bg-dark2 border-b border-b-light-text3 dark:border-b-dark-text3">
             <div *ngIf="canShowSupportedCurrencyToggle()" class="overflow-hidden flex flex-row-reverse">
                 @for (currency of supportedCurrencies; track currency.id) {
                     <div
@@ -56,7 +56,7 @@
             </div>
         </div>
     
-        <div  class="order-3 rtl relative text-right px-4 sm:px-0 h-full justify-start py-[0.7rem] sm:py-[1rem] bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
+        <div  class="order-3 rtl relative text-right px-4 sm:px-0 h-full justify-start py-[0.7rem] sm:py-[1rem] bg-light2 dark:bg-dark2 border-b border-b-light-border dark:border-b-dark-border">
             <div #rightSubCategoryArrow [class.hidden]="!showRightSubCategoryArrow()" id="rightSubCategoryArrow" class="absolute h-[99%] align-middle right-0 top-1/2 -translate-y-1/2 pt-[0.2rem] pb-[0.4rem] bg-light dark:bg-dark w-10">
                 <div (click)="subCategoryRight()" class="h-4 w-4 sm:w-8 sm:h-8 flex justify-center items-center translate-y-3 sm:translate-x-0 -translate-x-4 bg-light-highlight dark:bg-dark-highlight rounded-md hover:cursor-pointer">
                     <i class="bi text-xs sm:text-base bi-caret-right-fill text-dark-text2 dark:text-light-text2"></i>
@@ -81,7 +81,7 @@
         </div>
         
     
-        <div class="order-4 px-4 sm:px-0 flex justify-between padding-vertical-2 py-2 sm:py-4 items-center bg-light dark:bg-dark border-b border-b-light-border dark:border-b-dark-border">
+        <div class="order-4 px-4 sm:px-0 flex justify-between padding-vertical-2 py-2 sm:py-4 items-center bg-light2 dark:bg-dark2 border-b border-b-light-border dark:border-b-dark-border">
             <div class="w-[26%] md:w-[35%] flex justify-start md:justify-end">
                 <div (click)="changeChange24hSortingType()" class="hover:cursor-pointer flex gap-1 sm:gap-3 flex-row items-center w-fit">
                     <div class="flex flex-col">

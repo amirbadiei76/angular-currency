@@ -1,4 +1,4 @@
-<main class="w-full min-h-[var(--screen-height)] bg-theme-white dark:bg-theme-black flex px-4 pt-20 pb-6 lg:px-18 lg:pb-8 lg:pt-24 lg:flex-row-reverse xl:pt-29 xl:px-41 xl:pb-16 flex-col flex-nowrap justify-between items-start">
+<main class="w-full min-h-[var(--screen-height)] bg-light2 dark:bg-dark2 flex px-4 pt-20 pb-6 lg:px-18 lg:pb-8 lg:pt-24 lg:flex-row-reverse xl:pt-29 xl:px-41 xl:pb-16 flex-col flex-nowrap justify-between items-start">
     
     @if (canShowItem()) {
         <div class="z-[2] w-full lg:w-[69%] flex flex-col flex-nowrap justify-end items-end content-center">
@@ -6,7 +6,7 @@
                 <app-breadcrumb [items]="breadCrumbItems" />
             }
             <div class="w-full flex justify-between items-center gap-2">
-                <button (click)="sharePage()" class="flex justify-center items-center text-xs md:text-sm transition text-dark-text dark:text-light-text duration-300 ease-out gap-2 h-12 hover:cursor-pointer rounded-semi px-2 border-transparent bg-neutral-50 dark:bg-neutral-700 border hover:border-light-text2 hover:dark:border-dark-text2">
+                <button (click)="sharePage()" class="flex justify-center items-center text-xs md:text-sm transition text-dark-text dark:text-light-text duration-300 ease-out gap-2 h-12 hover:cursor-pointer rounded-semi px-2 border-transparent bg-light-border2 dark:bg-dark-border border hover:border-light-text2 hover:dark:border-dark-text2">
                     <i class="bi bi-share-fill"></i>
                     اشتراک
                 </button>
@@ -22,7 +22,7 @@
                             [value]="textToFilter()"
                             (focus)="inputFocus()"
                             (input)="filterList($event)"
-                            class="rtl transition duration-300 ease-out pl-[2.5rem] peer pr-[2.7rem] rounded-semi outline-none border-transparent bg-neutral-50 dark:bg-neutral-700 border focus:border-green-btn hover:not-focus:border-light-text2 hover:not-focus:dark:border-dark-text2 h-full text-dark-text dark:text-light-text w-full text-right select-none"
+                            class="rtl transition duration-300 ease-out pl-[2.5rem] peer pr-[2.7rem] rounded-semi outline-none border-transparent bg-light-border2 dark:bg-dark-border border focus:border-green-btn hover:not-focus:border-light-text2 hover:not-focus:dark:border-dark-text2 h-full text-dark-text dark:text-light-text w-full text-right select-none"
                             autocomplete="off"
                             placeholder=" "
                         >

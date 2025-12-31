@@ -1,6 +1,6 @@
 <main class="w-full min-h-[var(--screen-height)] bg-light2 dark:bg-dark2 flex flex-col flex-1 pt-16 pb-6">
     
-    <div class="mx-0 sm:mx-auto sm:max-w-256 sm:w-full px-0 sm:px-28 md:px-36 {{ showhome() ? 'flex' : 'hidden' }}">
+    <div class="mx-0 sm:mx-auto sm:max-w-256 sm:w-full px-0 sm:px-28 md:px-36">
         <div class="order-2 relative sm:order-1 px-4 sm:px-0 overflow-hidden flex justify-end bg-light2 dark:bg-dark2 border-b border-b-light-text2 dark:border-b-dark-text2">        
             <div #scrollViewCategory (scroll)="onScrollCategoryEventHandler()" class="inline-block text-center whitespace-nowrap overflow-hidden rtl scroll-hide w-full overflow-x-scroll scroll-smooth scroll-snap-x">
                 <div #categoryContainer class="inline-block scroll-hide w-full text-right text-xs leading-4.5 sm:leading-5 font-medium sm:text-sm">

@@ -57,7 +57,16 @@
                               <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                           </svg>
                           @if (toItem$ | async; as to) {
-                            <input type="text" autocomplete="off" (input)="filterToList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ to.faGroupName }}" >
+                            <input
+                              type="text"
+                              autocomplete="off"
+                              autocorrect="off"
+                              autocapitalize="off"
+                              spellcheck="false"
+                              (input)="filterToList($event)"
+                              class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none"
+                              placeholder="جستجو در {{ to.faGroupName }}" 
+                            >
                           }
                       </div>
 
@@ -115,7 +124,16 @@
                             <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                         </svg> 
                         @if (fromItem$ | async; as from) { 
-                          <input autocomplete="off" type="text" (input)="filterFromList($event)" class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none" placeholder="جستجو در {{ from.faGroupName }}" >
+                          <input
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            type="text"
+                            (input)="filterFromList($event)"
+                            class="rtl h-full focus:border-green-btn transition duration-300 ease-out pl-[0.8rem] pr-[2.7rem] rounded-semi outline-none bg-transparent border border-light-text2 dark:border-dark-text2 text-light-text2 dark:text-dark-text2 w-full text-right select-none"
+                            placeholder="جستجو در {{ from.faGroupName }}"
+                          >
                         }
                       </div>
 
@@ -143,7 +161,18 @@
                 @if (fromItem$ | async; as from) {
                   <p class="input-unit-base">{{from.shortedName}}</p>
                 }
-                <input autocomplete="off" maxlength="16" [value]="inputValue() || 1" (input)="onInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                <input
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  maxlength="16"
+                  [value]="inputValue() || 1"
+                  (input)="onInputChange($event)"
+                  type="text"
+                  commafyNumber
+                  class="input-base rtl"
+                >
               </div>
             </div>
         </div>

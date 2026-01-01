@@ -78,6 +78,9 @@
                             <p class="input-unit-base">تومان</p>
                             <input
                                 autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
                                 maxlength="19"
                                 placeholder="0"
                                 [value]="goldValue"
@@ -96,7 +99,19 @@
                         <div class="relative w-full">
                             <p class="input-unit-base">{{ goldTypes[currentGoldType()].weightUnit }}</p>
                             @if (weightValue$ | async; as weightValue) {
-                                <input autocomplete="off" maxlength="16" placeholder="0" (input)="onWeightInputChange($event)" [value]="weightValue" type="text" commafyNumber class="input-base rtl">
+                                <input
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                    maxlength="16"
+                                    placeholder="0"
+                                    (input)="onWeightInputChange($event)"
+                                    [value]="weightValue"
+                                    type="text"
+                                    commafyNumber
+                                    class="input-base rtl"
+                                >
                             }
                         </div>
                     </div>
@@ -114,7 +129,19 @@
                         <div class="relative w-full">
                             <p class="input-unit-base">درصد</p>
                             @if (wageValue$ | async; as wageValue) {
-                                <input autocomplete="off" maxlength="16" placeholder="0" [value]="wageValue" (input)="onWageInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                                <input
+                                    autocomplete="off"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                    maxlength="16"
+                                    placeholder="0"
+                                    [value]="wageValue"
+                                    (input)="onWageInputChange($event)"
+                                    type="text"
+                                    commafyNumber
+                                    class="input-base rtl"
+                                >
                             }
                         </div>
                     </div>
@@ -133,7 +160,19 @@
                     <div class="relative w-full">
                         <p class="input-unit-base">درصد</p>
                         @if (taxValue$ | async; as taxValue) {
-                            <input autocomplete="off" maxlength="16" placeholder="0" [value]="taxValue" (input)="onTaxInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                            <input
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                maxlength="16"
+                                placeholder="0"
+                                [value]="taxValue"
+                                (input)="onTaxInputChange($event)"
+                                type="text"
+                                commafyNumber
+                                class="input-base rtl"
+                            >
                         }
                     </div>
                 </div>
@@ -151,7 +190,19 @@
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ profitType() === 0 ? 'درصد' : 'تومان' }}</p>
                         @if (profitValue$ | async; as profitValue) {
-                            <input autocomplete="off" maxlength="16" placeholder="0" [value]="profitValue" (input)="onProfitInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                            <input
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                maxlength="16"
+                                placeholder="0"
+                                [value]="profitValue"
+                                (input)="onProfitInputChange($event)"
+                                type="text"
+                                commafyNumber
+                                class="input-base rtl"
+                            >
                         }
                     </div>
                 </div>
@@ -198,7 +249,19 @@
                     <div class="relative w-full">
                         <p class="input-unit-base">{{ ounceTypes[currentOunceType()].title }}</p>
                         @if (weightValue$ | async; as weightValue) {
-                            <input autocomplete="off" maxlength="16" placeholder="0" [value]="weightValue" commafyNumber (input)="onWeightInputChange($event)" type="text" commafyNumber class="input-base rtl">
+                            <input
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                maxlength="16"
+                                placeholder="0"
+                                [value]="weightValue"
+                                commafyNumber
+                                (input)="onWeightInputChange($event)"
+                                type="text"
+                                commafyNumber class="input-base rtl"
+                            >
                         }
                     </div>
                 </div>

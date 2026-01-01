@@ -24,6 +24,9 @@
                             (input)="filterList($event)"
                             class="rtl transition duration-300 ease-out pl-[2.5rem] peer pr-[2.7rem] rounded-semi outline-none border-transparent bg-light-border2 dark:bg-dark-border border focus:border-green-btn hover:not-focus:border-light-text2 hover:not-focus:dark:border-dark-text2 h-full text-dark-text dark:text-light-text w-full text-right select-none"
                             autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
                             placeholder=" "
                         >
                         <i (click)="removeInput()" class="bi bi-x-circle-fill peer-[:not(:placeholder-shown)]:flex hidden hover:cursor-pointer text-light-text2 dark:text-dark-text2 absolute top-1/2 -translate-y-1/2 left-4"></i>

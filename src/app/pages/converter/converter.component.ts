@@ -309,9 +309,11 @@ export class ConverterComponent {
         }
         if (!this.fromBtn?.nativeElement.contains(event.target as Node)) {
           this.fromDropdownOpen.set(false)
+          this.resetSearchInputs()
         }
         if (!this.toBtn?.nativeElement.contains(event.target as Node)) {
           this.toDropdownOpen.set(false)
+          this.resetSearchInputs()
         }
       })
     }

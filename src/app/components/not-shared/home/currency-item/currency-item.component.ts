@@ -10,7 +10,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'currency-item',
-  imports: [CommonModule, NgIf, StarIconComponent, RouterModule],
+  imports: [CommonModule, StarIconComponent, RouterModule],
   templateUrl: './currency-item.component.html',
   styleUrl: './currency-item.component.css'
 })

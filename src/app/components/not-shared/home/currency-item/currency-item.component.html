@@ -4,22 +4,32 @@
         <p class="text-dark-text3 dark:text-light-text3 font-normal text-nowrap line-clamp-1 md:text-xs lg:text-sm">اطلاعات بیشتر</p>
     </div>
     <div class="flex justify-start md:justify-center items-center gap-2 w-[15%]">
-        <p *ngIf="currencyItem?.groupName !== 'World_Market'" class="font-normal text-xs leading-4.5 {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</p>
-        <p *ngIf="currencyItem?.groupName === 'World_Market'" class="font-normal text-xs leading-4.5 {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}{{currencyItem?.lastPriceInfo?.dp}}%</p>
+        @if (currencyItem?.groupName === 'World_Market') {
+            <p class="font-normal text-xs leading-4.5 {{currencyItem?.lastPriceInfo?.dt === 'low' ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{currencyItem?.lastPriceInfo?.dt === 'low' ? '-' : '+'}}{{currencyItem?.lastPriceInfo?.dp}}%</p>
+        }
+        @else {
+            <p class="font-normal text-xs leading-4.5 {{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? 'text-light-red-text dark:text-dark-red-text' : 'text-light-green-text dark:text-dark-green-text'}}">{{(showCurrencyId === 0 && currencyItem?.rialChangeState === 'low') || (showCurrencyId === 1 && currencyItem?.dollarChangeState === 'low') ? '-' : '+'}}{{showCurrencyId === 0 ? currencyItem?.rialChanges : currencyItem?.dollarChanges}}%</p>
+        }
     </div>
     <div class="flex flex-col items-end justify-center w-[25%] mr-1 relative">
 
-        <strong *ngIf="currencyItem?.groupName !== 'World_Market'" class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{showCurrencyId === 0 ? currencyItem?.tomanStringPrice : currencyItem?.dollarStringPrice }}</strong>
-        <strong *ngIf="currencyItem?.groupName === 'World_Market'" class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{ currencyItem?.lastPriceInfo?.p }}</strong>
+        @if (currencyItem?.groupName === 'World_Market') {
+            <p class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{ currencyItem?.lastPriceInfo?.p }}</p>
+        }
+        @else {
+            <p class="text-dark-text dark:text-light-text font-normal text-xs md:text-sm leading-4.5 md:leading-5">{{showCurrencyId === 0 ? currencyItem?.tomanStringPrice : currencyItem?.dollarStringPrice }}</p>
+        }
         <div class="flex justify-center items-center gap-2 relative ">
              
-            <div *ngIf="currencyItem?.poundAsk" class="group flex justify-center items-center relative"> 
-                <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-45 speech-bubble">
-                    <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} پوند</span>
-                    <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
+            @if (currencyItem?.poundAsk) {
+                <div class="group flex justify-center items-center relative"> 
+                    <div class="z-[8] pointer-events-none group-hover:not-target:opacity-100 opacity-0 duration-300 flex bg-light-border dark:bg-dark-border absolute flex-col bottom-[-0.8rem] h-12 justify-center items-end w-45 speech-bubble">
+                        <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">قیمت اصلی: {{currencyItem?.lastPriceInfo?.p}} پوند</span>
+                        <span class="rtl text-dark-text dark:text-light-text text-xs md:text-sm leading-4.5 md:leading-5">نرخ تبدیل: {{currencyItem?.poundAsk}}</span>
+                    </div>
+                    <i class="hover:cursor-pointer z-[8] mt-1 bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2"></i>
                 </div>
-                <i class="hover:cursor-pointer z-[8] mt-1 bi bi-info-circle-fill text-2xs md:text-sm text-dark-text2 dark:text-light-text2"></i>
-            </div>
+            }
             <p class="{{currencyItem?.groupName !== 'World_Market' ? 'visible' : 'invisible'}} text-dark-text2 dark:text-light-text2 font-normal font-yekan text-2xs leading-3 mt-1">{{showCurrencyId === 0 ? 'تومان' : 'دلار'}}</p>
         </div>
     </div>

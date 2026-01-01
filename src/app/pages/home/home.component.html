@@ -11,9 +11,11 @@
                                     [attr.data-active-category]="item.title === currentCategory()"
                                     (click)="setCurrentCategory(item.title, 'همه', tabElement)"
                                     class="py-4  {{ item.title === currentCategory() ? 'text-dark dark:text-light' : 'text-dark-text2 dark:text-light-text2'}} hover:cursor-pointer flex items-center justify-center {{ item.title === 'دیده بان' ? 'gap-2.5' : '' }}">
-                                    <div class="{{item.title === 'دیده بان' ? 'w-4 h-4' : ''}}">
-                                        <star-icon [selected]="item.title === currentCategory()" *ngIf="item.title == 'دیده بان'" />
-                                    </div>
+                                    @if (item.title === 'دیده بان') {
+                                        <div class="w-4 h-4">
+                                            <star-icon [selected]="item.title == currentCategory()" />
+                                        </div>
+                                    }
                                     {{item.title}}
                                 </span>
                             </div>

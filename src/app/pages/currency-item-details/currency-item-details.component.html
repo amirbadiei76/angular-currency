@@ -13,7 +13,7 @@
                 <div #inputContainer class="relative w-full sm:w-[60%] md:w-[75%] xl:w-[55%]">
                     <div class="relative text-xs sm:text-sm leading-5 h-12">
                         <svg
-                            viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-light-text2 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
+                            viewBox="0 -0.24 28.423 28.423" class="absolute right-0 top-1/2 -translate-1/2 w-5 h-5 fill-dark-border5 dark:fill-dark-text2" xmlns="http://www.w3.org/2000/svg">
                             <path id="Path_215" data-name="Path 215" d="M14.953,2.547A12.643,12.643,0,1,0,27.6,15.19,12.649,12.649,0,0,0,14.953,2.547Zm0,2A10.643,10.643,0,1,1,4.31,15.19,10.648,10.648,0,0,1,14.953,4.547Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                             <path id="Path_216" data-name="Path 216" d="M30.441,28.789l-6.276-6.276a1,1,0,1,0-1.414,1.414L29.027,30.2a1,1,0,1,0,1.414-1.414Z" transform="translate(-2.31 -2.547)" fill-rule="evenodd"/>
                         </svg>
@@ -28,7 +28,7 @@
                         >
                         <i (click)="removeInput()" class="bi bi-x-circle-fill peer-[:not(:placeholder-shown)]:flex hidden hover:cursor-pointer text-light-text2 dark:text-dark-text2 absolute top-1/2 -translate-y-1/2 left-4"></i>
                         @if (itemFaGroupName$ | async; as itemFaGroupName) {
-                            <p class="absolute text-light-text2 dark:text-dark-text2 top-1/2 -translate-y-1/2 right-[2.7rem] pointer-events-none peer-[:not(:placeholder-shown)]:hidden">عنوان را در {{itemFaGroupName}} جستجو کنید</p>
+                            <p class="absolute text-dark-border5 dark:text-dark-text2 top-1/2 -translate-y-1/2 right-[2.7rem] pointer-events-none peer-[:not(:placeholder-shown)]:hidden">عنوان را در {{itemFaGroupName}} جستجو کنید</p>
                         }
                     </div>
                     

@@ -131,6 +131,9 @@ export class ChartComponent {
       this.volumeSeries?.setData(processed.volumes as any[])
       this.lineSeries?.setData(processed.lineVolumes as any[]);
 
+      this.candlestickSeries?.applyOptions({ priceFormat: { precision: unit === 1 ? 4 : 2 } })
+      this.lineSeries?.applyOptions({ priceFormat: { precision: unit === 1 ? 4 : 2 } })
+
       if (this.presetChanged()) {
         this.chart?.timeScale().fitContent();
         this.chart?.priceScale('right').applyOptions({ autoScale: true })

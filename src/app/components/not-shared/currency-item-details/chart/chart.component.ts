@@ -131,7 +131,10 @@ export class ChartComponent {
       this.volumeSeries?.setData(processed.volumes as any[])
       this.lineSeries?.setData(processed.lineVolumes as any[]);
 
-      if (this.presetChanged()) this.chart?.timeScale().fitContent();
+      if (this.presetChanged()) {
+        this.chart?.timeScale().fitContent();
+        this.chart?.priceScale('right').applyOptions({ autoScale: true })
+      }
     });
   }
 

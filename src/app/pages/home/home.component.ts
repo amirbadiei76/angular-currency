@@ -256,7 +256,9 @@ export class HomeComponent {
   constructor(private title: Title, private meta: Meta) {
     this.setCurrentCategory(this.lastHomeState.currentCategory, this.lastHomeState.currentSubCategory);
 
-    if (typeof window !== 'undefined') {      
+    if (typeof window !== 'undefined') { 
+      this.syncHighlightAfterScroll()
+           
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
       }
@@ -538,7 +540,7 @@ export class HomeComponent {
     });
 
     if (typeof window !== 'undefined') {
-      
+
       fromEvent(window, 'resize')
       .pipe(
         map(() => document.body.clientWidth),

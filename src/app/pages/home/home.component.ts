@@ -258,7 +258,7 @@ export class HomeComponent {
 
     if (typeof window !== 'undefined') { 
       this.syncHighlightAfterScroll()
-           
+
       window.onbeforeunload = () => {
         window.scrollTo(0, 0)  
       }
@@ -575,7 +575,8 @@ export class HomeComponent {
 
   ngAfterViewInit () {
     if (typeof window !== 'undefined') {
-
+      this.syncHighlightAfterScroll()
+      
       fromEvent(window, 'click')
       .pipe(
         filter((event: Event) => (event.target as HTMLElement).id !== 'searchInput'),

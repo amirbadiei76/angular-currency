@@ -33,7 +33,7 @@
                     </div>
                     
                     <div
-                        #itemList class="absolute overflow-hidden p-5 hidden w-full z-[2] max-h-86 flex-col top-12 rounded-semi bg-neutral-50 dark:bg-neutral-700">
+                        #itemList class="absolute overflow-hidden p-5 hidden w-full z-[2] max-h-86 flex-col top-12 rounded-semi bg-light-border2 dark:bg-dark-border">
                         @if (currentFilteredList$ | async; as currentFilteredList) {
                             <div class="flex flex-col justify-start items-end scroll-hide overflow-y-scroll {{ !currentFilteredList?.length ? 'gap-0' : 'gap-4'}}">
                             

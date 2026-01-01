@@ -41,7 +41,7 @@
                             <div class="flex flex-col justify-start items-end scroll-hide overflow-y-scroll {{ !currentFilteredList?.length ? 'gap-0' : 'gap-4'}}">
                             
                                 @for (currentItem of currentFilteredList; track currentItem.id) {
-                                    <app-search-item (itemSelected)="onItemSelect($event)" [item]="currentItem" />
+                                    <app-search-item class="w-full" (itemSelected)="onItemSelect($event)" [item]="currentItem" />
                                 }
                                 @if (!currentFilteredList?.length) {
                                     @if (itemFaGroupName$ | async; as itemFaGroupName) {

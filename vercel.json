@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+        {
+            "source": "/((?!gold-calculator|converter|assets).*",
+            "destination": "/index.html"
+        }
+    ],
+    "cleanUrls": true
+}

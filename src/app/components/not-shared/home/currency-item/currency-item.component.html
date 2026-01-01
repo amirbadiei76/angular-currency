@@ -47,7 +47,7 @@
                     </span>
                 </span>
                 <span *ngIf="!currencyItem?.isFav" class="w-6 h-7 flex justify-end items-center sm:items-end" (click)="addToFav($event)">
-                    <star-icon class="w-4 h-4" />
+                    <star-icon [selected]="!currencyItem?.isFav" class="w-4 h-4 text-dark dark:text-light" />
                 </span>
             </div>
         </div>

@@ -29,6 +29,6 @@ export class HeaderComponent {
   }
 
   changeTheme() {    
-    this.themeService.toggleTheme();
+    this.themeService.cycleTheme();
   }
 }

@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Inject, Injectable, Renderer2, RendererFactory2, signal, WritableSignal } from '@angular/core';
 
-type ThemeType = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 @Injectable({
   providedIn: 'root'
@@ -9,36 +9,60 @@ type ThemeType = 'light' | 'dark';
 export class ThemeService {
 
   private renderer: Renderer2;
-  private currentTheme: ThemeType = 'light';
-  private isDark = false;
   private themeKey = 'user-theme';
+  public currentMode: WritableSignal<ThemeMode>;
 
   constructor(private rendererFactory: RendererFactory2, @Inject(DOCUMENT) private document: Document) {
     this.renderer = rendererFactory.createRenderer(null, null)
-    this.isDark = this.document.documentElement.classList.contains('dark');
-    this.currentTheme = this.document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+    const initialMode = this.document.documentElement.getAttribute('data-mode') as ThemeMode || 'system';
+    this.currentMode = signal<ThemeMode>(initialMode);
+    
+    if (typeof window !== 'undefined') {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (this.currentMode() === 'system') {
+          this.updateDarkClass(e.matches);
+        }
+      });
+    }
   }
 
-  private setTheme (theme: ThemeType = 'light') {
-    if (theme === this.currentTheme) return;
-    this.isDark = theme === 'dark' ? true : false;
-    this.currentTheme = theme;
-    if (theme === 'dark') this.renderer.addClass(this.document.documentElement, 'dark')
-    else this.renderer.removeClass(this.document.documentElement, 'dark')
-    this.setCookie(this.themeKey, theme, 365 * 10);
+  private setMode(mode: ThemeMode): void {
+    this.currentMode.set(mode);
+    this.renderer.setAttribute(this.document.documentElement, 'data-mode', mode);
+    this.setCookie(this.themeKey, mode, 365);
+
+    if (mode === 'system') {
+      this.updateDarkClass(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    } else {
+      this.updateDarkClass(mode === 'dark');
+    }
   }
 
-  getTheme() {
-    return this.isDark;
+  private updateDarkClass(isDark: boolean): void {
+    if (isDark) {
+      this.renderer.addClass(this.document.documentElement, 'dark');
+    } else {
+      this.renderer.removeClass(this.document.documentElement, 'dark');
+    }
   }
 
   getStringTheme () {
-    return this.currentTheme
+    return this.currentMode
   }
 
-  toggleTheme () {
-    const newTheme = this.currentTheme === 'light' ? 'dark' : 'light'
-    this.setTheme(newTheme)
+  public cycleTheme(): void {
+    const current = this.currentMode();
+    let next: ThemeMode;
+
+    if (current === 'light') {
+      next = 'dark';
+    } else if (current === 'dark') {
+      next = 'system';
+    } else {
+      next = 'light';
+    }
+
+    this.setMode(next);
   }
 
   setCookie(name: string, value: string, days: number) {

@@ -16,15 +16,29 @@
   <link rel="icon" type="image/png" sizes="512×512" href="assets/icons/main/favicon-512x512.png">
 
   <script>
-      function getCookies(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`)
-        if (parts.length === 2) return parts.pop().split(';').shift()
-      }
+      (function() {
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(';').shift();
+        }
 
-      const theme = getCookies('user-theme');
-      if (theme === 'dark') document.documentElement.classList.add('dark');
-      else document.documentElement.classList.remove('dark')
+        const storedTheme = getCookie('user-theme') || 'system';
+      
+        document.documentElement.setAttribute('data-mode', storedTheme);
+
+        if (storedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (storedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        }
+      })();
   </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="manifest" href="manifest.webmanifest">

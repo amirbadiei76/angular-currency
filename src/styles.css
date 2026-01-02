@@ -95,7 +95,6 @@
 
 .theme-icon { display: none !important; }
 
-/* نمایش آیکون مربوطه بر اساس اتریبیوت html */
 html[data-mode="light"] .theme-icon-sun { display: block !important; }
 html[data-mode="dark"] .theme-icon-moon { display: block !important; }
 html[data-mode="system"] .theme-icon-system { display: block !important; }

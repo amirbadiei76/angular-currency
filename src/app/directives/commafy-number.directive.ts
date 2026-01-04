@@ -19,32 +19,39 @@ export class CommafyNumberDirective {
     return grouped.split('').reverse().join('');
   }
   
+  private normalizeDigits(value: string): string {
+    const persian = '۰۱۲۳۴۵۶۷۸۹';
+    const arabic  = '٠١٢٣٤٥٦٧٨٩';
+
+    return value.replace(/[۰-۹٠-٩]/g, d => {
+      const p = persian.indexOf(d);
+      if (p !== -1) return p.toString();
+
+      const a = arabic.indexOf(d);
+      if (a !== -1) return a.toString();
+
+      return d;
+    });
+  }
 
   format() {
-    const input = this.el.nativeElement;
-    const cursor = input.selectionStart ?? 0;
+      const input = this.el.nativeElement;
+      const cursor = input.selectionStart ?? 0;
 
-    let value = input.value.replace(/[^\d.]/g, '');
+      const normalized = this.normalizeDigits(input.value);
+      
+      const raw = normalized.replace(/\D+/g, '');
 
-    const parts = value.split('.');
-    if (parts.length > 2) {
-      value = parts[0] + '.' + parts.slice(1).join('');
-    }
+      if (!raw) {
+        input.value = '';
+        return;
+      }
 
-    const [integerPart, decimalPart] = value.split('.');
+      const formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-    const formattedInt = integerPart
-      ? integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-      : '';
+      const diff = formatted.length - input.value.length;
 
-    const formattedValue =
-      decimalPart !== undefined
-        ? `${formattedInt}.${decimalPart}`
-        : formattedInt;
-
-    const diff = formattedValue.length - input.value.length;
-
-    input.value = formattedValue;
-    input.setSelectionRange(cursor + diff, cursor + diff);
+      input.value = formatted;
+      input.setSelectionRange(cursor + diff, cursor + diff);
   }
 }
